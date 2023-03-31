@@ -1,7 +1,7 @@
 package com.example.hhproject0.security;
 
-import com.example.hamgaja.users.entity.User;
-import com.example.hamgaja.users.entity.UserRoleEnum;
+import com.example.hhproject0.user.entity.User;
+import com.example.hhproject0.user.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

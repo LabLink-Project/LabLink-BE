@@ -1,7 +1,8 @@
 package com.example.hhproject0.config;
 
-import com.example.hamgaja.jwt.JwtAuthFilter;
-import com.example.hamgaja.jwt.JwtUtil;
+
+import com.example.hhproject0.jwt.JwtAuthFilter;
+import com.example.hhproject0.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
