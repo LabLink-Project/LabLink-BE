@@ -83,7 +83,7 @@ jobs:
         run:
           aws deploy create-deployment
           --application-name LabLink
-          --deployment-group-name LabLink
+          --deployment-group-name LabLinkApplication
           --file-exists-behavior OVERWRITE
           --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
           --region ap-northeast-2
