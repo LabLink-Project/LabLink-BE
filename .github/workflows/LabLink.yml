@@ -27,10 +27,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: actions/checkout@v3
-    - run: touch ./src/main/resources/application.properties
-    - run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
-    
+    - name: make application.properties
+      run: |
+        echo ">> mkdir & touch"
+        mkdir -p ./src/main/resources
+        cd ./src/main/resources
+        touch ./application.properties
+        echo ">> copy application.properties"
+        echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.properties
 
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
