@@ -1,7 +1,8 @@
 package com.example.hhproject0.security;
 
-import com.example.hamgaja.users.entity.User;
-import com.example.hamgaja.users.repository.UserRepository;
+
+import com.example.hhproject0.user.entity.User;
+import com.example.hhproject0.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-
         return new UserDetailsImpl(user, user.getUsername());
     }
 
