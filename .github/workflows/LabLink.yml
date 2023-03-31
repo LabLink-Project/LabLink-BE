@@ -82,8 +82,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run:
           aws deploy create-deployment
-          --application-name my-codedeploy-app
-          --deployment-group-name my-hamgaja-codedeploy
+          --application-name LabLink
+          --deployment-group-name LabLink
           --file-exists-behavior OVERWRITE
           --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
           --region ap-northeast-2
