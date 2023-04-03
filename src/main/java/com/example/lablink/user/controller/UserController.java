@@ -3,7 +3,6 @@ package com.example.lablink.user.controller;
 import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
-import com.example.lablink.user.dto.request.TermsRequestDto;
 import com.example.lablink.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +21,8 @@ public class UserController {
 
     // 유저 회원가입
     @PostMapping("/users/signup")
-    public ResponseEntity signup(@RequestBody SignupRequestDto signupRequestDto, TermsRequestDto termsRequestDto) {
-        return ResponseMessage.SuccessResponse(userService.signup(signupRequestDto, termsRequestDto), null);
+    public ResponseEntity signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+        return ResponseMessage.SuccessResponse(userService.signup(signupRequestDto), null);
     }
 
     // 유저 로그인

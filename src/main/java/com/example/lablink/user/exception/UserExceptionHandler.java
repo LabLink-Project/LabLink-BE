@@ -14,6 +14,5 @@ public class UserExceptionHandler {
     protected ResponseEntity<ResponseMessage> handleCustomException(UserException e) {
         log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
         return ResponseMessage.ErrorResponse(e.getErrorCode());
-
     }
 }

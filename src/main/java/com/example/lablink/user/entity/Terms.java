@@ -1,6 +1,6 @@
 package com.example.lablink.user.entity;
 
-import com.example.lablink.user.dto.request.TermsRequestDto;
+import com.example.lablink.user.dto.request.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,8 +21,13 @@ public class Terms {
     @Column(nullable = false)
     private boolean notificationTerm;
 
-    public Terms(TermsRequestDto termsRequestDto) {
-        this.marketingTerm = termsRequestDto.isMarketingTerm();
-        this.notificationTerm = termsRequestDto.isNotificationTerm();
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Terms(SignupRequestDto signupRequestDto, User user) {
+        this.marketingTerm = signupRequestDto.isMarketingTerm();
+        this.notificationTerm = signupRequestDto.isNotificationTerm();
+        this.user = user;
     }
 }

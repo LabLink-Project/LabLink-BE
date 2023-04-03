@@ -22,40 +22,35 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String username;
+    private String userName;
 
     @Column(nullable = false)
     private String userPhone;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String kakaoEmail;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String naverEmail;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String googleEmail;
 
-    @OneToOne
-    @JoinColumn(name = "terms_id", nullable = false)
-    private Terms terms;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
-    public User(String email, String password, SignupRequestDto signupRequestDto, Terms terms) {
-        this.email = email;
+    public User(String password, SignupRequestDto signupRequestDto, UserRoleEnum role) {
+        this.email = signupRequestDto.getEmail();
         this.password = password;
-        this.username = signupRequestDto.getUserName();
+        this.userName = signupRequestDto.getUserName();
         this.userPhone = signupRequestDto.getUserPhone();
-        this.kakaoEmail = getKakaoEmail();
-        this.naverEmail = getNaverEmail();
-        this.googleEmail = getGoogleEmail();
-        this.terms = terms;
-
+//        this.kakaoEmail = getKakaoEmail();
+//        this.naverEmail = getNaverEmail();
+//        this.googleEmail = getGoogleEmail();
+        this.role = role;
     }
 
-
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private UserRoleEnum role;
 
 
 
