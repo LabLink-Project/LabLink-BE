@@ -1,7 +1,7 @@
-package com.example.lablink.security;
+package com.example.hhproject0.security;
 
-import com.example.lablink.user.entity.User;
-import com.example.lablink.user.entity.UserRoleEnum;
+import com.example.hhproject0.user.entity.User;
+import com.example.hhproject0.user.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

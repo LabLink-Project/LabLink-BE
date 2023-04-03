@@ -1,8 +1,8 @@
-package com.example.lablink.jwt;
+package com.example.hhproject0.jwt;
 
 
 
-import com.example.lablink.security.SecurityExceptionDto;
+import com.example.hhproject0.security.SecurityExceptionDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;

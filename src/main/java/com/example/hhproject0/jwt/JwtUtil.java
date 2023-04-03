@@ -1,7 +1,7 @@
-package com.example.lablink.jwt;
+package com.example.hhproject0.jwt;
 
-import com.example.lablink.security.UserDetailsServiceImpl;
-import com.example.lablink.user.entity.UserRoleEnum;
+import com.example.hhproject0.security.UserDetailsServiceImpl;
+import com.example.hhproject0.user.entity.UserRoleEnum;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

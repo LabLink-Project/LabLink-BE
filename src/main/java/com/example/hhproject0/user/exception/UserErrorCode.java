@@ -1,4 +1,4 @@
-package com.example.lablink.user.exception;
+package com.example.hhproject0.user.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

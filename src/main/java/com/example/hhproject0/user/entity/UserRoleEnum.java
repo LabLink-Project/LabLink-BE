@@ -1,4 +1,4 @@
-package com.example.lablink.user.entity;
+package com.example.hhproject0.user.entity;
 
 public enum UserRoleEnum {
     USER(Authority.USER),  // 고객 권한

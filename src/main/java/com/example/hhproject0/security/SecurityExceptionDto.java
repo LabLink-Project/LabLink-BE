@@ -1,4 +1,4 @@
-package com.example.lablink.security;
+package com.example.hhproject0.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

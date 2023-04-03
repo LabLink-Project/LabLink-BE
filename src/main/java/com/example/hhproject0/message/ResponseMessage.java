@@ -1,7 +1,7 @@
-package com.example.lablink.message;
+package com.example.hhproject0.message;
 
 
-import com.example.lablink.user.exception.UserErrorCode;
+import com.example.hhproject0.user.exception.UserErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

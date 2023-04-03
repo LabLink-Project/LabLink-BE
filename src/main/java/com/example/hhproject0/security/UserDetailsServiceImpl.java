@@ -1,8 +1,8 @@
-package com.example.lablink.security;
+package com.example.hhproject0.security;
 
 
-import com.example.lablink.user.entity.User;
-import com.example.lablink.user.repository.UserRepository;
+import com.example.hhproject0.user.entity.User;
+import com.example.hhproject0.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package com.example.lablink.config;
+package com.example.hhproject0.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

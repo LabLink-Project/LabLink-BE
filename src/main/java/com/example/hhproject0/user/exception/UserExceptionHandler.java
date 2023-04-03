@@ -1,7 +1,7 @@
-package com.example.lablink.user.exception;
+package com.example.hhproject0.user.exception;
 
 
-import com.example.lablink.message.ResponseMessage;
+import com.example.hhproject0.message.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

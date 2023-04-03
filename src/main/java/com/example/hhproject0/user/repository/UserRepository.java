@@ -1,6 +1,6 @@
-package com.example.lablink.user.repository;
+package com.example.hhproject0.user.repository;
 
-import com.example.lablink.user.entity.User;
+import com.example.hhproject0.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
