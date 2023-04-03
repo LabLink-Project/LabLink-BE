@@ -49,6 +49,7 @@ public class User {
         this.naverEmail = getNaverEmail();
         this.googleEmail = getGoogleEmail();
         this.terms = terms;
+
     }
 
 
