@@ -1,4 +1,4 @@
-package com.example.lablink.user.exception;
+package com.example.lablink.company.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
-public enum UserErrorCode {
+public enum CompanyErrorCode {
     INVALID_TOKEN(UNAUTHORIZED, "토큰이 유효하지 않습니다"), // 401
     DUPLICATE_EMAIL(CONFLICT, "중복된 이메일이 존재합니다"), // 409
     EMAIL_NOT_FOUND(NOT_FOUND, "존재하지 않는 이메일 입니다."), // 404
