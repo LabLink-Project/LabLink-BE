@@ -1,6 +1,7 @@
 package com.example.lablink.message;
 
 
+import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.user.exception.UserErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,16 @@ public class ResponseMessage<T> {
                 );
     }
 
-
+    public static ResponseEntity ErrorResponse(CompanyErrorCode errorCode) {
+        return ResponseEntity
+            .status(errorCode.getHttpStatus())
+            .body(ResponseMessage.builder()
+                .statusCode(errorCode.getHttpStatus().value())
+                .message(errorCode.getMessage())
+                .data("")
+                .build()
+            );
+    }
 
     public static <T> ResponseEntity SuccessResponse(String message, T data) {
         return ResponseEntity

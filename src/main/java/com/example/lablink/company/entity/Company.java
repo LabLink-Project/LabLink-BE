@@ -1,11 +1,13 @@
 package com.example.lablink.company.entity;
 
+import com.example.lablink.company.dto.request.CompanySignupRequestDto;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Company {
 
     @Id
@@ -25,7 +27,7 @@ public class Company {
     private String ownerName;
 
     @Column(nullable = false)
-    private String businessCategory;
+    private String business;
 
     @Column(nullable = false)
     private String managerPhone;
@@ -33,7 +35,13 @@ public class Company {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private String category;
-
+    public Company(String password, CompanySignupRequestDto companySignupRequestDto) {
+        this.email = companySignupRequestDto.getEmail();
+        this.password = password;
+        this.companyName = companySignupRequestDto.getCompanyName();
+        this.ownerName = companySignupRequestDto.getOwnerName();
+        this.business = companySignupRequestDto.getBusiness();
+        this.managerPhone = companySignupRequestDto.getManagerPhone();
+        this.address = companySignupRequestDto.getAddress();
+    }
 }
