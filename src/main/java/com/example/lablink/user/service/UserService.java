@@ -39,7 +39,6 @@ public class UserService {
         // 유저 저장 및 유저를 약관에 저장시킴 -> 약관을 유저에 저장시키면 유저를 불러올때마다 약관이 불려와 무거움
         User user = userRepository.save(new User(password, signupRequestDto, role));
         termsService.saveTerms(signupRequestDto, user);
-
         return "회원가입 완료.";
     }
 
@@ -52,7 +51,7 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException(UserErrorCode.EMAIL_NOT_FOUND));
 
         // 비밀번호 일치 여부
-        if (passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new UserException(UserErrorCode.PASSWORD_MISMATCH);
         }
 

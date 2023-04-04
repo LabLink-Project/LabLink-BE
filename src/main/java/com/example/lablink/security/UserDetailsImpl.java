@@ -25,7 +25,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Company role =
         UserRoleEnum role = user.getRole();
         String authority = role.getAuthority();
 
