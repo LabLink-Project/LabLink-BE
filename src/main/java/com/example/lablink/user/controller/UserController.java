@@ -22,12 +22,12 @@ public class UserController {
     // 유저 회원가입
     @PostMapping("/users/signup")
     public ResponseEntity signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
-        return ResponseMessage.SuccessResponse(userService.signup(signupRequestDto), null);
+        return ResponseMessage.SuccessResponse(userService.signup(signupRequestDto), "");
     }
 
     // 유저 로그인
     @PostMapping("/users/login")
     public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        return ResponseMessage.SuccessResponse(userService.login(loginRequestDto, response), null);
+        return ResponseMessage.SuccessResponse(userService.login(loginRequestDto, response), "");
     }
 }
