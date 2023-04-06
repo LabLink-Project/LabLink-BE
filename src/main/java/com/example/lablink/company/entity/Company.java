@@ -1,6 +1,7 @@
 package com.example.lablink.company.entity;
 
 import com.example.lablink.company.dto.request.CompanySignupRequestDto;
+import com.example.lablink.user.entity.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -20,7 +21,7 @@ public class Company {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String companyName;
 
     @Column(nullable = false)
@@ -35,6 +36,10 @@ public class Company {
     @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
     public Company(String password, CompanySignupRequestDto companySignupRequestDto) {
         this.email = companySignupRequestDto.getEmail();
         this.password = password;
@@ -43,5 +48,6 @@ public class Company {
         this.business = companySignupRequestDto.getBusiness();
         this.managerPhone = companySignupRequestDto.getManagerPhone();
         this.address = companySignupRequestDto.getAddress();
+        this.role = UserRoleEnum.BUSINESS;
     }
 }

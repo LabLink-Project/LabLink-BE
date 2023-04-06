@@ -10,9 +10,12 @@ import com.example.lablink.user.exception.UserErrorCode;
 import com.example.lablink.user.exception.UserException;
 import com.example.lablink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
@@ -41,7 +44,7 @@ public class UserService {
     }
 
     // 유저 로그인
-    public String login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
 
@@ -53,7 +56,21 @@ public class UserService {
             throw new UserException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getEmail()));
-        return "로그인 완료";
+        // JWT 토큰 생성
+        String token = jwtUtil.createUserToken(user);
+
+        // 쿠키 생성 및 추가
+        Cookie cookie = new Cookie("Authorization", token);
+        cookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 설정 (1일)
+        cookie.setHttpOnly(true); // XSS 방지를 위해 HttpOnly 속성 설정
+        response.addCookie(cookie);
+//        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user));
+    }
+
+    // 유저 이메일 찾기
+    public User findByUserEmail(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return user;
     }
 }
