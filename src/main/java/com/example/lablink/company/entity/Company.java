@@ -20,7 +20,7 @@ public class Company {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String companyName;
 
     @Column(nullable = false)
@@ -35,7 +35,11 @@ public class Company {
     @Column(nullable = false)
     private String address;
 
-    public Company(String password, CompanySignupRequestDto companySignupRequestDto) {
+//    @Column(nullable = false)
+//    @Enumerated(value = EnumType.STRING)
+//    private UserRoleEnum role;
+
+    public Company(String password, CompanySignupRequestDto companySignupRequestDto/*, UserRoleEnum role*/) {
         this.email = companySignupRequestDto.getEmail();
         this.password = password;
         this.companyName = companySignupRequestDto.getCompanyName();
@@ -43,5 +47,6 @@ public class Company {
         this.business = companySignupRequestDto.getBusiness();
         this.managerPhone = companySignupRequestDto.getManagerPhone();
         this.address = companySignupRequestDto.getAddress();
+//        this.role = role;
     }
 }

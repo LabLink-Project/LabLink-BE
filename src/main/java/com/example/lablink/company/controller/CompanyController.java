@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -26,7 +27,8 @@ public class CompanyController {
 
     // 기업 로그인
     @PostMapping("/companies/login")
-    public ResponseEntity companyLogin(@RequestBody CompanyLoginRequestDto companyLoginRequestDto, HttpServletResponse response) {
-        return ResponseMessage.SuccessResponse(companyService.companyLogin(companyLoginRequestDto, response), "");
+    public ResponseEntity companyLogin(@RequestBody CompanyLoginRequestDto companyLoginRequestDto, HttpServletResponse response, HttpServletRequest request) {
+        companyService.companyLogin(companyLoginRequestDto, response, request);
+        return ResponseMessage.SuccessResponse("로그인 완료", "");
     }
 }
