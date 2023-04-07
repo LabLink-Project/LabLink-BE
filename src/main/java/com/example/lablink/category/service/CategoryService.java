@@ -5,7 +5,6 @@ import com.example.lablink.category.exception.CategoryErrorCode;
 import com.example.lablink.category.exception.CategoryException;
 import com.example.lablink.category.repository.CategoryRepository;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
-import com.example.lablink.study.entity.Study;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,6 @@ package com.example.lablink.scheduler;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.entity.StudyStatusEnum;
 import com.example.lablink.study.repository.StudyRepository;
-import com.example.lablink.study.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

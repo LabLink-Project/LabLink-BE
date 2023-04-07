@@ -2,8 +2,6 @@ package com.example.lablink.study.dto.requestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

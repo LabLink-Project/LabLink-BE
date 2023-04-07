@@ -1,6 +1,5 @@
 package com.example.lablink.study.exception;
 
-import com.example.lablink.user.exception.UserErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

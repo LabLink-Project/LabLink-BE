@@ -1,8 +1,6 @@
 package com.example.lablink.category.entity;
 
-import com.example.lablink.company.entity.Company;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
-import com.example.lablink.study.entity.Study;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
