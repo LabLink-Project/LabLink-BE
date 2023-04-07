@@ -15,6 +15,7 @@ public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final GetStudyService getStudyService;
 
+    @Transactional
     public String bookmark(Long studyId, User user) {
         getStudyService.getStudy(studyId);
 
