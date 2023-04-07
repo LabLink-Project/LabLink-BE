@@ -16,15 +16,14 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "study_id", nullable = false)
-    private Study study;
+    @Column(nullable = false)
+    private Long studyId;
 
     @Column(nullable = false)
     private String category;
 
-    public Category(StudyRequestDto requestDto, Study study) {
-        this.study = study;
+    public Category(StudyRequestDto requestDto, Long studyId) {
+        this.studyId = studyId;
         this.category = requestDto.getCategory();
     }
 }

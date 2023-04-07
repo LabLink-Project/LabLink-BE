@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public void saveCategory(StudyRequestDto studyRequestDto, Study study){
-        categoryRepository.save(new Category(studyRequestDto, study));
+    public void saveCategory(StudyRequestDto studyRequestDto, Long studyId){
+        categoryRepository.save(new Category(studyRequestDto, studyId));
     }
 
-    public Category getCategory(Study study) {
-        return categoryRepository.findByStudy(study).orElseThrow(
+    public Category getCategory(Long studyId) {
+        return categoryRepository.findByStudyId(studyId).orElseThrow(
                 ()-> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND)
         );
     }
