@@ -11,14 +11,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,14 +28,13 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
-public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
+public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     @Profile("db-local")
@@ -56,21 +53,30 @@ public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-    // CR
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//    @Bean
+//    public CsrfTokenRepository csrfTokenRepository() {
+//        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
+//        repository.setCookieHttpOnly(true);
+//        repository.setCookieName("XSRF-TOKEN");
+//        return repository;
 //    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
+//        http.csrf()
+//            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .and();
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
                 .antMatchers("**").permitAll()
+//                .antMatchers("/users/signup").permitAll()
+//                .antMatchers("/companies/signup").permitAll()
+//                .antMatchers("/companies/**").hasRole("COMPANY")
+//                .antMatchers("/users/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
@@ -82,7 +88,6 @@ public class WebSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.sendRedirect("/");
                 });
-
 
         http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 

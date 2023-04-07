@@ -1,10 +1,10 @@
 package com.example.lablink.jwt;
 
 import com.example.lablink.company.entity.Company;
-import com.example.lablink.security.UserDetailsServiceImpl;
+import com.example.lablink.company.security.CompanyDetailsServiceImpl;
+import com.example.lablink.user.security.UserDetailsServiceImpl;
 
 import com.example.lablink.user.entity.User;
-import com.example.lablink.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class JwtUtil {
     private static final long TOKEN_TIME = 60 * 60 * 1000L;
 
     private final UserDetailsServiceImpl userDetailsService;       //스프링 시큐리티
-
+    private final CompanyDetailsServiceImpl companyDetailsService;
 
     // application.yml 파일에 정의된 JWT secret key
     @Value("${jwt.secret.key}")
@@ -63,28 +63,34 @@ public class JwtUtil {
     public String createUserToken(User user) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
+        String token = BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("userRole", user.getRole())
+                .claim("userRole", null/*, company.getRole()*/)
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)
                 .compact();
+
+        // token 문자열에서 모든 공백 제거
+        return token.replaceAll("\\s+", "");
     }
 
     // 기업 토큰 생성
     public String createCompanyToken(Company company) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
+        String token = BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(company.getEmail())
-                .claim("companyRole", company.getRole())
+                .claim("companyRole", null/*, company.getRole()*/)
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)
                 .compact();
+
+        // token 문자열에서 모든 공백 제거
+        return token.replaceAll("\\s+", "");
     }
 
 
@@ -114,7 +120,14 @@ public class JwtUtil {
     // 인증 객체 생성
     public Authentication createAuthentication(String email) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        UserDetails companyDetails = companyDetailsService.loadUserByUsername(email);
+
+        if (userDetails instanceof User) {
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        } else {
+            return new UsernamePasswordAuthenticationToken(companyDetails, null, companyDetails.getAuthorities());
+        }
     }
 
 }
