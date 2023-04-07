@@ -81,25 +81,11 @@ public class Study extends Timestamped {
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
         this.imageURL = requestDto.getImageURL();
-        this.status = StudyStatusEnum.ONGOING;
-    }
-
-    // xxx : test
-    public Study(StudyRequestDto requestDto) {
-        this.title = requestDto.getTitle();
-        this.studyInfo = requestDto.getStudyInfo();
-        this.studyPurpose = requestDto.getStudyPurpose();
-        this.studyAction = requestDto.getStudyAction();
-        this.subjectCount = requestDto.getSubjectCount();
-        this.date = requestDto.getDate();
-        this.address = requestDto.getAddress();
-        this.pay = requestDto.getPay();
-        this.subjectGender = requestDto.getSubjectGender();
-        this.subjectAge = requestDto.getSubjectAge();
-        this.repearCount = requestDto.getRepearCount();
-        this.endDate = requestDto.getEndDate();
-        this.imageURL = requestDto.getImageURL();
-        this.status = StudyStatusEnum.ONGOING;
+        if (endDate.isBefore(LocalDateTime.now())) {
+            this.status = StudyStatusEnum.CLOSED;
+        } else{
+            this.status = StudyStatusEnum.ONGOING;
+        }
     }
 
     public void update(StudyRequestDto requestDto) {
@@ -116,6 +102,11 @@ public class Study extends Timestamped {
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
         this.imageURL = requestDto.getImageURL();
+        if (endDate.isBefore(LocalDateTime.now())) {
+            this.status = StudyStatusEnum.CLOSED;
+        } else{
+            this.status = StudyStatusEnum.ONGOING;
+        }
     }
 
     public void updateStatus(StudyStatusEnum status) {

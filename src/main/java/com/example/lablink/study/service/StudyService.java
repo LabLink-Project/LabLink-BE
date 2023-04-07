@@ -33,17 +33,10 @@ public class StudyService {
     // 게시글 작성
     @Transactional
     public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
-        Study study = studyRepository.save(new Study(requestDto, companyDetails.getCompany()));
+        Company company = companyDetails == null ? null : companyDetails.getCompany();
+        Study study = studyRepository.save(new Study(requestDto, company));
         categoryService.saveCategory(requestDto, study.getId());
     }
-
-    // 게시글 작성
-    // xxx: test
-//    @Transactional
-//    public void createStudy(StudyRequestDto requestDto) {
-//        Study study = studyRepository.save(new Study(requestDto));
-//        categoryService.saveCategory(requestDto, study.getId());
-//    }
 
     // 게시글 조회 (전체 조회 및 검색 조회 등)
     @Transactional(readOnly = true)
@@ -64,6 +57,7 @@ public class StudyService {
 
     // 인기 공고로 변경 (지원자순)
     public List<StudyResponseDto> getSortedStudies(String sortedType, UserDetailsImpl userDetails) {
+        User user = userDetails == null ? null : userDetails.getUser();
         List<Study> studies = new ArrayList<>();
         List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
 
@@ -84,7 +78,7 @@ public class StudyService {
             // 카테고리 추가
             Category category = categoryService.getCategory(study.getId());
             // 북마크 기능 추가
-            boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), userDetails.getUser());
+            boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
             studyResponseDtos.add(new StudyResponseDto(study, category, isBookmarked));
         }
         return studyResponseDtos;
@@ -102,14 +96,16 @@ public class StudyService {
 
     // 게시글 수정
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
+        Company company = companyDetails == null ? null : companyDetails.getCompany();
         Study study = getStudyService.getStudy(studyId);
-        checkRole(studyId, companyDetails.getCompany());
+        checkRole(studyId, company);
         study.update(requestDto);
     }
 
     // 게시글 삭제
     public void deleteStudy(Long studyId, CompanyDetailsImpl companyDetails) {
-        checkRole(studyId, companyDetails.getCompany());
+        Company company = companyDetails == null ? null : companyDetails.getCompany();
+        checkRole(studyId, company);
         studyRepository.deleteById(studyId);
     }
 
