@@ -2,15 +2,17 @@ package com.example.lablink.study.entity;
 
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
+import com.example.lablink.timestamp.entity.Timestamped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Study {
+public class Study extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,25 +39,25 @@ public class Study {
     private Long subjectCount;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
-    private String pay;
+    private int pay;
 
     @Column(nullable = false)
-    private String gender;
+    private String subjectGender;
 
     @Column(nullable = false)
-    private String age;
+    private String subjectAge;
 
     @Column(nullable = false)
     private int repearCount;
 
     @Column(nullable = false)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(nullable = false)
     private String imageURL;
@@ -74,11 +76,49 @@ public class Study {
         this.date = requestDto.getDate();
         this.address = requestDto.getAddress();
         this.pay = requestDto.getPay();
-        this.gender = requestDto.getGender();
-        this.age = requestDto.getAge();
+        this.subjectGender = requestDto.getSubjectGender();
+        this.subjectAge = requestDto.getSubjectAge();
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
         this.imageURL = requestDto.getImageURL();
         this.status = StudyStatusEnum.ONGOING;
+    }
+
+    // xxx : test
+    public Study(StudyRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.studyInfo = requestDto.getStudyInfo();
+        this.studyPurpose = requestDto.getStudyPurpose();
+        this.studyAction = requestDto.getStudyAction();
+        this.subjectCount = requestDto.getSubjectCount();
+        this.date = requestDto.getDate();
+        this.address = requestDto.getAddress();
+        this.pay = requestDto.getPay();
+        this.subjectGender = requestDto.getSubjectGender();
+        this.subjectAge = requestDto.getSubjectAge();
+        this.repearCount = requestDto.getRepearCount();
+        this.endDate = requestDto.getEndDate();
+        this.imageURL = requestDto.getImageURL();
+        this.status = StudyStatusEnum.ONGOING;
+    }
+
+    public void update(StudyRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.studyInfo = requestDto.getStudyInfo();
+        this.studyPurpose = requestDto.getStudyPurpose();
+        this.studyAction = requestDto.getStudyAction();
+        this.subjectCount = requestDto.getSubjectCount();
+        this.date = requestDto.getDate();
+        this.address = requestDto.getAddress();
+        this.pay = requestDto.getPay();
+        this.subjectGender = requestDto.getSubjectGender();
+        this.subjectAge = requestDto.getSubjectAge();
+        this.repearCount = requestDto.getRepearCount();
+        this.endDate = requestDto.getEndDate();
+        this.imageURL = requestDto.getImageURL();
+    }
+
+    public void updateStatus(StudyStatusEnum status) {
+        this.status = status;
     }
 }

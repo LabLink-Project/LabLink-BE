@@ -1,13 +1,12 @@
 package com.example.lablink.study.dto.requestDto;
-
-import com.example.lablink.study.entity.StudyStatusEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
-import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
-@Setter
 public class StudyRequestDto {
     private String title;
     private String studyInfo;
@@ -15,12 +14,19 @@ public class StudyRequestDto {
     private String studyAction;
     private Long subjectCount;
     private String category;
-    private LocalDate date;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime date;
+
     private String address;
-    private String pay;
-    private String gender;
-    private String age;
+    private int pay;
+    private String subjectGender;
+    private String subjectAge;
     private int repearCount;
-    private LocalDate endDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime endDate;
     private String imageURL;
 }
