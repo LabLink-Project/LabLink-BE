@@ -38,7 +38,7 @@ public class CompanyService {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
 
-        companyRepository.save(new Company(password, companySignupRequestDto/*, role*/));
+        companyRepository.save(new Company(password, companySignupRequestDto, UserRoleEnum.BUSINESS));
         return "회원가입 완료";
     }
 
@@ -58,14 +58,15 @@ public class CompanyService {
         // CSRF, JWT토큰 생성
 //        CsrfToken companyCsrfToken = csrfTokenRepository.generateToken(request);
         String companyToken = jwtUtil.createCompanyToken(company);
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, companyToken);
 
         // 쿠키 생성 및 JWT토큰 추가
-        Cookie cookie = new Cookie("Authorization", companyToken);
-        cookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 (1일)
-        cookie.setPath("/"); // 전제api가 쿠키에 액세스 가능
-        cookie.setHttpOnly(true); // XSS공격 방지 (악성코드?)
-//        cookie.setSecure(true); // HTTPS 사용 시 설정 (쿠키가 보안되지 않은 연결을 통해 전송되는 경우 탈취 방지)
-        response.addCookie(cookie);
+//        Cookie cookie = new Cookie("Authorization", companyToken);
+//        cookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 (1일)
+//        cookie.setPath("/"); // 전제api가 쿠키에 액세스 가능
+//        cookie.setHttpOnly(true); // XSS공격 방지 (악성코드?)
+////        cookie.setSecure(true); // HTTPS 사용 시 설정 (쿠키가 보안되지 않은 연결을 통해 전송되는 경우 탈취 방지)
+//        response.addCookie(cookie);
 
         // 쿠키 생성 및 CSRF토큰 추가
 //        Cookie csrfCookie = new Cookie("XSRF-TOKEN", companyCsrfToken.getToken());

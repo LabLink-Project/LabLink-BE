@@ -25,7 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     /* 요청이 들어올 때마다 실행.
-     * 토큰 확인, 토큰 유효성 검사, 토큰에 포함된 정보를 기반으로 인증 수행*/
+     * 토큰 확인, 토큰 유효성 검사, 토큰에 포함된 정보를 기반으로 인증 수행 */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -41,7 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             // 토큰 유효 -> getUserInfoFromToken메서드를 사용해 JWT 토큰의 payload에서 정보 반환
             Claims info = jwtUtil.getUserInfoFromToken(token);    //토큰에서 user정보 가져옴(payload)
             // Claims 객체에서 사용자 이름을 가져와 인증 설정
-            setAuthentication(info.getSubject());   //getSubject 헤더값
+            setAuthentication(info.getSubject(), info.get("role", String.class));   //getSubject 헤더값
         }
         // 다음 단계 실행 -> 다른 필터 및 컨트롤러 실행
         filterChain.doFilter(request,response);
@@ -64,9 +64,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     /* 주어진 파라미터 값으로 SecurityContext에 인증 설정.
      * JWT 유틸리티를 사용하여 인증 객체를 생성하고, SecurityContext에 설정*/
-    public void setAuthentication(String email) {
+    public void setAuthentication(String email, String role) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = jwtUtil.createAuthentication(email);
+        Authentication authentication = jwtUtil.createAuthentication(email, role);
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);

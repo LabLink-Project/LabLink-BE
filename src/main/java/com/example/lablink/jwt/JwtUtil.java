@@ -2,6 +2,7 @@ package com.example.lablink.jwt;
 
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsServiceImpl;
+import com.example.lablink.user.entity.UserRoleEnum;
 import com.example.lablink.user.security.UserDetailsServiceImpl;
 
 import com.example.lablink.user.entity.User;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -66,14 +68,15 @@ public class JwtUtil {
         String token = BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("userRole", null/*, company.getRole()*/)
+                .claim("role", user.getRole().toString())
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)
                 .compact();
 
         // token 문자열에서 모든 공백 제거
-        return token.replaceAll("\\s+", "");
+//        return token.replaceAll("\\s+", "");
+        return token;
     }
 
     // 기업 토큰 생성
@@ -83,14 +86,15 @@ public class JwtUtil {
         String token = BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(company.getEmail())
-                .claim("companyRole", null/*, company.getRole()*/)
+                .claim("role",company.getRole().toString())
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)
                 .compact();
 
         // token 문자열에서 모든 공백 제거
-        return token.replaceAll("\\s+", "");
+//        return token.replaceAll("\\s+", "");
+        return token;
     }
 
 
@@ -118,16 +122,27 @@ public class JwtUtil {
     }
 
     // 인증 객체 생성
-    public Authentication createAuthentication(String email) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        UserDetails companyDetails = companyDetailsService.loadUserByUsername(email);
-
-        if (userDetails instanceof User) {
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        } else {
-            return new UsernamePasswordAuthenticationToken(companyDetails, null, companyDetails.getAuthorities());
+    public Authentication createAuthentication(String email, String role) {
+        UserDetails userDetails = null;
+        if(Objects.equals(role, "USER")){
+            userDetails = userDetailsService.loadUserByUsername(email);
+        } else if (Objects.equals(role, "BUSINESS")) {
+            userDetails = companyDetailsService.loadUserByUsername(email);
         }
+
+        assert userDetails != null : "UserDetails must not be null";
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//        UserDetails companyDetails = companyDetailsService.loadUserByUsername(email);
+//        return new UsernamePasswordAuthenticationToken(companyDetails, null, companyDetails.getAuthorities());
+
+//        if (userDetails instanceof User) {
+//            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//        } else {
+//            return new UsernamePasswordAuthenticationToken(companyDetails, null, companyDetails.getAuthorities());
+//        }
     }
 
 }

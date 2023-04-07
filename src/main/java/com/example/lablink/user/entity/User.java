@@ -36,11 +36,11 @@ public class User {
     @Column(unique = true)
     private String googleEmail;
 
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private UserRoleEnum role;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
-    public User(String password, SignupRequestDto signupRequestDto/*, UserRoleEnum role*/) {
+    public User(String password, SignupRequestDto signupRequestDto, UserRoleEnum role) {
         this.email = signupRequestDto.getEmail();
         this.password = password;
         this.userName = signupRequestDto.getUserName();
@@ -48,7 +48,7 @@ public class User {
 //        this.kakaoEmail = getKakaoEmail();
 //        this.naverEmail = getNaverEmail();
 //        this.googleEmail = getGoogleEmail();
-//        this.role = role;
+        this.role = role;
     }
 
 
