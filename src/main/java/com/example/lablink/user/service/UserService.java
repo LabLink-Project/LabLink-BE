@@ -42,7 +42,7 @@ public class UserService {
         }
 
         // 유저 저장 및 유저를 약관에 저장시킴 -> 약관을 유저에 저장시키면 유저를 불러올때마다 약관이 불려와 무거움
-        User user = userRepository.save(new User(password, signupRequestDto/*, role*/));
+        User user = userRepository.save(new User(password, signupRequestDto, UserRoleEnum.USER));
         termsService.saveTerms(signupRequestDto, user);
         return "회원가입 완료.";
     }
@@ -62,15 +62,15 @@ public class UserService {
 
         // CSRF, JWT토큰 생성
 //        CsrfToken userCsrfToken = csrfTokenRepository.generateToken(request);
-        String userToken = jwtUtil.createUserToken(user);
-
+//        String userToken = jwtUtil.createUserToken(user);
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user));
         // 쿠키 생성 및 JWT토큰 추가
-        Cookie cookie = new Cookie("Authorization", userToken);
-        cookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 (1일)
-        cookie.setPath("/"); // 전제api가 쿠키에 액세스 가능
-        cookie.setHttpOnly(true); // XSS공격 방지 (악성코드?)
-//        cookie.setSecure(true); // HTTPS 사용 시 설정 (쿠키가 보안되지 않은 연결을 통해 전송되는 경우 탈취 방지)
-        response.addCookie(cookie);
+//        Cookie cookie = new Cookie("Authorization", userToken);
+//        cookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 (1일)
+//        cookie.setPath("/"); // 전제api가 쿠키에 액세스 가능
+//        cookie.setHttpOnly(true); // XSS공격 방지 (악성코드?)
+////        cookie.setSecure(true); // HTTPS 사용 시 설정 (쿠키가 보안되지 않은 연결을 통해 전송되는 경우 탈취 방지)
+//        response.addCookie(cookie);
 
         // 쿠키 생성 및 CSRF토큰 추가
 //        Cookie csrfCookie = new Cookie("XSRF-TOKEN", userCsrfToken.getToken());
