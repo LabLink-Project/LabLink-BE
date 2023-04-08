@@ -88,8 +88,8 @@ public class StudyService {
             // 카테고리 추가
             Category category = categoryService.getCategory(study.getId());
             // 북마크 기능 추가
-            boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
-            studyResponseDtos.add(new StudyResponseDto(study, category, isBookmarked));
+            boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
+            studyResponseDtos.add(new StudyResponseDto(study, category, isbookmarked));
         }
         return studyResponseDtos;
     }
@@ -100,11 +100,12 @@ public class StudyService {
         User user = userDetails == null ? null : userDetails.getUser();
         Study study = getStudyService.getStudy(studyId);
         Category category = categoryService.getCategory(study.getId());
-        boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
-        return new StudyDetailResponseDto(study, category, isBookmarked);
+        boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
+        return new StudyDetailResponseDto(study, category, isbookmarked);
     }
 
     // 게시글 수정
+    // TODO : 이미지 수정 넣기
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = companyDetails == null ? null : companyDetails.getCompany();
         Study study = getStudyService.getStudy(studyId);
@@ -113,6 +114,7 @@ public class StudyService {
     }
 
     // 게시글 삭제
+    // TODO : 이미지 삭제 넣기
     public void deleteStudy(Long studyId, CompanyDetailsImpl companyDetails) {
         Company company = companyDetails == null ? null : companyDetails.getCompany();
         checkRole(studyId, company);
