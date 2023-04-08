@@ -3,14 +3,17 @@ package com.example.lablink.user.service;
 import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.jwt.JwtUtil;
+
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
 import com.example.lablink.user.dto.request.UserEmailCheckRequestDto;
 import com.example.lablink.user.entity.User;
+
 import com.example.lablink.user.entity.UserRoleEnum;
 import com.example.lablink.user.exception.UserErrorCode;
 import com.example.lablink.user.exception.UserException;
 import com.example.lablink.user.repository.UserRepository;
+import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -95,5 +98,11 @@ public class UserService {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
     }
+
+    public User getUser(UserDetailsImpl userDetails){
+        return  userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                ()->new UserException(UserErrorCode.USER_NOT_FOUND));
+    }
+
 
 }

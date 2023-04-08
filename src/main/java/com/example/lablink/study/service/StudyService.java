@@ -4,6 +4,8 @@ import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.category.entity.Category;
 import com.example.lablink.category.service.CategoryService;
 import com.example.lablink.company.entity.Company;
+import com.example.lablink.company.exception.CompanyErrorCode;
+import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;

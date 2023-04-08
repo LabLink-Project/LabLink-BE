@@ -1,4 +1,5 @@
 package com.example.lablink.message;
+import com.example.lablink.application.exception.ApplicationErrorCode;
 import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.category.exception.CategoryErrorCode;
 import com.example.lablink.study.exception.StudyErrorCode;
@@ -30,28 +31,40 @@ public class ResponseMessage<T> {
 
     public static ResponseEntity ErrorResponse(CompanyErrorCode errorCode) {
         return ResponseEntity
-            .status(errorCode.getHttpStatus())
-            .body(ResponseMessage.builder()
-                .statusCode(errorCode.getHttpStatus().value())
-                .message(errorCode.getMessage())
-                .data("")
-                .build()
-            );
+                .status(errorCode.getHttpStatus())
+                .body(ResponseMessage.builder()
+                        .statusCode(errorCode.getHttpStatus().value())
+                        .message(errorCode.getMessage())
+                        .data("")
+                        .build()
+                );
     }
 
     // StudyErrorCode
     public static ResponseEntity ErrorResponse(StudyErrorCode errorCode) {
         return ResponseEntity
-            .status(errorCode.getHttpStatus())
-            .body(ResponseMessage.builder()
-                .statusCode(errorCode.getHttpStatus().value())
-                .message(errorCode.getMessage())
-                .data("")
-                .build()
-            );
+                .status(errorCode.getHttpStatus())
+                .body(ResponseMessage.builder()
+                        .statusCode(errorCode.getHttpStatus().value())
+                        .message(errorCode.getMessage())
+                        .data("")
+                        .build()
+                );
     }
 
     public static ResponseEntity ErrorResponse(CategoryErrorCode errorCode) {
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ResponseMessage.builder()
+                        .statusCode(errorCode.getHttpStatus().value())
+                        .message(errorCode.getMessage())
+                        .data("")
+                        .build()
+                );
+
+    }
+
+    public static ResponseEntity ErrorResponse(ApplicationErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(ResponseMessage.builder()

@@ -96,10 +96,12 @@ public class CompanyService {
         }
     }
 
+
     // 기업명 중복 체크
     public void companyNameCheck(CompanyNameCheckRequestDto companyNameCheckRequestDto) {
         if(companyRepository.existsByCompanyName(companyNameCheckRequestDto.getCompanyName())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_COMPANY_NAME);
         }
     }
+
 }
