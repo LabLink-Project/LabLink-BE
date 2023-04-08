@@ -1,5 +1,7 @@
 package com.example.lablink.study.controller;
 
+import com.example.lablink.S3Image.dto.S3ResponseDto;
+import com.example.lablink.S3Image.service.S3UploaderService;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.study.dto.StudySearchOption;
@@ -7,20 +9,29 @@ import com.example.lablink.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/studies")
 public class StudyController {
     private final StudyService studyService;
+    private final S3UploaderService s3UploaderService;
 
     // 게시글 작성
     @PostMapping()
-    public ResponseEntity createStudy(@RequestBody StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
-        studyService.createStudy(requestDto, companyDetails);
+    public ResponseEntity createStudy(StudyRequestDto requestDto
+            , @AuthenticationPrincipal CompanyDetailsImpl companyDetails
+            /*, @RequestParam(value="image") MultipartFile image */){
+        MultipartFile image = requestDto.getImage();
+
+        S3ResponseDto s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
+        studyService.createStudy(requestDto, companyDetails, s3ResponseDto);
         return ResponseMessage.SuccessResponse("게시글 작성 성공", "");
     }
 

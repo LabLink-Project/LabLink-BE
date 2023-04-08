@@ -1,5 +1,6 @@
 package com.example.lablink.study.service;
 
+import com.example.lablink.S3Image.dto.S3ResponseDto;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.category.entity.Category;
 import com.example.lablink.category.service.CategoryService;
@@ -34,9 +35,16 @@ public class StudyService {
 
     // 게시글 작성
     @Transactional
-    public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
+    public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails, S3ResponseDto image) {
         Company company = companyDetails == null ? null : companyDetails.getCompany();
-        Study study = studyRepository.save(new Study(requestDto, company));
+        Study study = null;
+        if (image != null) {
+            String storedFileName = image.getUploadFileUrl();
+            study = new Study(requestDto, company, storedFileName);
+        } else {
+            study = new Study(requestDto, company);
+        }
+        studyRepository.save(study);
         categoryService.saveCategory(requestDto, study.getId());
     }
 

@@ -33,7 +33,7 @@ public class ApplicationResponseDto {
         this.address = study.getAddress();
         this.userId = user.getId();
         this.username = user.getUserName();
-        this.userPhone = user.getUserPhone();
+//        this.userPhone = user.getUserPhone();
         this.userEmail = user.getEmail();
     }
 }

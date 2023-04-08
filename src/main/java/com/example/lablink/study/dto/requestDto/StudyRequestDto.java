@@ -1,10 +1,14 @@
 package com.example.lablink.study.dto.requestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class StudyRequestDto {
     private String title;
     private String studyInfo;
@@ -26,5 +30,6 @@ public class StudyRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDate;
-    private String imageURL;
+//    private String imageURL;
+    MultipartFile image;
 }
