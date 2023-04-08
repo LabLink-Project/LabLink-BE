@@ -3,6 +3,7 @@ package com.example.lablink.user.controller;
 import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
+import com.example.lablink.user.dto.request.UserEmailCheckRequestDto;
 import com.example.lablink.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+
 public class UserController {
 
     private final UserService userService;
@@ -28,8 +29,15 @@ public class UserController {
 
     // 유저 로그인
     @PostMapping("/users/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response, HttpServletRequest request) {
-        userService.login(loginRequestDto, response, request);
+    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        userService.login(loginRequestDto, response);
         return ResponseMessage.SuccessResponse("로그인 완료", "");
+    }
+
+    // 유저 이메일 재입력 체크
+    @PostMapping("/users/signup/email-check")
+    public ResponseEntity emailCheck(@RequestBody @Valid UserEmailCheckRequestDto userEmailCheckRequestDto) {
+        userService.emailCheck(userEmailCheckRequestDto);
+        return ResponseMessage.SuccessResponse("사용 가능합니다.", "");
     }
 }

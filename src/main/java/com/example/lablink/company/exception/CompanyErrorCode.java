@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 public enum CompanyErrorCode {
     INVALID_TOKEN(UNAUTHORIZED, "토큰이 유효하지 않습니다"), // 401
     DUPLICATE_EMAIL(CONFLICT, "중복된 이메일이 존재합니다"), // 409
+    DUPLICATE_COMPANY_NAME(CONFLICT, "중복된 회사명 존재합니다"), // 409
     EMAIL_NOT_FOUND(NOT_FOUND, "존재하지 않는 이메일 입니다."), // 404
     PASSWORD_MISMATCH(BAD_REQUEST, "비밀번호가 일치하지 않습니다."), // 400
 
