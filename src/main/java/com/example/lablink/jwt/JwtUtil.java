@@ -2,7 +2,6 @@ package com.example.lablink.jwt;
 
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsServiceImpl;
-import com.example.lablink.user.entity.UserRoleEnum;
 import com.example.lablink.user.security.UserDetailsServiceImpl;
 
 import com.example.lablink.user.entity.User;
@@ -27,6 +26,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+// 토큰 생성 및 유효성 검사 -> 들어오는 요청 처리 필요X
 public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization";     //http요청 응답 보낼 때, 헤더값 key에 해당.
     public static final String AUTHORIZATION_KEY = "role";
@@ -51,13 +51,24 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // header 토큰을 가져오기
     // 전달된 HttpServletRequest 객체에서 "Authorization" 헤더의 값에서 토큰을 추출하여 반환
     public String resolveToken(HttpServletRequest request) {
+        // header 토큰을 가져오기
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
+
+//        // 쿠키에서 토큰 반환
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equals("Authorization")) {
+//                    String token = cookie.getValue();
+//                    return token;
+//                }
+//            }
+//        }
         return null;
     }
 
@@ -65,7 +76,7 @@ public class JwtUtil {
     public String createUserToken(User user) {
         Date date = new Date();
 
-        String token = BEARER_PREFIX +
+        return BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("role", user.getRole().toString())
@@ -76,14 +87,13 @@ public class JwtUtil {
 
         // token 문자열에서 모든 공백 제거
 //        return token.replaceAll("\\s+", "");
-        return token;
     }
 
     // 기업 토큰 생성
     public String createCompanyToken(Company company) {
         Date date = new Date();
 
-        String token = BEARER_PREFIX +
+        return BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(company.getEmail())
                 .claim("role",company.getRole().toString())
@@ -94,7 +104,6 @@ public class JwtUtil {
 
         // token 문자열에서 모든 공백 제거
 //        return token.replaceAll("\\s+", "");
-        return token;
     }
 
 

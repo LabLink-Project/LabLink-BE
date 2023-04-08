@@ -21,6 +21,7 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
+// 들어오는 요청 처리
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
@@ -31,6 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // HTTP 요청에서 Authorization헤더를 찾아 토큰 반환
         String token = jwtUtil.resolveToken(request);
+
         // 토큰이 있다면 진행
         if(token != null) {
             // 토큰 유효성 검사 -> 만료,위조 등 유효하지 않음

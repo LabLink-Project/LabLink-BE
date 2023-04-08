@@ -53,18 +53,11 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-//    @Bean
-//    public CsrfTokenRepository csrfTokenRepository() {
-//        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
-//        repository.setCookieHttpOnly(true);
-//        repository.setCookieName("XSRF-TOKEN");
-//        return repository;
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
-//        http.csrf()
+//        http
+//            .csrf()
 //            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //            .and();
 

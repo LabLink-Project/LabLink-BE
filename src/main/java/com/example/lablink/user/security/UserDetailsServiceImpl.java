@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 // 로그인시 유저 정보를 가저오는 역할 클래스
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-
     private final UserRepository userRepository;
 
     /* jwt토큰 발급절차에서 subject의 내용이 달라질 경우 이 로직에서도 수정이 필요
