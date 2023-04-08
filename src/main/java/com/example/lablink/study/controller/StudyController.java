@@ -28,9 +28,11 @@ public class StudyController {
     public ResponseEntity createStudy(StudyRequestDto requestDto
             , @AuthenticationPrincipal CompanyDetailsImpl companyDetails
             /*, @RequestParam(value="image") MultipartFile image */){
-        MultipartFile image = requestDto.getImage();
-
-        S3ResponseDto s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
+        S3ResponseDto s3ResponseDto = null;
+        if(requestDto.getImage() != null){
+            MultipartFile image = requestDto.getImage();
+            s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
+        }
         studyService.createStudy(requestDto, companyDetails, s3ResponseDto);
         return ResponseMessage.SuccessResponse("게시글 작성 성공", "");
     }
