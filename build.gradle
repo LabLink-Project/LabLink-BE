@@ -52,29 +52,24 @@ dependencies {
     // aws-s3 image
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
+/*
+tasks.named('test') {
+    useJUnitPlatform()
+}
 
-//tasks.named('test') {
-//    useJUnitPlatform()
-//}
-
-
-//jacoco {
-//    toolVersion = "0.8.8"
-//}
-//
-//jacocoTestReport {
-//    reports {
-//        html.enabled true
-//        xml.enabled true
-//        csv.enabled true
-//    }
-//}
-//test {
-//    jacoco {
-//        destinationFile = file("$buildDir/jacoco/jacoco.exec")
-//    }
-//}
-
+jacocoTestReport {
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled true
+    }
+}
+test {
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco.exec")
+    }
+}
+*/
 jar {
     enabled = false
 }
