@@ -33,9 +33,9 @@ public class StudyDetailResponseDto {
     private final LocalDateTime endDate;
 
     private final String imageURL;
-    private final boolean isBookmarked;
+    private final boolean isbookmarked;
 
-    public StudyDetailResponseDto(Study study, Category category, boolean isBookmarked) {
+    public StudyDetailResponseDto(Study study, Category category, boolean isbookmarked) {
         this.id = study.getId();
         this.title = study.getTitle();
         this.studyInfo = study.getStudyInfo();
@@ -51,6 +51,6 @@ public class StudyDetailResponseDto {
         this.repearCount = study.getRepearCount();
         this.endDate = study.getEndDate();
         this.imageURL = study.getImageURL();
-        this.isBookmarked = isBookmarked;
+        this.isbookmarked = isbookmarked;
     }
 }
