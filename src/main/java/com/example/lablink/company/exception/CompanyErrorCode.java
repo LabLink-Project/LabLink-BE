@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 public enum CompanyErrorCode {
     INVALID_TOKEN(UNAUTHORIZED, "토큰이 유효하지 않습니다"), // 401
     DUPLICATE_EMAIL(CONFLICT, "중복된 이메일이 존재합니다"), // 409
+    DUPLICATE_COMPANY_NAME(CONFLICT, "중복된 회사명 존재합니다"), // 409
     EMAIL_NOT_FOUND(NOT_FOUND, "존재하지 않는 이메일 입니다."), // 404
     PASSWORD_MISMATCH(BAD_REQUEST, "비밀번호가 일치하지 않습니다."), // 400
 
@@ -20,7 +21,7 @@ public enum CompanyErrorCode {
 //
 //    /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
 //    USER_NOT_FOUND(NOT_FOUND, "등록된 사용자가 없습니다"),
-//    POST_NOT_FOUND(NOT_FOUND, "선택한 게시물을 찾을 수 없습니다."),
+    COMPANY_NOT_FOUND(NOT_FOUND, "선택한 회사를 찾을 수 없습니다."),
 //    COMMENT_NOT_FOUND(NOT_FOUND, "선택한 댓글을 찾을 수 없습니다.")
 
     ;

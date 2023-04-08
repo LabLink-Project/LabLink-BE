@@ -36,7 +36,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     @Profile("db-local")
     public WebSecurityCustomizer localWebSecurityCustomizer() {
@@ -57,12 +56,20 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
+//        http
+//            .csrf()
+//            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .and();
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
                 .antMatchers("**").permitAll()
+//                .antMatchers("/users/signup").permitAll()
+//                .antMatchers("/companies/signup").permitAll()
+//                .antMatchers("/companies/**").hasRole("COMPANY")
+//                .antMatchers("/users/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
@@ -74,7 +81,6 @@ public class WebSecurityConfig {
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.sendRedirect("/");
                 });
-
 
         http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 
