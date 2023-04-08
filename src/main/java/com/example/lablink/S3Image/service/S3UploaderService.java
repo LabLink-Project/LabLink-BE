@@ -1,6 +1,5 @@
 package com.example.lablink.S3Image.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -23,11 +22,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class S3UploaderService {
-    @Value("${spring.s3.bucket}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
-//    private final AmazonS3Client amazonS3Client;
-    private final AmazonS3 amazonS3;
+    private final AmazonS3Client amazonS3Client;
     private final S3ImageRepository s3ImageRepository;
 
     public S3ResponseDto uploadFiles(String directory, MultipartFile multipartFile) {
@@ -43,12 +41,12 @@ public class S3UploaderService {
 
             String keyName = directory + uploadFileName; // ex) 구분/년/월/일/파일.확장자
             // S3에 폴더 및 파일 업로드
-            amazonS3.putObject(
+            amazonS3Client.putObject(
                     new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicReadWrite));
             // TODO : 외부에 공개하는 파일인 경우 Public Read 권한을 추가, ACL 확인
             // S3에 업로드한 폴더 및 파일 URL
-            uploadFileUrl = amazonS3.getUrl(bucketName, keyName).toString();
+            uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,9 +74,9 @@ public class S3UploaderService {
 
         try {
             String keyName = s3Image.getUploadFilePath() + "/" + s3Image.getUploadFileName(); // ex) 구분/년/월/일/파일.확장자
-            boolean isObjectExist = amazonS3.doesObjectExist(bucketName, keyName);
+            boolean isObjectExist = amazonS3Client.doesObjectExist(bucketName, keyName);
             if (isObjectExist) {
-                amazonS3.deleteObject(bucketName, keyName);
+                amazonS3Client.deleteObject(bucketName, keyName);
             } else {
                 throw new StudyException(StudyErrorCode.NOT_FOUND_IMAGE);
             }
