@@ -1,5 +1,6 @@
 package com.example.lablink.S3Image.entity;
 
+import com.example.lablink.S3Image.dto.S3ResponseDto;
 import lombok.*;
 
 import javax.persistence.*;
