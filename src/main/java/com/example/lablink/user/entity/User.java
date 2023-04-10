@@ -9,6 +9,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity(name = "users")
+@Table(name = "users", indexes = {
+    @Index(name = "idx_email", columnList = "email")
+})
 @Getter
 @NoArgsConstructor
 public class User extends Timestamped {
@@ -45,6 +48,10 @@ public class User extends Timestamped {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @OneToOne
+    @JoinColumn(name = "userinfo_id", nullable = false)
+    private UserInfo userinfo;
+
     public User(String password, SignupRequestDto signupRequestDto, UserRoleEnum role) {
         this.email = signupRequestDto.getEmail();
         this.password = password;
@@ -57,7 +64,17 @@ public class User extends Timestamped {
         this.role = role;
     }
 
-
-
+//    public User(String password, SignupRequestDto signupRequestDto, UserRoleEnum role, UserInfo userinfo) {
+//        this.email = signupRequestDto.getEmail();
+//        this.password = password;
+//        this.userName = signupRequestDto.getUserName();
+//        this.dateOfBirth = signupRequestDto.getDateOfBirth();
+//        this.userGender = signupRequestDto.getUserGender();
+////        this.kakaoEmail = getKakaoEmail();
+////        this.naverEmail = getNaverEmail();
+////        this.googleEmail = getGoogleEmail();
+//        this.role = role;
+//        this.userinfo = userinfo;
+//    }
 
 }
