@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -66,7 +67,11 @@ public class Study extends Timestamped {
     @Enumerated(value = EnumType.STRING)
     private StudyStatusEnum status;
 
-    public Study(StudyRequestDto requestDto, Company company) {
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private CategoryEnum category;
+
+    public Study(StudyRequestDto requestDto, StudyStatusEnum status, Company company, String storedFileName) {
         this.title = requestDto.getTitle();
         this.company = company;
         this.studyInfo = requestDto.getStudyInfo();
@@ -80,38 +85,13 @@ public class Study extends Timestamped {
         this.subjectAge = requestDto.getSubjectAge();
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
-        // TODO: 이미지 null값일 시 썸네일 넣어주기
-        this.imageURL = "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png";
-        if (endDate.isBefore(LocalDateTime.now())) {
-            this.status = StudyStatusEnum.CLOSED;
-        } else{
-            this.status = StudyStatusEnum.ONGOING;
-        }
+        // done: 이미지 null값일 시 썸네일 넣어주기
+        this.imageURL = Objects.requireNonNullElse(storedFileName, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
+        this.status = status;
+        this.category = requestDto.getCategory();
     }
 
-    public Study(StudyRequestDto requestDto, Company company, String storedFileName) {
-        this.title = requestDto.getTitle();
-        this.company = company;
-        this.studyInfo = requestDto.getStudyInfo();
-        this.studyPurpose = requestDto.getStudyPurpose();
-        this.studyAction = requestDto.getStudyAction();
-        this.subjectCount = requestDto.getSubjectCount();
-        this.date = requestDto.getDate();
-        this.address = requestDto.getAddress();
-        this.pay = requestDto.getPay();
-        this.subjectGender = requestDto.getSubjectGender();
-        this.subjectAge = requestDto.getSubjectAge();
-        this.repearCount = requestDto.getRepearCount();
-        this.endDate = requestDto.getEndDate();
-        this.imageURL = storedFileName;
-        if (endDate.isBefore(LocalDateTime.now())) {
-            this.status = StudyStatusEnum.CLOSED;
-        } else{
-            this.status = StudyStatusEnum.ONGOING;
-        }
-    }
-
-    public void update(StudyRequestDto requestDto) {
+    public void update(StudyRequestDto requestDto, StudyStatusEnum status, String storedFileName) {
         this.title = requestDto.getTitle();
         this.studyInfo = requestDto.getStudyInfo();
         this.studyPurpose = requestDto.getStudyPurpose();
@@ -124,13 +104,8 @@ public class Study extends Timestamped {
         this.subjectAge = requestDto.getSubjectAge();
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
-        this.imageURL = "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png";
-//        this.imageURL = requestDto.getImageURL();
-        if (endDate.isBefore(LocalDateTime.now())) {
-            this.status = StudyStatusEnum.CLOSED;
-        } else{
-            this.status = StudyStatusEnum.ONGOING;
-        }
+        if (storedFileName != null) this.imageURL = storedFileName;
+        this.status = status;
     }
 
     public void updateStatus(StudyStatusEnum status) {

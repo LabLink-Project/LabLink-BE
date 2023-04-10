@@ -8,6 +8,8 @@ import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
+@Tag(name = "study", description = "study API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/studies")
@@ -24,6 +27,7 @@ public class StudyController {
     private final S3UploaderService s3UploaderService;
 
     // 게시글 작성
+    @Operation(summary = "공고 작성", description = "공고 작성")
     @PostMapping()
     public ResponseEntity createStudy(StudyRequestDto requestDto
             , @AuthenticationPrincipal CompanyDetailsImpl companyDetails
@@ -38,6 +42,7 @@ public class StudyController {
     }
 
     // 게시글 조회
+    @Operation(summary = "공고 전체 조회", description = "공고 전체 조회 및 검색, 정렬")
     @GetMapping()
     public ResponseEntity getStudies(
             @ModelAttribute StudySearchOption searchOption,
@@ -58,6 +63,7 @@ public class StudyController {
     }
 
     // 게시글 상세 조회
+    @Operation(summary = "공고 상세 조회", description = "공고 상세 조회")
     @GetMapping("/{studyId}")
     public ResponseEntity getDetailStudy(@PathVariable Long studyId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseMessage.SuccessResponse("조회 성공",
@@ -65,13 +71,15 @@ public class StudyController {
     }
 
     // 게시글 수정
+    @Operation(summary = "공고 수정", description = "공고 수정")
     @PutMapping("/{studyId}")
-    public ResponseEntity updateStudy(@PathVariable Long studyId, @RequestBody StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+    public ResponseEntity updateStudy(@PathVariable Long studyId, StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         studyService.updateStudy(studyId, requestDto, companyDetails);
         return ResponseMessage.SuccessResponse("공고 수정 성공", "");
     }
 
     // 게시글 삭제
+    @Operation(summary = "공고 삭제", description = "공고 삭제")
     @DeleteMapping("/{studyId}")
     public ResponseEntity deleteStudy(@PathVariable Long studyId, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         studyService.deleteStudy(studyId, companyDetails);

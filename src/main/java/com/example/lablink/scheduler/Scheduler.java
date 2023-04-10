@@ -18,8 +18,10 @@ public class Scheduler {
     private final StudyRepository studyRepository;
     // 초, 분, 시, 일, 월, 주 순서
     @Scheduled(cron = "0 0 0 * * *")
+    // todo : exception ?
     public void updateStatus() throws InterruptedException {
         log.info("studystatus 업데이트 실행");
+        // todo :findAll이 아니라 enddate가 LocalDateTime보다 이후면 들고오기 (쿼리짜서)
         List<Study> studies = studyRepository.findAll();
         for (Study study : studies) {
             // endDate와 localDate 비교 및 studystatus 변경

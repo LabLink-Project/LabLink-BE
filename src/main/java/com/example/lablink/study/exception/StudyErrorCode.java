@@ -13,7 +13,9 @@ public enum StudyErrorCode {
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
 
-    /* 401 UNAUTHORIZED : 로그인 */
+
+    /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
+    LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
 
     /* 403 FORBIDDEN : 권한 */
     NOT_AUTHOR(FORBIDDEN, "작성자만 삭제/수정할 수 있습니다."),
