@@ -66,7 +66,7 @@ public class StudyController {
 
     // 게시글 수정
     @PutMapping("/{studyId}")
-    public ResponseEntity updateStudy(@PathVariable Long studyId, @RequestBody StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+    public ResponseEntity updateStudy(@PathVariable Long studyId, StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         studyService.updateStudy(studyId, requestDto, companyDetails);
         return ResponseMessage.SuccessResponse("공고 수정 성공", "");
     }
