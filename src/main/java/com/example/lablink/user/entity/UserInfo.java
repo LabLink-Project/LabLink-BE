@@ -21,13 +21,8 @@ public class UserInfo {
     @Column(nullable = false)
     private String userPhone;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    public UserInfo(SignupRequestDto signupRequestDto, User user) {
+    public UserInfo(SignupRequestDto signupRequestDto) {
         this.userAdrress = signupRequestDto.getUserAdrress();
         this.userPhone = signupRequestDto.getUserPhone();
-        this.user = user;
     }
 }
