@@ -1,4 +1,5 @@
 package com.example.lablink.study.dto.requestDto;
+import com.example.lablink.study.entity.CategoryEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class StudyRequestDto {
     private String studyPurpose;
     private String studyAction;
     private Long subjectCount;
-    private String category;
+    private CategoryEnum category;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

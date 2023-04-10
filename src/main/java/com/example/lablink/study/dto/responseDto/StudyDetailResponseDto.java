@@ -1,6 +1,6 @@
 package com.example.lablink.study.dto.responseDto;
 
-import com.example.lablink.category.entity.Category;
+import com.example.lablink.study.entity.CategoryEnum;
 import com.example.lablink.study.entity.Study;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class StudyDetailResponseDto {
     private final String studyPurpose;
     private final String studyAction;
     private final Long subjectCount;
-    private final String category;
+    private final CategoryEnum category;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -35,14 +35,14 @@ public class StudyDetailResponseDto {
     private final String imageURL;
     private final boolean isbookmarked;
 
-    public StudyDetailResponseDto(Study study, Category category, boolean isbookmarked) {
+    public StudyDetailResponseDto(Study study, boolean isbookmarked) {
         this.id = study.getId();
         this.title = study.getTitle();
         this.studyInfo = study.getStudyInfo();
         this.studyPurpose = study.getStudyPurpose();
         this.studyAction = study.getStudyAction();
         this.subjectCount = study.getSubjectCount();
-        this.category = category.getCategory();
+        this.category = study.getCategory();
         this.date = study.getDate();
         this.address = study.getAddress();
         this.pay = study.getPay();
