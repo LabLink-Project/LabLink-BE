@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor
@@ -18,14 +17,12 @@ public class SignupRequestDto {
     * */
     private String email;
     private String password;
-    private String userName;
-    private Date dateOfBirth;
-    private String userGender;
-
-    private String userAdrress;
     private String userPhone;
 
-    private boolean marketingTerm;
-    private boolean notificationTerm;
+    private boolean ageCheck;
+    private boolean termsOfServiceAgreement;
+    private boolean privacyPolicyConsent;
+    private boolean sensitiveInfoConsent;
+    private boolean marketingOptIn;
 
 }

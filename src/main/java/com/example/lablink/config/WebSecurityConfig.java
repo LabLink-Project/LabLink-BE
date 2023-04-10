@@ -75,11 +75,12 @@ public class WebSecurityConfig {
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
 
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    response.sendRedirect("/");
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessHandler((request, response, authentication) -> {
+                        response.setHeader("Authorization", null);
+                        response.sendRedirect("/");
                 });
 
         http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
