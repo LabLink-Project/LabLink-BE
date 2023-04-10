@@ -147,8 +147,9 @@ public class StudyService {
         // image가 있는 공고였다면 s3에서 지워줘야 함
         Study study = getStudyService.getStudy(studyId);
         S3Image s3Image = s3Service.getS3Image(study.getImageURL());
-        s3UploaderService.deleteFile(s3Image.getId());
-
+        if(s3Image != null){
+            s3UploaderService.deleteFile(s3Image.getId());
+        }
         checkRole(studyId, company);
         studyRepository.deleteById(studyId);
     }

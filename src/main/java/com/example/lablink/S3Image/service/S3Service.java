@@ -15,8 +15,6 @@ public class S3Service {
 
     @Transactional
     public S3Image getS3Image(String uploadFileUrl){
-        return s3ImageRepository.findByUploadFileUrl(uploadFileUrl).orElseThrow(
-                () -> null
-        );
+        return s3ImageRepository.findByUploadFileUrl(uploadFileUrl).orElse(null);
     }
 }
