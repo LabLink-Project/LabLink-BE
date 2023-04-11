@@ -18,7 +18,7 @@ public enum ApplicationErrorCode {
     //NOT_PROPER_INPUTFORM(BAD_REQUEST, "입력한 형식이 맞지 않습니다."),
     NOT_HAVE_PERMISSION(BAD_REQUEST, "권한이 없습니다."),
     NOT_AUTHOR(BAD_REQUEST, "작성자만 조회/수정/삭제할 수 있습니다."),
-
+    NOT_MY_APPLICATION(BAD_REQUEST, "내가 작성한 신청서가 아닙니다."),
 //    /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     Application_NOT_FOUND(NOT_FOUND, "등록된 신청서가 없습니다"),
 //    POST_NOT_FOUND(NOT_FOUND, "선택한 게시물을 찾을 수 없습니다."),

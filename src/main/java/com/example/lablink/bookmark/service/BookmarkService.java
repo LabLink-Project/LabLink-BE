@@ -2,17 +2,16 @@ package com.example.lablink.bookmark.service;
 
 import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.repository.BookmarkRepository;
-import com.example.lablink.company.entity.Company;
-import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.exception.StudyErrorCode;
 import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.service.GetStudyService;
-import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,15 @@ public class BookmarkService {
     private void saveBookmark(Long studyId, User user) {
         bookmarkRepository.saveAndFlush(new Bookmark(studyId, user));
     }
-    private void deleteBookmark(Long studyId, User user) {
+    public void deleteBookmark(Long studyId, User user) {
         bookmarkRepository.deleteByStudyIdAndUser(studyId, user);
     }
+
+    public List<Bookmark> findAllByMyBookmark(User user) {
+        return bookmarkRepository.findAllByUser(user);
+    }
+
+    public void deleteAllBookmark(Bookmark bookmark) {
+        bookmarkRepository.delete(bookmark);
+    };
 }
