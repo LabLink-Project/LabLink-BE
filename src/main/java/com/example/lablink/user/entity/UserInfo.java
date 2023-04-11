@@ -15,19 +15,13 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String userAdrress;
 
     @Column(nullable = false)
     private String userPhone;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    public UserInfo(SignupRequestDto signupRequestDto, User user) {
-        this.userAdrress = signupRequestDto.getUserAdrress();
+    public UserInfo(SignupRequestDto signupRequestDto) {
         this.userPhone = signupRequestDto.getUserPhone();
-        this.user = user;
     }
 }

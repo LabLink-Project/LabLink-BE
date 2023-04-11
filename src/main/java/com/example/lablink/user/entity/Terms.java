@@ -16,18 +16,30 @@ public class Terms {
     private Long id;
 
     @Column(nullable = false)
-    private boolean marketingTerm;
+    private boolean ageCheck;
 
     @Column(nullable = false)
-    private boolean notificationTerm;
+    private boolean termsOfServiceAgreement;
+
+    @Column(nullable = false)
+    private boolean privacyPolicyConsent;
+
+    @Column(nullable = false)
+    private boolean sensitiveInfoConsent;
+
+    @Column(nullable = false)
+    private boolean marketingOptIn;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Terms(SignupRequestDto signupRequestDto, User user) {
-        this.marketingTerm = signupRequestDto.isMarketingTerm();
-        this.notificationTerm = signupRequestDto.isNotificationTerm();
+        this.ageCheck = signupRequestDto.isAgeCheck();
+        this.termsOfServiceAgreement = signupRequestDto.isTermsOfServiceAgreement();
+        this.privacyPolicyConsent = signupRequestDto.isPrivacyPolicyConsent();
+        this.sensitiveInfoConsent = signupRequestDto.isSensitiveInfoConsent();
+        this.marketingOptIn = signupRequestDto.isMarketingOptIn();
         this.user = user;
     }
 }
