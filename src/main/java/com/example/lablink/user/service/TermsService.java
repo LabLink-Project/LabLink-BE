@@ -18,4 +18,8 @@ public class TermsService {
         return termsRepository.save(new Terms(signupRequestDto, user));
     }
 
+    //약관 삭제
+    public void deleteTerms (User user) {
+        termsRepository.deleteByUser(user);
+    }
 }

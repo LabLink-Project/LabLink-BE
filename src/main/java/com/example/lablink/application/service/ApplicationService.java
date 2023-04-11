@@ -15,14 +15,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
-
     private final UserService userService;
-
     private final GetStudyService getStudyService;
 
     //신청서 추가
@@ -81,4 +81,15 @@ public class ApplicationService {
         Study study = getStudyService.getStudy(studyId);
         return new ApplicationResponseDto(study.getCompany(),study,user);
     }
+
+    // 내가 쓴 신청서 확인
+    public List<Application> findAllByMyApplication(User user) {
+        return applicationRepository.findAllByUser(user);
+    }
+
+    public void deleteApplication(Application application) {
+        applicationRepository.delete(application);
+    }
+
+
 }

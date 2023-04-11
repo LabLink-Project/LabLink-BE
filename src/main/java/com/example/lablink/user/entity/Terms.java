@@ -15,16 +15,16 @@ public class Terms {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private boolean ageCheck;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private boolean termsOfServiceAgreement;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private boolean privacyPolicyConsent;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private boolean sensitiveInfoConsent;
 
     @Column(nullable = false)

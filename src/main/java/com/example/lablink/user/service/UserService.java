@@ -1,13 +1,13 @@
 package com.example.lablink.user.service;
 
 import com.example.lablink.application.entity.Application;
+import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.jwt.JwtUtil;
 
-import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
@@ -20,7 +20,8 @@ import com.example.lablink.user.exception.UserErrorCode;
 import com.example.lablink.user.exception.UserException;
 import com.example.lablink.user.repository.UserRepository;
 import com.example.lablink.user.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +30,34 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TermsService termsService;
     private final JwtUtil jwtUtil;
-//    private final ApplicationService applicationService;
+    private final ApplicationService applicationService;
     private final BookmarkService bookmarkService;
-    private final StudyService studyService;
     private final UserInfoService userInfoService;
 
+    // 순환 종속성 해결을 위한 생성자 주입 & Lazy
+    @Autowired
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       TermsService termsService,
+                       JwtUtil jwtUtil,
+                       @Lazy ApplicationService applicationService,
+                       BookmarkService bookmarkService,
+                       UserInfoService userInfoService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.termsService = termsService;
+        this.jwtUtil = jwtUtil;
+        this.applicationService = applicationService;
+        this.bookmarkService = bookmarkService;
+        this.userInfoService = userInfoService;
+    }
 //    인증 인가를 담당하는 Service의 보안? 을 위함이기에 단익책임 위반 X
 //    private final CsrfTokenRepository csrfTokenRepository;
 
@@ -120,42 +137,23 @@ public class UserService {
                 ()->new UserException(UserErrorCode.USER_NOT_FOUND));
     }
 
-//    // 회원 탈퇴
-//    @Transactional
-//    public String deleteUser(UserDetailsImpl userDetails, HttpServletResponse response, Study study) {
-//
-//        List<Application> applications = applicationService.findApplication(userDetails.getUser());
-//        for (Application application : applications) {
-//            applicationService.deleteApplication(userDetails, study.getId(), application.getId());
-//        }
-//        List<Bookmark> bookmarks = bookmarkService.findMyBookmark(userDetails.getUser());
-//        for (Bookmark bookmark : bookmarks) {
-//            bookmarkService.deleteBookmark(study.getId(), userDetails.getUser());
-//        }
-//
-//        userRepository.delete(userDetails.getUser());
-//
-////        // 공고 리스트별로 아래 기능 진행 studies
-////        // TODO 공고별 신청서 존재 확인 dd
-////        // 공고별 내가 쓴 신청서인지 확인 ㅇㅇ appli
-////        // 북마크 제거,
-////        // 신청서 제거
-////        List<Study> studies = studyService.findAllStudy();
-////        for (Study study : studies) {
-////            // 신청서 찾아오기
-//////            applicationService.findApplication(application.getId());
-////            // 내가 쓴 신청서인지 확인
-////            applicationService.findMyApplication(userDetails.getUser(), application.getId());
-////            // 북마크 있다면 제거
-////            if(bookmarkService.checkBookmark(study.getId(), userDetails.getUser())) {
-////                bookmarkService.deleteBookmark(study.getId(), userDetails.getUser());
-////            }
-////            // 신청서 삭제
-////            applicationService.deleteApplication(userDetails, study.getId(), application.getId());
-////        }
-//        // 로그아웃 (헤더 null값 만들기)
-//        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
-//        userRepository.delete(userDetails.getUser());
-//        return "탈퇴 완료.";
-//    }
+    // 회원 탈퇴
+    @Transactional
+    public String deleteUser(UserDetailsImpl userDetails, HttpServletResponse response) {
+        // 북마크 제거
+        List<Bookmark> bookmarks = bookmarkService.findAllByMyBookmark(userDetails.getUser());
+        for (Bookmark bookmark : bookmarks) {
+            bookmarkService.deleteAllBookmark(bookmark);
+        }
+        // 신청서 삭제
+        List<Application> applications = applicationService.findAllByMyApplication(userDetails.getUser());
+        for (Application application : applications) {
+            applicationService.deleteApplication(application);
+        }
+        // 로그아웃 (헤더 null값 만들기)
+        termsService.deleteTerms(userDetails.getUser());
+        userRepository.delete(userDetails.getUser());
+        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
+        return "탈퇴 완료.";
+    }
 }

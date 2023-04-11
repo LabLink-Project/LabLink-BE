@@ -58,6 +58,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public List<StudyResponseDto> getStudies(StudySearchOption searchOption, Integer pageIndex, Integer pageCount, UserDetailsImpl userDetails) {
         User user = userDetails == null ? null : userDetails.getUser();
+
         List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
         for (Study study : studyRepository.findAllByOrderByEndDateDesc()){
             // 북마크 기능 추가
@@ -169,5 +170,10 @@ public class StudyService {
         studyRepository.findByIdAndCompany(studyId, company).orElseThrow(
                 () -> new StudyException(StudyErrorCode.NOT_AUTHOR)
         );
+    }
+
+    // 기업 전체 공고 리스트
+    public List<Study> findAllStudy () {
+        return studyRepository.findAll();
     }
 }
