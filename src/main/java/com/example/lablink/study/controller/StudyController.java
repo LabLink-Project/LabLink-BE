@@ -6,6 +6,9 @@ import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
+import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
+import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
+import com.example.lablink.study.service.StudySearchService;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j
 @Tag(name = "study", description = "study API")
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class StudyController {
     private final StudyService studyService;
     private final S3UploaderService s3UploaderService;
+    private final StudySearchService studySearchService;
 
     // 게시글 작성
     @Operation(summary = "공고 작성", description = "공고 작성")
@@ -48,19 +54,30 @@ public class StudyController {
             @ModelAttribute StudySearchOption searchOption,
             @RequestParam(defaultValue = "1") int pageIndex,
             @RequestParam(defaultValue = "10") int pageCount,
+            @RequestParam(required = false) String sortedType,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // searchOption 객체를 사용하여 검색 조건을 처리합니다.
         // pageIndex와 pageCount 파라미터는 기본값을 설정하여 받습니다.
         return ResponseMessage.SuccessResponse("조회 성공",
-                studyService.getStudies(searchOption, pageIndex, pageCount, userDetails));
+                studySearchService.getStudies(searchOption, pageIndex, pageCount, sortedType, userDetails));
+    }
+
+    @GetMapping("/search/rank")
+    public List<SearchRankResponseDto> searchRankList(){
+        return studySearchService.searchRankList();
+    }
+
+    @GetMapping("/search/latest")
+    public List<LatestSearchKeyword> latestSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return studySearchService.latestSearchKeyword(userDetails);
     }
 
     // 게시글 관심 공고 조회
-    @GetMapping("/sorting")
-    public ResponseEntity getSortedStudies(@RequestParam(required = false) String sortedType, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseMessage.SuccessResponse("조회 성공",
-                studyService.getSortedStudies(sortedType, userDetails));
-    }
+//    @GetMapping("/sorting")
+//    public ResponseEntity getSortedStudies(@RequestParam(required = false) String sortedType, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        return ResponseMessage.SuccessResponse("조회 성공",
+//                studyService.getSortedStudies(sortedType, userDetails));
+//    }
 
     // 게시글 상세 조회
     @Operation(summary = "공고 상세 조회", description = "공고 상세 조회")
