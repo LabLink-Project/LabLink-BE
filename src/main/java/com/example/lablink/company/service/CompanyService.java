@@ -1,5 +1,6 @@
 package com.example.lablink.company.service;
 
+import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.company.dto.request.CompanyNameCheckRequestDto;
@@ -8,7 +9,10 @@ import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.company.repository.CompanyRepository;
+import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.jwt.JwtUtil;
+import com.example.lablink.study.entity.Study;
+import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final StudyService studyService;
 //    인증 인가를 담당하는 Service의 보안? 을 위함이기에 단익책임 위반 X
 //    private final CsrfTokenRepository csrfTokenRepository;
 
@@ -96,12 +102,23 @@ public class CompanyService {
         }
     }
 
-
     // 기업명 중복 체크
     public void companyNameCheck(CompanyNameCheckRequestDto companyNameCheckRequestDto) {
         if(companyRepository.existsByCompanyName(companyNameCheckRequestDto.getCompanyName())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_COMPANY_NAME);
         }
+    }
+
+    // 기업 회원 탈퇴
+    public void deleteCompany(CompanyDetailsImpl companyDetails, HttpServletResponse response) {
+        // todo 공고별 신청서 삭제 & 공고 삭제
+        List<Study> studies = studyService.findAllCompanyStudy(companyDetails.getCompany());
+        for (Study study : studies) {
+            studyService.deleteStudy(study);
+        }
+        // 로그아웃 (헤더 null값 만들기)
+        companyRepository.delete(companyDetails.getCompany());
+        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
     }
 
 }
