@@ -25,7 +25,8 @@ public class StudyRequestDto {
     private String address;
     private int pay;
     private String subjectGender;
-    private String subjectAge;
+    private int subjectMinAge;
+    private int subjectMaxAge;
     private int repearCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")

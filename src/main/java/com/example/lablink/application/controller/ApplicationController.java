@@ -15,38 +15,40 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "application", description = "application API")
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/studies/{studyId}/application")
+@RequestMapping("/studies/{studyId}")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-
     @Operation(summary = "신청서 작성", description = "신청서 작성")
-    @PostMapping("/{applicationId}")
+    @PostMapping("/applications")
     public ResponseEntity addApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId, @RequestBody ApplicationRequestDto applicationRequestDto){
-        return ResponseMessage.SuccessResponse(applicationService.addApplication(userDetails, studyId,applicationRequestDto),"");
+        applicationService.addApplication(userDetails, studyId,applicationRequestDto);
+        return ResponseMessage.SuccessResponse("신청서 작성 성공","");
     }
 
-    @Operation(summary = "신청서 수정", description = "신청서 수정")
+    /*@Operation(summary = "신청서 수정", description = "신청서 수정")
     @PutMapping("/{applicationId}")
     public ResponseEntity editApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId,@RequestBody ApplicationRequestDto applicationRequestDto,@PathVariable Long applicationId){
-        return ResponseMessage.SuccessResponse(applicationService.modifyApplication(userDetails,studyId,applicationRequestDto,applicationId),"");
-    }
+        applicationService.modifyApplication(userDetails,studyId,applicationRequestDto,applicationId);
+        return ResponseMessage.SuccessResponse("신청서 수정 성공","");
+    }*/
 
     @Operation(summary = "신청서 삭제", description = "신청서 삭제")
-    @DeleteMapping("/{applicationId}")
+    @DeleteMapping("/applications/{applicationId}")
     public ResponseEntity deleteApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
-        return ResponseMessage.SuccessResponse(applicationService.deleteApplication(userDetails,studyId,applicationId),"");
+        applicationService.deleteApplication(userDetails,studyId,applicationId);
+        return ResponseMessage.SuccessResponse("신청서 삭제 성공","");
     }
 
     @Operation(summary = "신청서 조회", description = "신청서 조회")
-    @GetMapping("/{applicationId}")
+    @GetMapping("/applications/{applicationId}")
     public ResponseEntity getApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
         return ResponseMessage.SuccessResponse("",applicationService.getApplication(userDetails,studyId,applicationId));
     }
 
     @Operation(summary = "신청서 접수 클릭 시 나오는 정보 값", description = "신청서 접수 클릭 시 나오는 정보 값")
-    @PostMapping()
+    @PostMapping("/applicationsInfo")
     public ResponseEntity afterApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long studyId){
         return ResponseMessage.SuccessResponse("",applicationService.afterApplication(userDetails,studyId));
     }

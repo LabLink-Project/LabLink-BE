@@ -10,9 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum StudyErrorCode {
     // TODO : errorcode 추가
-
     /* 400 BAD_REQUEST : 잘못된 요청 */
-
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),

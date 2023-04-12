@@ -16,7 +16,7 @@ public class UserInfo {
     private Long id;
 
     @Column(nullable = true)
-    private String userAdrress;
+    private String userAddress;
 
     @Column(nullable = false)
     private String userPhone;

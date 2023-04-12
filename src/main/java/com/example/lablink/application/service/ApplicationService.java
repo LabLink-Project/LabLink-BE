@@ -27,13 +27,15 @@ public class ApplicationService {
 
     //신청서 추가
     @Transactional
-    public String addApplication(UserDetailsImpl userDetails, Long studyId, ApplicationRequestDto applicationRequestDto) {
+    public void addApplication(UserDetailsImpl userDetails, Long studyId, ApplicationRequestDto applicationRequestDto) {
         applicationRepository.save(new Application(userDetails.getUser(),studyId,applicationRequestDto.getMessage()));
-        return "신청서 작성 성공";
+        // studyid들고와서 currentApplicantCount +1 해주기
+        Study study = getStudyService.getStudy(studyId);
+        study.updateCurrentApplicantCount();
     }
     //신청서 수정
     @Transactional
-    public String modifyApplication(UserDetailsImpl userDetails, Long studyId,ApplicationRequestDto applicationRequestDto,Long applicationId) {
+    public void modifyApplication(UserDetailsImpl userDetails, Long studyId,ApplicationRequestDto applicationRequestDto,Long applicationId) {
         Application application = applicationRepository.findById(applicationId).orElseThrow(
                 ()->new ApplicationException(ApplicationErrorCode.Application_NOT_FOUND)
         );
@@ -43,12 +45,10 @@ public class ApplicationService {
         }
 
         application.update(applicationRequestDto.getMessage());
-
-        return "신청서 수정 성공";
     }
     //신청서 삭제
     @Transactional
-    public String deleteApplication(UserDetailsImpl userDetails, Long studyId,Long applicationId) {
+    public void deleteApplication(UserDetailsImpl userDetails, Long studyId,Long applicationId) {
         Application application =applicationRepository.findById(applicationId).orElseThrow(
                 ()->new ApplicationException(ApplicationErrorCode.Application_NOT_FOUND)
         );
@@ -57,9 +57,6 @@ public class ApplicationService {
           throw new ApplicationException(ApplicationErrorCode.NOT_AUTHOR);
         }
         applicationRepository.delete(application);
-
-        return "신청서 삭제 성공";
-
     }
     //신청서 조회
     @Transactional(readOnly = true)
@@ -79,7 +76,7 @@ public class ApplicationService {
     public ApplicationResponseDto afterApplication(UserDetailsImpl userDetails, Long studyId) {
         User user = userService.getUser(userDetails);
         Study study = getStudyService.getStudy(studyId);
-        return new ApplicationResponseDto(study.getCompany(),study,user);
+        return new ApplicationResponseDto(study.getCompany(),study,user,user.getUserinfo());
     }
 
     // 내가 쓴 신청서 확인
