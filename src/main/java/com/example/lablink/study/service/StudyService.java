@@ -51,50 +51,7 @@ public class StudyService {
         } else {
             study = new Study(requestDto, status, company, null);
         }
-        studyRepository.save(study);
-    }
-
-    // 게시글 조회 (전체 조회 및 검색 조회 등)
-    @Transactional(readOnly = true)
-    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, Integer pageIndex, Integer pageCount, UserDetailsImpl userDetails) {
-        User user = userDetails == null ? null : userDetails.getUser();
-
-        List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
-        for (Study study : studyRepository.findAllByOrderByEndDateDesc()){
-            // 북마크 기능 추가
-            boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
-            studyResponseDtos.add(new StudyResponseDto(study, isBookmarked));
-        }
-        // TODO: 검색 관련 코드 추가
-        return studyResponseDtos;
-    }
-
-
-    // 인기 공고로 변경 (지원자순)
-    public List<StudyResponseDto> getSortedStudies(String sortedType, UserDetailsImpl userDetails) {
-        User user = userDetails == null ? null : userDetails.getUser();
-        List<Study> studies = new ArrayList<>();
-        List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
-
-        // TODO: 추천하는 실험 목록 뽑아내는 코드 작성
-
-        if (sortedType == null){
-            // TODO: 지원자 순으로 정렬
-        }
-        if (Objects.equals(sortedType, "latest")){
-            studies = studyRepository.findAllByOrderByCreatedAtDesc();
-        }
-
-        if (Objects.equals(sortedType, "pay")){
-            studies = studyRepository.findAllByOrderByPayDesc();
-        }
-
-        for (Study study : studies){
-            // 북마크 기능 추가
-            boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
-            studyResponseDtos.add(new StudyResponseDto(study, isbookmarked));
-        }
-        return studyResponseDtos;
+        studyRepository.saveAndFlush(study);
     }
 
     // 게시글 상세 조회
@@ -107,7 +64,7 @@ public class StudyService {
     }
 
     // 게시글 수정
-    // TODO : 이미지 수정 넣기
+    // 이미지 수정 refactoring
     @Transactional
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = isCompanyLogin(companyDetails);
@@ -139,7 +96,7 @@ public class StudyService {
     }
 
     // 게시글 삭제
-    // TODO : 이미지 삭제 넣기
+    // 이미지 삭제 refactoring
     @Transactional
     public void deleteStudy(Long studyId, CompanyDetailsImpl companyDetails) {
         // companyDetails == null 아면 로그인이 필요한 서비스입니다. 날려주기

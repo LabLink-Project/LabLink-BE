@@ -29,6 +29,9 @@ public class ApplicationService {
     @Transactional
     public void addApplication(UserDetailsImpl userDetails, Long studyId, ApplicationRequestDto applicationRequestDto) {
         applicationRepository.save(new Application(userDetails.getUser(),studyId,applicationRequestDto.getMessage()));
+        // studyid들고와서 currentApplicantCount +1 해주기
+        Study study = getStudyService.getStudy(studyId);
+        study.updateCurrentApplicantCount();
     }
     //신청서 수정
     @Transactional

@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer localWebSecurityCustomizer() {
         // 로컬 환경 개발 : h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console())
+//                .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 

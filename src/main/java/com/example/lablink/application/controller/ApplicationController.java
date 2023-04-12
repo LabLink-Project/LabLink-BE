@@ -20,7 +20,6 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-
     @Operation(summary = "신청서 작성", description = "신청서 작성")
     @PostMapping("/applications")
     public ResponseEntity addApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId, @RequestBody ApplicationRequestDto applicationRequestDto){

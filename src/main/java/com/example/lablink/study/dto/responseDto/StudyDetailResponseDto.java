@@ -25,7 +25,8 @@ public class StudyDetailResponseDto {
     private final String address;
     private final int pay;
     private final String subjectGender;
-    private final String subjectAge;
+    private final int subjectMinAge;
+    private final int subjectMaxAge;
     private final int repearCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -34,6 +35,7 @@ public class StudyDetailResponseDto {
 
     private final String imageURL;
     private final boolean isbookmarked;
+    private final int currentApplicantCount;
 
     public StudyDetailResponseDto(Study study, boolean isbookmarked) {
         this.id = study.getId();
@@ -47,10 +49,12 @@ public class StudyDetailResponseDto {
         this.address = study.getAddress();
         this.pay = study.getPay();
         this.subjectGender = study.getSubjectGender();
-        this.subjectAge = study.getSubjectAge();
+        this.subjectMinAge = study.getSubjectMinAge();
+        this.subjectMaxAge = study.getSubjectMaxAge();
         this.repearCount = study.getRepearCount();
         this.endDate = study.getEndDate();
         this.imageURL = study.getImageURL();
         this.isbookmarked = isbookmarked;
+        this.currentApplicantCount = study.getCurrentApplicantCount();
     }
 }
