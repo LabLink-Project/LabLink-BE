@@ -52,7 +52,10 @@ public class Study extends Timestamped {
     private String subjectGender;
 
     @Column(nullable = false)
-    private String subjectAge;
+    private int subjectMinAge;
+
+    @Column(nullable = false)
+    private int subjectMaxAge;
 
     @Column(nullable = false)
     private int repearCount;
@@ -71,6 +74,9 @@ public class Study extends Timestamped {
     @Enumerated(value = EnumType.STRING)
     private CategoryEnum category;
 
+    @Column(nullable = false)
+    private int currentApplicantCount; // 지원자 현황
+
     public Study(StudyRequestDto requestDto, StudyStatusEnum status, Company company, String storedFileName) {
         this.title = requestDto.getTitle();
         this.company = company;
@@ -82,13 +88,15 @@ public class Study extends Timestamped {
         this.address = requestDto.getAddress();
         this.pay = requestDto.getPay();
         this.subjectGender = requestDto.getSubjectGender();
-        this.subjectAge = requestDto.getSubjectAge();
+        this.subjectMinAge = requestDto.getSubjectMinAge();
+        this.subjectMaxAge = requestDto.getSubjectMaxAge();
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
         // done: 이미지 null값일 시 썸네일 넣어주기
         this.imageURL = Objects.requireNonNullElse(storedFileName, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
         this.status = status;
         this.category = requestDto.getCategory();
+        this.currentApplicantCount = 0;
     }
 
     public void update(StudyRequestDto requestDto, StudyStatusEnum status, String storedFileName) {
@@ -101,7 +109,8 @@ public class Study extends Timestamped {
         this.address = requestDto.getAddress();
         this.pay = requestDto.getPay();
         this.subjectGender = requestDto.getSubjectGender();
-        this.subjectAge = requestDto.getSubjectAge();
+        this.subjectMinAge = requestDto.getSubjectMinAge();
+        this.subjectMaxAge = requestDto.getSubjectMaxAge();
         this.repearCount = requestDto.getRepearCount();
         this.endDate = requestDto.getEndDate();
         if (storedFileName != null) this.imageURL = storedFileName;
