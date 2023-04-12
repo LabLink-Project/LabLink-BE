@@ -35,6 +35,7 @@ public class StudyDetailResponseDto {
 
     private final String imageURL;
     private final boolean isbookmarked;
+    private final int currentApplicantCount;
 
     public StudyDetailResponseDto(Study study, boolean isbookmarked) {
         this.id = study.getId();
@@ -54,5 +55,6 @@ public class StudyDetailResponseDto {
         this.endDate = study.getEndDate();
         this.imageURL = study.getImageURL();
         this.isbookmarked = isbookmarked;
+        this.currentApplicantCount = study.getCurrentApplicantCount();
     }
 }

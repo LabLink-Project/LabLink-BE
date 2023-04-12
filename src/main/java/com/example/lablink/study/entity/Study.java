@@ -120,4 +120,8 @@ public class Study extends Timestamped {
     public void updateStatus(StudyStatusEnum status) {
         this.status = status;
     }
+
+    public void updateCurrentApplicantCount() {
+        ++this.currentApplicantCount;
+    }
 }
