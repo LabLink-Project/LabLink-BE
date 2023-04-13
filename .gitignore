@@ -30,6 +30,8 @@ out/
 **/resources/application-common.yml
 **/resources/application-db.yml
 
+docker-compose.yml
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
