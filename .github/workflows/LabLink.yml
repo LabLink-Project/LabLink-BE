@@ -54,14 +54,14 @@ jobs:
           echo ">> copy application.properties"
           echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.properties
           
-      - name: make docker-compose.yml
-        run: |
-          echo ">> mkdir & touch"
-          mkdir -p ./
-          cd ./
-          touch ./docker-compose.yml
-          echo ">> copy docker-compose.yml"
-          echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
+#       - name: make docker-compose.yml
+#         run: |
+#           echo ">> mkdir & touch"
+#           mkdir -p ./
+#           cd ./
+#           touch ./docker-compose.yml
+#           echo ">> copy docker-compose.yml"
+#           echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
           
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
