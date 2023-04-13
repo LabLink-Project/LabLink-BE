@@ -7,10 +7,8 @@ import com.example.lablink.S3Image.service.S3UploaderService;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsImpl;
-import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.study.dto.responseDto.StudyDetailResponseDto;
-import com.example.lablink.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.entity.StudyStatusEnum;
 import com.example.lablink.study.exception.StudyErrorCode;
@@ -25,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -129,8 +125,18 @@ public class StudyService {
         );
     }
 
-    // 기업 전체 공고 리스트
+    // 전체 공고 리스트
     public List<Study> findAllStudy () {
         return studyRepository.findAll();
+    }
+
+    // 기업별 공고 찾기
+    public List<Study> findAllCompanyStudy(Company company) {
+        return studyRepository.findAllByCompany(company);
+    }
+
+    // 기업 회원 탈퇴시 존재 공고 삭제
+    public void deleteStudy(Study study) {
+        studyRepository.delete(study);
     }
 }

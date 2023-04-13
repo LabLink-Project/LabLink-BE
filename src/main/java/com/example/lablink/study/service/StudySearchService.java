@@ -47,8 +47,8 @@ public class StudySearchService {
             studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
 
             if(searchOption.getKeyword() != null){
-                Double timestamp = (double) System.currentTimeMillis();
                 // 최신검색어 구현
+                Double timestamp = (double) System.currentTimeMillis();
                 redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
 
                 // 인기검색어 구현
@@ -85,7 +85,7 @@ public class StudySearchService {
             String key = user.getId().toString();
             ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
             Set<ZSetOperations.TypedTuple<String>> typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);
-            return typedTuples.stream().map(LatestSearchKeyword::convertToResponseRankingDto).collect(Collectors.toList());
+            return typedTuples.stream().map(LatestSearchKeyword::convertToLatestSearchKeyword).collect(Collectors.toList());
         } else{
             return null;
         }
@@ -94,10 +94,10 @@ public class StudySearchService {
     // 인기검색어 리스트 1위~10위까지
     public List<SearchRankResponseDto> searchRankList() {
         String key = "ranking";
+        // ZSetOperations 객체 생성
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         // score순으로 10개 보여줌
         Set<ZSetOperations.TypedTuple<String>> typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);
-        log.info(typedTuples.toString());
         return typedTuples.stream().map(SearchRankResponseDto::convertToResponseRankingDto).collect(Collectors.toList());
     }
 

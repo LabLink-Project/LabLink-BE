@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,25 +21,25 @@ import javax.validation.Valid;
 @Tag(name = "User", description = "User API")
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입")
-    @PostMapping("/users/signup")
+    @PostMapping("/signup")
     public ResponseEntity signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         return ResponseMessage.SuccessResponse(userService.signup(signupRequestDto), "");
     }
 
     @Operation(summary = "유저 로그인", description = "유저 로그인")
-    @PostMapping("/users/login")
+    @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return ResponseMessage.SuccessResponse(userService.login(loginRequestDto, response), "");
     }
 
     @Operation(summary = "유저 이메일 중복 체크", description = "유저 이메일 중복 체크")
-    @PostMapping("/users/signup/email-check")
+    @PostMapping("/signup/email-check")
     public ResponseEntity emailCheck(@RequestBody @Valid UserEmailCheckRequestDto userEmailCheckRequestDto) {
         return ResponseMessage.SuccessResponse(userService.emailCheck(userEmailCheckRequestDto), "");
     }
@@ -56,8 +53,14 @@ public class UserController {
     }
 
     @Operation(summary = "유저 회원탈퇴", description = "유저 회원탈퇴")
-    @DeleteMapping("/users")
+    @DeleteMapping("")
     public ResponseEntity deleteUser (@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response) {
         return ResponseMessage.SuccessResponse(userService.deleteUser(userDetails, response), "");
     }
+
+//    @Operation(summary = "내 실험 관리", description = "내 실험 관리")
+//    @GetMapping("/applications")
+//    public ResponseEntity getMyLabs(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return ResponseMessage.SuccessResponse("조회 성공", userService.getMyLabs(userDetails));
+//    }
 }
