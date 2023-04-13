@@ -54,6 +54,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'io.lettuce:lettuce-core:6.1.5.RELEASE'
+
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0' // xls
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0' // xlsx
 }
 
 tasks.named('test') {

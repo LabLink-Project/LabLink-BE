@@ -4,5 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class FeedBackRequestDto {
-    private String FeedBackMessage;
+    private String feedbackMessage;
+
+    private boolean management;
 }
