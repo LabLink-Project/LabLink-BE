@@ -12,6 +12,8 @@ services:
     # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
     ports:
       - 6379:6379
+    environment:
+      - REDIS_PASSWORD = dlthals17
     # 스토리지 마운트(볼륨) 설정
     volumes:
       - ./redis/data:/data
