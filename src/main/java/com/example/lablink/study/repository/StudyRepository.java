@@ -18,6 +18,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findAllByOrderByCreatedAtDesc();
     List<Study> findAllByOrderByPayDesc();
     List<Study> findAllByOrderByCurrentApplicantCountDesc();
+    List<Study> findAllByCompany(Company company);
 
     @Query(value = "select * from study " +
         "where (:category is null or lower(category) like lower(concat('%', :category, '%'))) " +
