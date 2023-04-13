@@ -13,7 +13,7 @@ services:
     ports:
       - 6379:6379
     environment:
-      - REDIS_PASSWORD = thals0
+      - REDIS_PASSWORD = ' ${ secrets.REDIS_PASSWORD }'
     # 스토리지 마운트(볼륨) 설정
     volumes:
       - ./redis/data:/data
