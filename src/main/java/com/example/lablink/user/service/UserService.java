@@ -8,10 +8,10 @@ import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.jwt.JwtUtil;
 
-import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
 import com.example.lablink.user.dto.request.UserEmailCheckRequestDto;
+import com.example.lablink.user.dto.response.MyLabResponseDto;
 import com.example.lablink.user.entity.User;
 
 import com.example.lablink.user.entity.UserInfo;
@@ -26,6 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -40,6 +42,9 @@ public class UserService {
     private final ApplicationService applicationService;
     private final BookmarkService bookmarkService;
     private final UserInfoService userInfoService;
+    private final EntityManager em;
+//    private final StudyService studyService;
+
 
     // 순환 종속성 해결을 위한 생성자 주입 & Lazy
     @Autowired
@@ -49,7 +54,9 @@ public class UserService {
                        JwtUtil jwtUtil,
                        @Lazy ApplicationService applicationService,
                        BookmarkService bookmarkService,
-                       UserInfoService userInfoService) {
+                       UserInfoService userInfoService,
+                       EntityManager em
+                       /*StudyService studyService*/) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.termsService = termsService;
@@ -57,6 +64,8 @@ public class UserService {
         this.applicationService = applicationService;
         this.bookmarkService = bookmarkService;
         this.userInfoService = userInfoService;
+        this.em = em;
+//        this.studyService = studyService;
     }
 //    인증 인가를 담당하는 Service의 보안? 을 위함이기에 단익책임 위반 X
 //    private final CsrfTokenRepository csrfTokenRepository;
@@ -156,4 +165,22 @@ public class UserService {
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
         return "탈퇴 완료.";
     }
+
+    // 내 실험 관리 - 신청한 목록
+    @Transactional
+    public List<MyLabResponseDto> getMyLabs(UserDetailsImpl userDetails) {
+        if(userDetails == null || userDetails.equals(" ")) {
+            throw new UserException(UserErrorCode.INVALID_TOKEN);
+        }
+        TypedQuery<MyLabResponseDto> query = em.createQuery(
+            "SELECT New com.example.lablink.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
+                "FROM Study s INNER JOIN Application a ON s.id = a.studyId " +
+                "WHERE a.user = :user", MyLabResponseDto.class);
+        query.setParameter("user", userDetails.getUser());
+
+        List<MyLabResponseDto> myLabs = query.getResultList();
+
+        return myLabs;
+    }
+
 }
