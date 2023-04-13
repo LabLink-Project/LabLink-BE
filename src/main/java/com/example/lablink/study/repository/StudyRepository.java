@@ -26,7 +26,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
         "and (:searchDate is null or lower(date) like lower(concat('%', :searchDate, '%'))) " +
         "and (:searchTime is null or lower(date) like lower(concat('%', :searchTime, '%'))) " +
         "and (:gender is null or lower(subject_gender) like lower(concat('%', :gender, '%'))) " +
-        "and ((:age is null) or ((:age > subject_min_age) and (:age < subject_max_age))) " +
+        "and ((:age is null) or ((:age >= subject_min_age) and (:age <= subject_max_age))) " +
         "and (:keyword is null or lower(title) like lower(concat('%', :keyword, '%'))) " +
         "order by created_at desc " +
         "limit :pageIndex, :pageCount",

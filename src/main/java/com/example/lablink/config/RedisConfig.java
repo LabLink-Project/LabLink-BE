@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableRedisRepositories
-public class RedisConfiguration extends CachingConfigurerSupport {
+public class RedisConfig extends CachingConfigurerSupport {
     @Value("${spring.redis.port}")
     private int port;
 
