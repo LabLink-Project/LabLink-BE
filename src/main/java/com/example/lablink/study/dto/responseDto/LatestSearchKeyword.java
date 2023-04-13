@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 public class LatestSearchKeyword {
     private String latestKeyword;
 
-    public static LatestSearchKeyword convertToResponseRankingDto(ZSetOperations.TypedTuple<String> stringTypedTuple) {
+    public static LatestSearchKeyword convertToLatestSearchKeyword(ZSetOperations.TypedTuple<String> stringTypedTuple) {
         LatestSearchKeyword latestSearchKeyword = new LatestSearchKeyword();
         latestSearchKeyword.setLatestKeyword(stringTypedTuple.getValue());
         return latestSearchKeyword;
