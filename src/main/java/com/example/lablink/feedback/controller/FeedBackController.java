@@ -38,8 +38,8 @@ public class FeedBackController {
     }
 
     @Operation(summary = "피드백 상세조회", description = "피드백 상세조회")
-    @GetMapping("/{feedBackId}")
-    public ResponseEntity detailFeedBack(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long feedbackId){
+    @GetMapping("/{feedbackId}")
+    public ResponseEntity detailFeedBack(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long feedbackId ){
         return ResponseMessage.SuccessResponse("",feedBackService.getDetailFeedBack(companyDetails,studyId,feedbackId));
     }
     @Operation(summary = "피드백 리스트 다운로드", description = "피드백 리스트 다운로드")
