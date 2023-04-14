@@ -1,7 +1,6 @@
 package com.example.lablink.feedback.entity;
 
 import com.example.lablink.study.entity.Study;
-import com.example.lablink.timestamp.entity.Timestamped;
 import com.example.lablink.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,20 +34,19 @@ public class Feedback {
     private String feedbackMessage;
 
     @Column(nullable = false)
-    private boolean management;
+    private boolean viewStatus;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Feedback(User user, Study study, String feedbackMessage, boolean management) {
+    public Feedback(User user, Study study, String feedbackMessage, boolean viewStatus) {
         this.user = user;
         this.study = study;
         this.feedbackMessage = feedbackMessage;
-        this.management = management;
+        this.viewStatus = viewStatus;
     }
 
-    public void update(String feedbackMessage) {
-        this.feedbackMessage = feedbackMessage;
+    public void update() {
+        this.viewStatus = true;
     }
-
 }

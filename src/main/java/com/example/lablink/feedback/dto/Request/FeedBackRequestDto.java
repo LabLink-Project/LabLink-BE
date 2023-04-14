@@ -6,5 +6,5 @@ import lombok.Getter;
 public class FeedBackRequestDto {
     private String feedbackMessage;
 
-    private boolean management;
+    private boolean viewStatus;
 }
