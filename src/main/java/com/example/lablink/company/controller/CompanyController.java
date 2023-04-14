@@ -72,4 +72,10 @@ public class CompanyController {
         companyService.deleteCompany(companyDetails, response);
         return ResponseMessage.SuccessResponse("탈퇴 완료.", "");
     }
+
+    @Operation(summary = "내 공고 확인", description = "내 공고 확인")
+    @GetMapping("/studies")
+    public ResponseEntity viewMyStudies(@AuthenticationPrincipal CompanyDetailsImpl companyDetails) {
+        return ResponseMessage.SuccessResponse("조회 성공", companyService.viewMyStudies(companyDetails));
+    }
 }

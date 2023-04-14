@@ -8,6 +8,8 @@ import java.util.Date;
 public class ApplicationRequestDto {
     private String message;
 
+    private String userName;
+
     private String userPhone;
 
     private String userAddress;

@@ -32,14 +32,42 @@ public class Application extends Timestamped {
     @Column(nullable = false)
     private String message;
 
-    public Application(User user, Long study, String message) {
+//    @Column(nullable = true)
+//    @Enumerated(value = EnumType.STRING)
+    private String applicationViewStatusEnum; // 기업이 내 신청서에 대한 "열람", "미열람"
+//
+//    @Column(nullable = true)
+//    @Enumerated(value = EnumType.STRING)
+    private String approvalStatusEnum; // 신청서 승인, 거절, 대기
+
+    public Application(User user, Long study, String message, String approvalStatusEnum, String applicationViewStatusEnum) {
         this.user = user;
         this.studyId = study;
         this.message = message;
+        this.approvalStatusEnum = approvalStatusEnum;
+        this.applicationViewStatusEnum = applicationViewStatusEnum;
     }
 
     public void update(String message) {
         this.message = message;
     }
 
+//    Enum 리팩토링시 사용 가능할듯
+//    public String getApprovalStatusEnum() {
+//        return this.approvalStatusEnum != null ? this.approvalStatusEnum.approvalGetStatus() : null;
+//    }
+
+//    public String getViewStatusEnum() {
+//        return this.approvalStatusEnum != null ? this.applicationViewStatusEnum.viewGetStatus() : null;
+//    }
+//
+    // 승인, 거절 업데이트
+    public void statusUpdate(String approvalStatusEnum) {
+        this.approvalStatusEnum = approvalStatusEnum;
+    }
+
+    // 열람, 미열람 업데이트
+    public void viewStatusUpdate(String applicationViewStatusEnum) {
+        this.applicationViewStatusEnum = applicationViewStatusEnum;
+    }
 }

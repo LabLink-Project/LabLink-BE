@@ -1,8 +1,5 @@
 package com.example.lablink.study.service;
 
-import com.example.lablink.company.entity.Company;
-import com.example.lablink.company.exception.CompanyErrorCode;
-import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.exception.StudyErrorCode;
 import com.example.lablink.study.exception.StudyException;
