@@ -5,6 +5,7 @@ import com.example.lablink.timestamp.entity.Timestamped;
 import com.example.lablink.user.dto.request.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -16,6 +17,7 @@ import java.util.Date;
     @Index(name = "idx_email", columnList = "email")
 })
 @Getter
+@Setter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE users SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
