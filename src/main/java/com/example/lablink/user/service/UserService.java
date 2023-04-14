@@ -183,4 +183,9 @@ public class UserService {
         return myLabs;
     }
 
+    // User 찾기
+    public User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+    }
+
 }
