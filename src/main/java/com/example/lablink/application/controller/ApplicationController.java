@@ -62,4 +62,10 @@ public class ApplicationController {
         return ResponseMessage.SuccessResponse("완료.", "");
     }
 
+    @Operation(summary = "공고별 신청서 확인", description = "공고별 신청서 확인")
+    @GetMapping("/applications")
+    public ResponseEntity applicationFromStudy(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId) {
+        return ResponseMessage.SuccessResponse("조회 성공", applicationService.applicationFromStudy(companyDetails, studyId));
+    }
+
 }

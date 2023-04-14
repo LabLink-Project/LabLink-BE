@@ -10,15 +10,19 @@ import com.example.lablink.application.exception.ApplicationErrorCode;
 import com.example.lablink.application.exception.ApplicationException;
 import com.example.lablink.application.repository.ApplicationRepository;
 import com.example.lablink.company.security.CompanyDetailsImpl;
+import com.example.lablink.study.dto.responseDto.ApplicationFromStudyResponseDto;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.service.GetStudyService;
+import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.entity.User;
+import com.example.lablink.user.entity.UserInfo;
 import com.example.lablink.user.security.UserDetailsImpl;
 import com.example.lablink.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +32,7 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserService userService;
     private final GetStudyService getStudyService;
+    private final StudyService studyService;
 
     //신청서 추가
     @Transactional
@@ -125,6 +130,25 @@ public class ApplicationService {
             // 인증된 회사 정보가 없는 경우, 예외 처리
             throw new ApplicationException(ApplicationErrorCode.NOT_HAVE_PERMISSION);
         }
+    }
+
+    // 공고별 신청서 확인
+    @Transactional
+    public List<ApplicationFromStudyResponseDto> applicationFromStudy(CompanyDetailsImpl companyDetails, Long studyId) {
+        // 1. 기업이 작성한 공고의id를 사용해 새로운 공고에 저장. -> 로그인 기업이 작성한 공고
+        Study study = studyService.findStudyFromCompany(studyId, companyDetails.getCompany());
+
+        List<ApplicationFromStudyResponseDto> applicationDtos = new ArrayList<>();
+        // 2. 1번의 공고id를 사용해 해당 공고의 신청서를 리스트에 저장.
+        List<Application> applications = applicationRepository.findByStudyId(study.getId());
+
+        for (Application application : applications) {
+            User user = application.getUser();
+            UserInfo userInfo = user.getUserinfo(); // FetchType.EAGER로 가져옴
+            applicationDtos.add(new ApplicationFromStudyResponseDto(user, userInfo, application));
+        }
+
+        return applicationDtos;
     }
 
     // 내가 쓴 신청서 확인

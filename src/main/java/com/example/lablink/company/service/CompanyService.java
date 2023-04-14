@@ -110,10 +110,9 @@ public class CompanyService {
 
     // 기업 회원 탈퇴
     public void deleteCompany(CompanyDetailsImpl companyDetails, HttpServletResponse response) {
-        // todo 공고별 신청서 삭제 & 공고 삭제
-        List<Study> studies = studyService.findAllCompanyStudy(companyDetails.getCompany());
-        for (Study study : studies) {
-            studyService.deleteStudy(study);
+        List<Study> studies = studyService.findAllCompanyStudy( companyDetails.getCompany());
+        for (Study study1 : studies) {
+            studyService.deleteStudy(study1);
         }
         // 로그아웃 (헤더 null값 만들기)
         companyRepository.delete(companyDetails.getCompany());

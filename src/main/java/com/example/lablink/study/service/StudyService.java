@@ -127,6 +127,9 @@ public class StudyService {
 
     // 기업별 공고 찾기
     public List<Study> findAllCompanyStudy(Company company) {
+        if (company == null) {
+            throw new StudyException(StudyErrorCode.STUDY_NOT_FOUND);
+        }
         return studyRepository.findAllByCompany(company);
     }
 
@@ -134,5 +137,12 @@ public class StudyService {
     public void deleteStudy(Study study) {
         studyRepository.delete(study);
     }
+
+    public Study findStudyFromCompany(Long studyId, Company company) {
+        return studyRepository.findByIdAndCompany(studyId, company)
+            .orElseThrow(() -> new StudyException(StudyErrorCode.STUDY_NOT_FOUND));
+    }
+
+
 
 }
