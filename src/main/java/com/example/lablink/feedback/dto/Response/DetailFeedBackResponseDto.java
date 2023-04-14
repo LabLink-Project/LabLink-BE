@@ -16,13 +16,13 @@ public class DetailFeedBackResponseDto {
 
     private String feedbackMessage;
 
-    private boolean viewStatus;
+
 
     public DetailFeedBackResponseDto(Feedback feedback) {
         this.id = feedback.getId();
         this.userName = feedback.getUser().getUserName();
         this.userEmail = feedback.getUser().getEmail();
         this.feedbackMessage = feedback.getFeedbackMessage();
-        this.viewStatus = feedback.isViewStatus();
+
     }
 }

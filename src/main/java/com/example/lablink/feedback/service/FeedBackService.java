@@ -33,7 +33,8 @@ public class FeedBackService {
     @Transactional
     public void addFeedBack(UserDetailsImpl userDetails, Long studyId, FeedBackRequestDto feedBackRequestDto) {
         Study study = getStudyService.getStudy(studyId);
-        feedBackRepository.save(new Feedback(userDetails.getUser(),study,feedBackRequestDto.getFeedbackMessage(),feedBackRequestDto.isViewStatus()));
+
+        feedBackRepository.save(new Feedback(userDetails.getUser(),study,feedBackRequestDto.getFeedbackMessage(),false));
     }
     @Transactional(readOnly = true)
     public List<FeedBackResponseDto> getFeedBack(CompanyDetailsImpl companyDetails, Long studyId) {
@@ -56,7 +57,7 @@ public class FeedBackService {
         Feedback feedback = feedBackRepository.findById(feedbackId).orElseThrow(
                 () -> new FeedBackException(FeedBackErrorCode.FeedBack_NOT_FOUND)
         );
-        feedback.update();
+        feedback.updateViewStatus();
         return new DetailFeedBackResponseDto(feedback);
     }
 
@@ -69,8 +70,8 @@ public class FeedBackService {
         for (Feedback feedback: feedbacks) {
             result.add(new FeedBackResponseDto(feedback));
         }
-        String filePath = "../..//Downloads";
-        String fileName = "FeedBack.xlsx";
+        String filePath = "../..//Downloads";//다운로드 경로
+        String fileName = "FeedBack.xlsx";//다운로드 파일 이음
 
         XSSFWorkbook workbook = new XSSFWorkbook();
 
@@ -104,35 +105,6 @@ public class FeedBackService {
             cell.setCellValue(result.get(i).getFeedbackMessage());
         }
 
-
-        // Sheet를 채우기 위한 데이터들을 Map에 저장
-        /*Map<Integer, Object[]> data = new TreeMap<>();
-        data.put(1, new Object[]{"이름", "이메일", "피드백 내용"});
-        int rowdata=1;
-        for(Integer i=0;i<result.size();i++){
-            data.put(++rowdata, new Object[]{result.get(i).getUserName(),result.get(i).getUserEmail() ,result.get(i).getFeedbackMessage()});
-        }*/
-
-
-        // data에서 keySet를 가져온다. 이 Set 값들을 조회하면서 데이터들을 sheet에 입력한다.
-        /*Set<Integer> keyset = data.keySet();
-        int rownum = 0;
-
-        // 알아야할 점, TreeMap을 통해 생성된 keySet는 for를 조회시, 키값이 오름차순으로 조회된다.
-        for (Integer key : keyset) {
-            Row row = sheet.createRow(rownum++);
-            Object[] objArr = data.get(key);
-            int cellnum = 0;
-            for (Object obj : objArr) {
-                Cell cell = row.createCell(cellnum++);
-                if (obj instanceof String) {
-                    cell.setCellValue((String)obj);
-                } else if (obj instanceof Integer) {
-                    cell.setCellValue((Integer)obj);
-                }
-            }
-        }*/
-
         try {
             FileOutputStream out = new FileOutputStream(new File(filePath, fileName));
             workbook.write(out);
@@ -146,8 +118,5 @@ public class FeedBackService {
 
         return studyId.equals(companyDetails.getCompany().getId());
     }
-
-
-
 
 }
