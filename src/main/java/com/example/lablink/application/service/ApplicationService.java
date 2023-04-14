@@ -17,6 +17,7 @@ import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.entity.UserInfo;
 import com.example.lablink.user.security.UserDetailsImpl;
+import com.example.lablink.user.service.UserInfoService;
 import com.example.lablink.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class ApplicationService {
     private final UserService userService;
     private final GetStudyService getStudyService;
     private final StudyService studyService;
+    private final UserInfoService userInfoService;
 
     //신청서 추가
     @Transactional
@@ -143,8 +145,8 @@ public class ApplicationService {
         List<Application> applications = applicationRepository.findByStudyId(study.getId());
 
         for (Application application : applications) {
-            User user = application.getUser();
-            UserInfo userInfo = user.getUserinfo(); // FetchType.EAGER로 가져옴
+            User user = userService.findUser(application.getUser().getId());
+            UserInfo userInfo = userInfoService.findUserInfo(user.getUserinfo().getId());
             applicationDtos.add(new ApplicationFromStudyResponseDto(user, userInfo, application));
         }
 
