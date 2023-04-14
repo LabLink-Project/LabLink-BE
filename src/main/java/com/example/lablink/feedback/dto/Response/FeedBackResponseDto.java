@@ -19,6 +19,7 @@ public class FeedBackResponseDto {
 
     private boolean viewStatus;
 
+
     public FeedBackResponseDto(Feedback feedback) {
         this.id = feedback.getId();
         this.userName = feedback.getUser().getUserName();

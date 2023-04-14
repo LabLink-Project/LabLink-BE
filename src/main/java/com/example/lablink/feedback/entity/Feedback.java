@@ -46,7 +46,7 @@ public class Feedback {
         this.viewStatus = viewStatus;
     }
 
-    public void update() {
+    public void updateViewStatus() {
         this.viewStatus = true;
     }
 }
