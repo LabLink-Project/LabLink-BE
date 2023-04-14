@@ -13,4 +13,6 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
     List<Application> findAllByUser(User user);
     Optional<Application> findByIdAndUserEmail(Long Id,String userEmail);
 
+    List<Application> findByStudyId(Long studyId);
+
 }

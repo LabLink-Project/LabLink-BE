@@ -7,6 +7,7 @@ import com.example.lablink.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.company.service.CompanyService;
 import com.example.lablink.message.ResponseMessage;
+import com.example.lablink.study.entity.Study;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -72,4 +73,5 @@ public class CompanyController {
         companyService.deleteCompany(companyDetails, response);
         return ResponseMessage.SuccessResponse("탈퇴 완료.", "");
     }
+
 }
