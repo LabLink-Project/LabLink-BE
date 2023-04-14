@@ -7,7 +7,6 @@ import com.example.lablink.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.company.service.CompanyService;
 import com.example.lablink.message.ResponseMessage;
-import com.example.lablink.study.entity.Study;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -74,4 +73,9 @@ public class CompanyController {
         return ResponseMessage.SuccessResponse("탈퇴 완료.", "");
     }
 
+    @Operation(summary = "내 공고 확인", description = "내 공고 확인")
+    @GetMapping("/studies")
+    public ResponseEntity viewMyStudies(@AuthenticationPrincipal CompanyDetailsImpl companyDetails) {
+        return ResponseMessage.SuccessResponse("조회 성공", companyService.viewMyStudies(companyDetails));
+    }
 }
