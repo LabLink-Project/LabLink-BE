@@ -7,9 +7,7 @@ import com.example.lablink.user.entity.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @AllArgsConstructor
@@ -19,11 +17,12 @@ public class ApplicationResponseDto {
     private String companyName;
     private LocalDateTime date;
     private String address;
-    private String username;
+    private String userName;
     private String userPhone;
     private String userEmail;
     private String userGender;
     private String userAge;
+    private String applicationStatus;
 
     private UserInfo userInfo;
 
@@ -33,8 +32,9 @@ public class ApplicationResponseDto {
         this.companyName = company.getCompanyName();
         this.date = study.getDate();
         this.address = study.getAddress();
-        this.username = user.getUserName();
+        this.userName = user.getUserName();
         this.userPhone = userInfo.getUserPhone();
         this.userEmail = user.getEmail();
+        this.applicationStatus = getApplicationStatus();
     }
 }

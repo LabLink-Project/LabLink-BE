@@ -1,7 +1,9 @@
 package com.example.lablink.application.controller;
 
 import com.example.lablink.application.dto.Request.ApplicationRequestDto;
+import com.example.lablink.application.dto.Request.ApplicationStatusRequestDto;
 import com.example.lablink.application.service.ApplicationService;
+import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.user.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,14 +45,21 @@ public class ApplicationController {
 
     @Operation(summary = "신청서 조회", description = "신청서 조회")
     @GetMapping("/applications/{applicationId}")
-    public ResponseEntity getApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
-        return ResponseMessage.SuccessResponse("",applicationService.getApplication(userDetails,studyId,applicationId));
+    public ResponseEntity getApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
+        return ResponseMessage.SuccessResponse("",applicationService.getApplication(userDetails,companyDetails,studyId,applicationId));
     }
 
     @Operation(summary = "신청서 접수 클릭 시 나오는 정보 값", description = "신청서 접수 클릭 시 나오는 정보 값")
     @PostMapping("/applicationsInfo")
     public ResponseEntity afterApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long studyId){
         return ResponseMessage.SuccessResponse("",applicationService.afterApplication(userDetails,studyId));
+    }
+
+    @Operation(summary = "신청서 승인, 거절", description = "신청서 승인, 거절")
+    @PatchMapping("/applications/{applicationId}/status")
+    public ResponseEntity applicationStatus(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @RequestBody ApplicationStatusRequestDto statusRequestDto, @PathVariable Long studyId, @PathVariable Long applicationId){
+        applicationService.applicationStatus(companyDetails, statusRequestDto, studyId, applicationId);
+        return ResponseMessage.SuccessResponse("완료.", "");
     }
 
 }

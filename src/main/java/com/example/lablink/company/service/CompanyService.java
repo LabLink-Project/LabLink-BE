@@ -1,6 +1,5 @@
 package com.example.lablink.company.service;
 
-import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.company.dto.request.CompanyNameCheckRequestDto;
@@ -122,3 +121,4 @@ public class CompanyService {
     }
 
 }
+

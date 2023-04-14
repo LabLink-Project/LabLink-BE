@@ -19,6 +19,7 @@ public enum StudyErrorCode {
     NOT_AUTHOR(FORBIDDEN, "작성자만 삭제/수정할 수 있습니다."),
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     STUDY_NOT_FOUND(NOT_FOUND, "등록된 공고가 없습니다"),
+    NOT_APPLY_TO_STUDY(NOT_FOUND, "공고에 지원한 신청서가 없습니다."),
     NOT_FOUND_IMAGE(NOT_FOUND, "등록된 이미지가 없습니다");
 
     private final HttpStatus httpStatus;

@@ -58,9 +58,10 @@ public class UserController {
         return ResponseMessage.SuccessResponse(userService.deleteUser(userDetails, response), "");
     }
 
-//    @Operation(summary = "내 실험 관리", description = "내 실험 관리")
-//    @GetMapping("/applications")
-//    public ResponseEntity getMyLabs(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return ResponseMessage.SuccessResponse("조회 성공", userService.getMyLabs(userDetails));
-//    }
+    @Operation(summary = "내 실험 관리(내 신청서 조회)", description = "내 실험 관리(내 신청서 조회)")
+    @GetMapping("/applications")
+    public ResponseEntity getMyLabs(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseMessage.SuccessResponse("조회 성공", userService.getMyLabs(userDetails));
+    }
+
 }

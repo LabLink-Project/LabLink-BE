@@ -125,11 +125,6 @@ public class StudyService {
         );
     }
 
-    // 전체 공고 리스트
-    public List<Study> findAllStudy () {
-        return studyRepository.findAll();
-    }
-
     // 기업별 공고 찾기
     public List<Study> findAllCompanyStudy(Company company) {
         return studyRepository.findAllByCompany(company);
@@ -139,4 +134,5 @@ public class StudyService {
     public void deleteStudy(Study study) {
         studyRepository.delete(study);
     }
+
 }
