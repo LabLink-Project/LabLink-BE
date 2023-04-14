@@ -4,6 +4,7 @@ import com.example.lablink.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.company.dto.request.CompanyNameCheckRequestDto;
 import com.example.lablink.company.dto.request.CompanySignupRequestDto;
+import com.example.lablink.company.dto.response.ViewMyStudyResponseDto;
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.exception.CompanyErrorCode;
 import com.example.lablink.company.exception.CompanyException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -102,6 +104,7 @@ public class CompanyService {
     }
 
     // 기업명 중복 체크
+    @Transactional
     public void companyNameCheck(CompanyNameCheckRequestDto companyNameCheckRequestDto) {
         if(companyRepository.existsByCompanyName(companyNameCheckRequestDto.getCompanyName())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_COMPANY_NAME);
@@ -109,6 +112,7 @@ public class CompanyService {
     }
 
     // 기업 회원 탈퇴
+    @Transactional
     public void deleteCompany(CompanyDetailsImpl companyDetails, HttpServletResponse response) {
         List<Study> studies = studyService.findAllCompanyStudy( companyDetails.getCompany());
         for (Study study1 : studies) {
@@ -119,5 +123,20 @@ public class CompanyService {
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
     }
 
+    // 내 공고 확인
+    public List<ViewMyStudyResponseDto> viewMyStudies(CompanyDetailsImpl companyDetails) {
+//        study.getId()에 해당하는 특정 공고에 대한 값 -> 사용 x
+//        studyService.findStudyFromCompany(study.getId(), companyDetails.getCompany());
+
+        // 기업 전체 공고 찾아 리스트에 넣기
+        List<Study> studies = studyService.findAllCompanyStudy(companyDetails.getCompany());
+        List<ViewMyStudyResponseDto> views = new ArrayList<>();
+
+        for (Study study : studies) {
+            views.add(new ViewMyStudyResponseDto(study));
+        }
+
+        return views;
+    }
 }
 
