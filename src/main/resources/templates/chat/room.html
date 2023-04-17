@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<script th:inline="javascript">
+    $(document).ready(function(){
+        var roomName = [[${room.companyId}]];
+        var roomId = [[${room.roomId}]];
+        var chatList = [[${chatList}]];
+        // var username = [[${room.userId}]];
+        var username = Math.floor(Math.random() * 10) + 1;
+
+        console.log(roomName + ", " + roomId + ", " + username);
+
+        var sockJs = new SockJS("/stomp/chat");
+        //1. SockJS를 내부에 들고있는 stomp를 내어줌
+        var stomp = Stomp.over(sockJs);
+
+        //2. connection이 맺어지면 실행
+        stomp.connect({}, function (){
+            console.log("STOMP Connection")
+            loadChat(chatList);
+            console.log(chatList);
+
+            //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+            stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
+                var content = JSON.parse(chat.body);
+                var message = content.message;
+
+                var writer = content.writer;
+                var str = '';
+
+                if(writer == username){
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-secondary'>";
+                    str += "<b>" + writer + " : " + message + "</b>";
+                    str += "</div></div>";
+                } else{
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-warning'>";
+                    str += "<b>" + writer + " : " + message + "</b>";
+                    str += "</div></div>";
+                }
+
+                $("#msgArea").append(str);
+            });
+
+            //3. send(path, header, message)로 메세지를 보낼 수 있음
+            stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
+        });
+
+        $("#button-send").on("click", function(e){
+            var msg = document.getElementById("msg");
+
+            // console.log(username + ":" + msg.value);
+            stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
+            msg.value = '';
+        });
+
+        //저장된 채팅 불러오기
+        function loadChat(chatList){
+            var str = '';
+            if(chatList != null) {
+                // writer == 나 이면 색을 다르게 해주긴해야함
+                for(chat in chatList) {
+                    str += "<div class='col-6'>";
+                    str += "<div class='alert alert-warning'>";
+                    str += "<b>" + chatList[chat].writer + " : " + chatList[chat].message + "</b>";
+                    str += "</div></div>";
+                }
+            }
+            $("#msgArea").append(str);
+        }
+
+    });
+</script>
+
+<!--<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">-->
+<th:block th:replace="~{this :: content}">
+    <th:block th:fragment="content">
+
+        <div class="container">
+            <div class="col-6">
+                <h1>[[${room.roomId}]]</h1>
+            </div>
+            <div>
+                <div id="msgArea" class="col"></div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <input type="text" id="msg" class="form-control">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    </th:block>
+</th:block>
+
+</html>
+
