@@ -4,8 +4,6 @@ import com.example.lablink.application.entity.Application;
 import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.service.BookmarkService;
-import com.example.lablink.company.exception.CompanyErrorCode;
-import com.example.lablink.company.exception.CompanyException;
 import com.example.lablink.jwt.JwtUtil;
 
 import com.example.lablink.user.dto.request.LoginRequestDto;
@@ -79,9 +77,13 @@ public class UserService {
 
         // 가입 이메일 중복 확인
         if (userRepository.existsByEmail(email)) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
 
+        // 필수 약관 동의
+        if(!signupRequestDto.isAgeCheck() || !signupRequestDto.isTermsOfServiceAgreement() || !signupRequestDto.isPrivacyPolicyConsent() || !signupRequestDto.isSensitiveInfoConsent()) {
+            throw new UserException(UserErrorCode.NEED_AGREE_REQUIRE_TERMS);
+        }
         // 유저 저장 및 유저를 약관에 저장시킴 -> 약관을 유저에 저장시키면 유저를 불러올때마다 약관이 불려와 무거움
         // userinfo는 회원가입할 때 받지 않음.
         UserInfo userInfo = userInfoService.saveUserInfo(signupRequestDto);
@@ -135,7 +137,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public String emailCheck(UserEmailCheckRequestDto userEmailCheckRequestDto) {
         if(userRepository.existsByEmail(userEmailCheckRequestDto.getEmail())) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
         return "사용 가능합니다.";
     }
