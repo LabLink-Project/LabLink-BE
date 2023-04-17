@@ -1,7 +1,11 @@
 package com.example.lablink.bookmark.service;
 
+import com.example.lablink.bookmark.dto.BookmarkResponseDto;
 import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.repository.BookmarkRepository;
+import com.example.lablink.company.security.CompanyDetailsImpl;
+import com.example.lablink.study.entity.CategoryEnum;
+import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.exception.StudyErrorCode;
 import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.service.GetStudyService;
@@ -11,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -61,4 +67,34 @@ public class BookmarkService {
     public void deleteAllBookmark(Bookmark bookmark) {
         bookmarkRepository.delete(bookmark);
     };
+
+    public void deleteByStudyId(long studyId){
+        bookmarkRepository.deleteByStudyId(studyId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookmarkResponseDto> getUserBookmark(String category, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        // 해당 유저의 북마크 목록을 가져오고,
+        // 그 북마크의 스터디 아이디로 카테고리 온라인인지 오프라인 확인 후 나눠서 보여주기
+        // 만약 북마크가 study랑 연관관계가 지어져 있다면 ?
+        // getStudy().getCategory() == online 이렇게 할 수 있겠는디
+        List<Bookmark> bookmarks = findAllByMyBookmark(user);
+        List<BookmarkResponseDto> onlineBookmarks = new ArrayList<>();
+        List<BookmarkResponseDto> offlienBookmarks = new ArrayList<>();
+        for (Bookmark bookmark : bookmarks) {
+            Study study = getStudyService.getStudy(bookmark.getStudyId());
+            CategoryEnum studyCategory = study.getCategory();
+            if (studyCategory == CategoryEnum.ONLINE){
+                onlineBookmarks.add(new BookmarkResponseDto(study, bookmark.getId()));
+            } else {
+                offlienBookmarks.add(new BookmarkResponseDto(study, bookmark.getId()));
+            }
+
+        }
+        if (Objects.equals(category, "online")) {
+            return onlineBookmarks;
+        }
+        return offlienBookmarks;
+    }
 }

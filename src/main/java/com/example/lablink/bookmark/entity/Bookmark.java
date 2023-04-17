@@ -1,11 +1,13 @@
 package com.example.lablink.bookmark.entity;
 
 import com.example.lablink.user.entity.User;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Bookmark {
     @Id
