@@ -20,6 +20,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findAllByOrderByCurrentApplicantCountDesc();
     List<Study> findAllByCompany(Company company);
 
+    // todo : 방금 올린 공고 못 찾는 이슈 해결
     @Query(value = "select * from study " +
         "where (:category is null or lower(category) like lower(concat('%', :category, '%'))) " +
         "and (:address is null or lower(address) like lower(concat('%', :address, '%'))) " +

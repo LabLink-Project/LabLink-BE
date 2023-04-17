@@ -98,6 +98,11 @@ public class StudyService {
         // companyDetails == null 아면 로그인이 필요한 서비스입니다. 날려주기
         Company company = isCompanyLogin(companyDetails);
 
+        // 유저의 북마크도 삭제해줘야 한다 ??
+        // -> 삭제된 공고입니다를 달아주느게 더 나을 것 같은데
+        // xxx : 북마크에서 지워버리는게 아니라 '삭제된 공고입니다'로 리팩토링 해주기
+        bookmarkService.deleteByStudyId(studyId);
+
         // image가 있는 공고였다면 s3에서 지워줘야 함
         Study study = getStudyService.getStudy(studyId);
         S3Image s3Image = s3Service.getS3Image(study.getImageURL());
@@ -143,6 +148,4 @@ public class StudyService {
         return studyRepository.findByIdAndCompany(studyId, company)
             .orElseThrow(() -> new StudyException(StudyErrorCode.STUDY_NOT_FOUND));
     }
-
-
 }
