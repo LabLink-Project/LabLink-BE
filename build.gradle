@@ -87,9 +87,9 @@ jacocoTestReport {
         csv.enabled false
         html.enabled false
 
-        xml.destination file("${buildDir}/jacoco/index.xml")
+        /*xml.destination file("${buildDir}/jacoco/index.xml")
         csv.destination file("${buildDir}/jacoco/index.csv")
-        html.destination file("${buildDir}/jacoco/index.html")
+        html.destination file("${buildDir}/jacoco/index.html")*/
     }
     afterEvaluate {
         classDirectories.setFrom(
