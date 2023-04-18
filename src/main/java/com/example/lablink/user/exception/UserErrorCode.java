@@ -19,6 +19,7 @@ public enum UserErrorCode {
 //    NOT_AUTHOR(BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다."),
 //
 //    /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
+    NEED_AGREE_REQUIRE_TERMS(NOT_FOUND, "필수 약관에 동의해 주세요"),
     USER_NOT_FOUND(NOT_FOUND, "등록된 사용자가 없습니다"),
     USERINFO_NOT_FOUND(NOT_FOUND, "등록된 사용자 정보가 없습니다"),
 //    POST_NOT_FOUND(NOT_FOUND, "선택한 게시물을 찾을 수 없습니다."),

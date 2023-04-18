@@ -24,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
+import static java.lang.System.out;
+
 @Service
 @RequiredArgsConstructor
 public class FeedBackService {
@@ -61,7 +63,7 @@ public class FeedBackService {
         return new DetailFeedBackResponseDto(feedback);
     }
 
-    public void excelDownloadFeedBack(CompanyDetailsImpl companyDetails, Long studyId)throws IOException {
+    public void excelDownloadFeedBack(CompanyDetailsImpl companyDetails, Long studyId){
         if(!isMatchCompany(studyId,companyDetails)){
             throw new FeedBackException(FeedBackErrorCode.NOT_HAVE_PERMISSION);
         }
@@ -108,9 +110,10 @@ public class FeedBackService {
         try {
             FileOutputStream out = new FileOutputStream(new File(filePath, fileName));
             workbook.write(out);
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            out.close();
         }
     }
 

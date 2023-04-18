@@ -10,6 +10,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -50,6 +53,35 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
     }
+
+//    @Bean
+//    public RedisTemplate<String, Object> chatRedisTemplate(RedisConnectionFactory connectionFactory) {
+//        RedisTemplate<String, Object> chatRedisTemplate = new RedisTemplate<>();
+//        chatRedisTemplate.setConnectionFactory(connectionFactory);
+//        chatRedisTemplate.setKeySerializer(new StringRedisSerializer());
+//        chatRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
+//        return chatRedisTemplate;
+//    }
+//
+//    // ChannelTopic 등록
+//    @Bean
+//    public ChannelTopic channelTopic() {
+//        return new ChannelTopic("chatroom");
+//    }
+//
+//    // MessageListenerAdapter 등록
+//    @Bean
+//    public MessageListenerAdapter listenerAdapter(RedisSubscriber redisSubscriber) {
+//        return new MessageListenerAdapter(redisSubscriber, "sendMessage");
+//    }
+//    // 등록한 ChannelTopic, MessageListenerAdapter로 RedisMessageListenerContainer 등록
+//    @Bean
+//    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, ChannelTopic channelTopic) {
+//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+//        container.setConnectionFactory(connectionFactory);
+//        container.addMessageListener(listenerAdapter, channelTopic);
+//        return container;
+//    }
 
     //레디스 캐시
     @Bean
