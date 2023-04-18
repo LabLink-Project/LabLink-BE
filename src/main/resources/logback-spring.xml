@@ -3,7 +3,7 @@
 
 <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
 <!--로그 파일 저장 위치-->
-<property name="LOGS_PATH" value="/home/ubuntu/app/logs/"/>>
+<property name="LOGS_PATH" value="\logs/"/>>
 <!-- 지정한 일자/시간마다 파일을 생성하면서 로그를 찍는다-->
 <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
