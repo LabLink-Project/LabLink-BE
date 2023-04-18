@@ -1,10 +1,14 @@
 package com.example.lablink.user.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEmailCheckRequestDto {
 
     @NotBlank(message = "이메일을 입력하세요.")

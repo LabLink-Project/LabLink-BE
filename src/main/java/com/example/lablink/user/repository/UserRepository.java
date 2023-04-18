@@ -8,6 +8,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByEmail(String userEmail);
     boolean existsByEmail(String userEmail);
+    boolean existsByNickName(String nickName);
 
 
     // native쿼리 사용 방식 -> from에 테이블 입력

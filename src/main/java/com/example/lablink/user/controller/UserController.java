@@ -4,6 +4,7 @@ import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
 import com.example.lablink.user.dto.request.UserEmailCheckRequestDto;
+import com.example.lablink.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.user.security.UserDetailsImpl;
 import com.example.lablink.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,12 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return ResponseMessage.SuccessResponse(userService.login(loginRequestDto, response), "");
+    }
+
+    @Operation(summary = "유저 닉네임 중복 체크", description = "유저 닉네임 중복 체크")
+    @PostMapping("/signup/nickName-check")
+    public ResponseEntity nickNameCheck(@RequestBody UserNickNameRequestDto userNickNameRequestDto) {
+        return ResponseMessage.SuccessResponse(userService.nickNameCheck(userNickNameRequestDto), "");
     }
 
     @Operation(summary = "유저 이메일 중복 체크", description = "유저 이메일 중복 체크")
