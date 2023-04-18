@@ -24,7 +24,8 @@ public class CompanyController {
     // 기업 회원가입
     @PostMapping("/companies/signup")
     public ResponseEntity companySignup(@RequestBody CompanySignupRequestDto companySignupRequestDto) {
-        return ResponseMessage.SuccessResponse(companyService.companySignup(companySignupRequestDto), "");
+        companyService.companySignup(companySignupRequestDto);
+        return ResponseMessage.SuccessResponse("회원가입 완료.", "");
     }
 
     // 기업 로그인

@@ -29,7 +29,7 @@ public class CompanyService {
 
     // 기업 회원가입
     @Transactional
-    public String companySignup(CompanySignupRequestDto companySignupRequestDto) {
+    public void companySignup(CompanySignupRequestDto companySignupRequestDto) {
         String email = companySignupRequestDto.getEmail();
         String password = passwordEncoder.encode(companySignupRequestDto.getPassword());
 
@@ -44,7 +44,6 @@ public class CompanyService {
         }
 
         companyRepository.save(new Company(password, companySignupRequestDto, UserRoleEnum.BUSINESS));
-        return "회원가입 완료";
     }
 
     // 기업 로그인
