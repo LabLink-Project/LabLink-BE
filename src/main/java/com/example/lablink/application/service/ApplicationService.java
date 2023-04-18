@@ -79,7 +79,7 @@ public class ApplicationService {
         applicationRepository.delete(application);
     }
 
-//    // 신청서 조회
+    // 신청서 조회
     @Transactional
     public Application getApplication(UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails, Long studyId, Long applicationId) {
         if (userDetails != null) {
