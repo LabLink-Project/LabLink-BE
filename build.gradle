@@ -84,9 +84,9 @@ test {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        csv.enabled true
-        html.enabled true
+        xml.enabled false
+        csv.enabled false
+        html.enabled false
 
         xml.destination file("${buildDir}/jacoco/index.xml")
         csv.destination file("${buildDir}/jacoco/index.csv")

@@ -54,6 +54,15 @@ jobs:
           echo ">> copy application.properties"
           echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.properties
           
+      - name: make application.properties
+        run: |
+          echo ">> mkdir & touch"
+          mkdir -p ./src/test/resources
+          cd ./src/test/resources
+          touch ./application.properties
+          echo ">> copy application.properties"
+          echo "${{ secrets.APPLICATION_TEST_PROPERTIES }}" >> ./application.properties
+          
       - name: make docker-compose.yml
         run: |
           echo ">> mkdir & touch"
