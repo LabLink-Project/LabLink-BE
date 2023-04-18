@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+<conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+<!--로그 파일 저장 위치-->
+<property name="LOGS_PATH" value="\logs/"/>>
+<!-- 지정한 일자/시간마다 파일을 생성하면서 로그를 찍는다-->
+<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>info</level>  <!-- 로그 레벨 지정하는 부분-->
+    </filter>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <!-- rollover daily -->
+        <!-- 일자와 시간,분까지 지정했기때문에 1분마다 로그 파일이 생성된다.-->
+        <fileNamePattern>${LOGS_PATH}log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+        <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <!-- or whenever the file size reaches 100MB -->
+            <maxFileSize>10MB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+        <!-- 로그 파일을 몇 개 생성할 건지-->
+        <maxHistory>30</maxHistory>
+    </rollingPolicy>
+
+    <encoder>
+        <!-- 찍어줄 로그의 형태, 시간과 로그가 찍힌 메소드, 메세지가 출력된다.-->
+        <pattern>[%-5level] %d{HH:mm:ss.SSS} [%logger{36} %M] - %msg%n</pattern>
+    </encoder>
+
+</appender>
+<root level="info">
+    <appender-ref ref="ROLLING"/>
+</root>
+</configuration>

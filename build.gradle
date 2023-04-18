@@ -71,26 +71,43 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-core"
     }
 //    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.4.1'
+
+    // Mail
+    implementation "org.springframework.boot:spring-boot-starter-mail"
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
 
 jacocoTestReport {
     reports {
-        html.enabled true
         xml.enabled true
         csv.enabled true
+        html.enabled true
+
+        xml.destination file("${buildDir}/jacoco/index.xml")
+        csv.destination file("${buildDir}/jacoco/index.csv")
+        html.destination file("${buildDir}/jacoco/index.html")
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/*Application*',
+                            '**/*Exception*',
+                            '**/dto/**',
+
+                    ])
+                })
+        )
     }
 }
 
-test {
-    jacoco {
-        destinationFile = file("$buildDir/jacoco/jacoco.exec")
-    }
+jacoco {
+    toolVersion = "0.8.9"
 }
-
 
 jar {
     enabled = false
