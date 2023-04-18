@@ -33,7 +33,6 @@ public class FeedBackController {
     @Operation(summary = "피드백 조회", description = "피드백 조회")
     @GetMapping()
     public ResponseEntity getFeedBack(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId){
-
         return ResponseMessage.SuccessResponse("",feedBackService.getFeedBack(companyDetails,studyId));
     }
 
