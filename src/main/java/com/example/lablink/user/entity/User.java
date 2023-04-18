@@ -31,6 +31,9 @@ public class User extends Timestamped {
     private String email;
 
     @Column(nullable = false)
+    private String nickName;
+
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = true)
@@ -62,6 +65,7 @@ public class User extends Timestamped {
     // 회원가입시
     public User(SignupRequestDto signupRequestDto, String password, UserInfo userinfo, UserRoleEnum role) {
         this.email = signupRequestDto.getEmail();
+        this.nickName = signupRequestDto.getNickName();
         this.password = password;
         this.userName = getUserName();
         this.dateOfBirth = getDateOfBirth();

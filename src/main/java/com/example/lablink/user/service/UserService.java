@@ -9,6 +9,7 @@ import com.example.lablink.jwt.JwtUtil;
 import com.example.lablink.user.dto.request.LoginRequestDto;
 import com.example.lablink.user.dto.request.SignupRequestDto;
 import com.example.lablink.user.dto.request.UserEmailCheckRequestDto;
+import com.example.lablink.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.user.dto.response.MyLabResponseDto;
 import com.example.lablink.user.entity.User;
 
@@ -138,6 +139,14 @@ public class UserService {
     public String emailCheck(UserEmailCheckRequestDto userEmailCheckRequestDto) {
         if(userRepository.existsByEmail(userEmailCheckRequestDto.getEmail())) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+        }
+        return "사용 가능합니다.";
+    }
+
+    // 유저 닉네임 중복 확인
+    public String nickNameCheck(UserNickNameRequestDto userNickNameRequestDto) {
+        if(userRepository.existsByNickName(userNickNameRequestDto.getNickName())) {
+            throw new UserException(UserErrorCode.DUPLICATE_NICK_NAME);
         }
         return "사용 가능합니다.";
     }

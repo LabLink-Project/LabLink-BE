@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTests {
+class UserServiceTest {
     // 임시의 Mock 객체를 생성할 때 import가 자동으로해당 service안에 있는 클래스들의 import? 의존성을 알아서 주입해준다 ??
     // 테스트 코드를 작성할 Service 주입.
     // setup메서드를 작성하지 않아도 된다
@@ -42,6 +42,7 @@ class UserServiceTests {
 
     private SignupRequestDto signupRequestDto = new SignupRequestDto(
         "test01@naver.com",
+        "nick",
         "password",
         "010-1111-1111",
         true,
