@@ -74,6 +74,7 @@ dependencies {
 
     // Mail
     implementation "org.springframework.boot:spring-boot-starter-mail"
+
 }
 
 test {
