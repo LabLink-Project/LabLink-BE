@@ -33,7 +33,7 @@ public class CompanyController {
 
     @Operation(summary = "기업 회원가입", description = "기업 회원가입")
     @PostMapping("/signup")
-    public ResponseEntity companySignup(@RequestBody CompanySignupRequestDto companySignupRequestDto) {
+    public ResponseEntity companySignup(@Valid @RequestBody CompanySignupRequestDto companySignupRequestDto) {
         companyService.companySignup(companySignupRequestDto);
         return ResponseMessage.SuccessResponse("회원가입 완료.", "");
     }
