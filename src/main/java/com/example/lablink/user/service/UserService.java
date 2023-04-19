@@ -72,13 +72,17 @@ public class UserService {
     // 유저 회원가입
     @Transactional
     public String signup(SignupRequestDto signupRequestDto) {
-//        UserRoleEnum role = UserRoleEnum.USER;
         String email = signupRequestDto.getEmail();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         // 가입 이메일 중복 확인
         if (userRepository.existsByEmail(email)) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+        }
+
+        // 가입 닉네임 중복 확인
+        if (userRepository.existsByNickName(signupRequestDto.getNickName())) {
+            throw new UserException(UserErrorCode.DUPLICATE_NICK_NAME);
         }
 
         // 필수 약관 동의
