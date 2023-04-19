@@ -47,7 +47,7 @@ public class StudyService {
         } else {
             study = new Study(requestDto, status, company, null);
         }
-        studyRepository.saveAndFlush(study);
+        studyRepository.save(study);
     }
 
     // 게시글 상세 조회
@@ -61,6 +61,7 @@ public class StudyService {
 
     // 게시글 수정
     // 이미지 수정 refactoring
+    // todo : 수정 requestDto가 따로 있어야 하나 ?
     @Transactional
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = isCompanyLogin(companyDetails);
@@ -81,7 +82,7 @@ public class StudyService {
         }
     }
 
-    private StudyStatusEnum setStatus(StudyRequestDto requestDto){
+    public StudyStatusEnum setStatus(StudyRequestDto requestDto){
         StudyStatusEnum status;
         if (requestDto.getEndDate().isBefore(LocalDateTime.now())) {
             status = StudyStatusEnum.CLOSED;
@@ -114,7 +115,10 @@ public class StudyService {
     }
 
     // companyDetails == null 아면 로그인이 필요한 서비스입니다. 날려주기
-    private Company isCompanyLogin(CompanyDetailsImpl companyDetails){
+    // xxx: isCompanyLogin() testcode짜려면 public으로 바꿔야하는데
+    //  1. public으로 바꾸고 테스트코드 짜는게 좋을까
+    //  2. private으로 하고 테스트코드 안짜는게 나을까?
+    public Company isCompanyLogin(CompanyDetailsImpl companyDetails){
         if (companyDetails != null){
             return companyDetails.getCompany();
         } else{
@@ -124,7 +128,7 @@ public class StudyService {
 
 
     // checkRole 게시글 권한 확인 (해당 게시글을 작성자와 똑같은지 확인)
-    private void checkRole(Long studyId, Company company){
+    public void checkRole(Long studyId, Company company){
         studyRepository.findByIdAndCompany(studyId, company).orElseThrow(
                 () -> new StudyException(StudyErrorCode.NOT_AUTHOR)
         );

@@ -3,6 +3,7 @@ package com.example.lablink.study.entity;
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.timestamp.entity.Timestamped;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -76,6 +77,29 @@ public class Study extends Timestamped {
 
     @Column(nullable = false)
     private int currentApplicantCount; // 지원자 현황
+
+    @Builder
+    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repearCount, LocalDateTime endDate, String imageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
+        this.id = id;
+        this.company = company;
+        this.title = title;
+        this.studyInfo = studyInfo;
+        this.studyPurpose = studyPurpose;
+        this.studyAction = studyAction;
+        this.subjectCount = subjectCount;
+        this.date = date;
+        this.address = address;
+        this.pay = pay;
+        this.subjectGender = subjectGender;
+        this.subjectMinAge = subjectMinAge;
+        this.subjectMaxAge = subjectMaxAge;
+        this.repearCount = repearCount;
+        this.endDate = endDate;
+        this.imageURL = imageURL;
+        this.status = status;
+        this.category = category;
+        this.currentApplicantCount = currentApplicantCount;
+    }
 
     public Study(StudyRequestDto requestDto, StudyStatusEnum status, Company company, String storedFileName) {
         this.title = requestDto.getTitle();

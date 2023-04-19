@@ -1,6 +1,7 @@
 package com.example.lablink.study.dto.requestDto;
 import com.example.lablink.study.entity.CategoryEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 public class StudyRequestDto {
     private String title;
     private String studyInfo;
