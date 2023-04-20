@@ -62,14 +62,22 @@ public class StudyController {
                 studySearchService.getStudies(searchOption, pageIndex, pageCount, sortedType, userDetails));
     }
 
+    // done : ResponseEntity로
+    // todo : 최근 검색 기록 삭제 기능 추가
     @GetMapping("/search/rank")
-    public List<SearchRankResponseDto> searchRankList(){
-        return studySearchService.searchRankList();
+    public ResponseEntity searchRankList(){
+        return ResponseMessage.SuccessResponse("인기 검색어 조회 성공", studySearchService.searchRankList());
     }
 
     @GetMapping("/search/latest")
-    public List<LatestSearchKeyword> latestSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return studySearchService.latestSearchKeyword(userDetails);
+    public ResponseEntity latestSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseMessage.SuccessResponse("최신 검색어 조회 성공", studySearchService.latestSearchKeyword(userDetails));
+    }
+
+    @DeleteMapping("/search/latest")
+    public ResponseEntity deleteSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String deleteWord){
+        studySearchService.deleteSearchKeyword(userDetails, deleteWord);
+        return ResponseMessage.SuccessResponse("최신 검색어 삭제 성공", "");
     }
 
     // 게시글 관심 공고 조회
