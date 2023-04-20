@@ -6,6 +6,8 @@ import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
 import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
 import com.example.lablink.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.study.entity.Study;
+import com.example.lablink.study.exception.StudyErrorCode;
+import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.repository.StudyRepository;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
@@ -88,6 +90,16 @@ public class StudySearchService {
             return typedTuples.stream().map(LatestSearchKeyword::convertToLatestSearchKeyword).collect(Collectors.toList());
         } else{
             return null;
+        }
+    }
+
+    public void deleteSearchKeyword(UserDetailsImpl userDetails, String deleteWord) {
+        if(userDetails != null){
+            User user = userDetails.getUser();
+            String key = user.getId().toString();
+            redisTemplate.opsForZSet().remove(key, deleteWord);
+        } else {
+            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
         }
     }
 
