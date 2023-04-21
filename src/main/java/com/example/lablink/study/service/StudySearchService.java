@@ -49,10 +49,11 @@ public class StudySearchService {
             studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
 
             if(searchOption.getKeyword() != null){
-                // 최신검색어 구현
-                Double timestamp = (double) System.currentTimeMillis();
-                redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
-
+                if(user != null){
+                    // 최신검색어 구현
+                    Double timestamp = (double) System.currentTimeMillis();
+                    redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
+                }
                 // 인기검색어 구현
                 Double score = 0.0;
                 try {
