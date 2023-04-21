@@ -10,7 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-public class StudyDetailResponseDto {
+public class
+StudyDetailResponseDto {
     private final Long id;
     private final String title;
     private final String studyInfo;
@@ -36,6 +37,7 @@ public class StudyDetailResponseDto {
     private final String imageURL;
     private final boolean isbookmarked;
     private final int currentApplicantCount;
+    private final String companyName;
 
     public StudyDetailResponseDto(Study study, boolean isbookmarked) {
         this.id = study.getId();
@@ -56,5 +58,6 @@ public class StudyDetailResponseDto {
         this.imageURL = study.getImageURL();
         this.isbookmarked = isbookmarked;
         this.currentApplicantCount = study.getCurrentApplicantCount();
+        this.companyName = study.getCompany().getCompanyName();
     }
 }

@@ -22,6 +22,7 @@ public class BookmarkResponseDto {
     private final LocalDateTime date;
     private final String address;
     private final int pay;
+    private final String companyName;
 
     public BookmarkResponseDto(Study study, long bookmarkId) {
         this.id = bookmarkId;
@@ -30,5 +31,6 @@ public class BookmarkResponseDto {
         this.date = study.getDate();
         this.address = study.getAddress();
         this.pay = study.getPay();
+        this.companyName = study.getCompany().getCompanyName();
     }
 }
