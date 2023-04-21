@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Scheduler {
     private final StudyRepository studyRepository;
-    private final JavaMailSender emailSender;
+//     private final JavaMailSender emailSender;
     // 초, 분, 시, 일, 월, 주 순서
     @Scheduled(cron = "0 0 0 * * *")
     // todo : exception ?
