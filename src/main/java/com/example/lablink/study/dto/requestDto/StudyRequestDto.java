@@ -29,7 +29,7 @@ public class StudyRequestDto {
     private String subjectGender;
     private int subjectMinAge;
     private int subjectMaxAge;
-    private int repearCount;
+    private int repeatCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

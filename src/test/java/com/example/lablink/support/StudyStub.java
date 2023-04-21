@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 public enum StudyStub {
-    Study1(1L, "Study1 Title", "Example Study Info", "Example Study Purpose", "Example Study Action", 50L, CategoryEnum.ONLINE, LocalDateTime.now(), "Example Address", 50000, "MALE", 20, 50, 3, LocalDateTime.now().plusDays(30), "http://example.com/image.jpg", true, 10),
+    Study1(1L, "Study1 Title", "Example Study Info", "Example Study Purpose", "Example Study Action", 50L, CategoryEnum.ONLINE, LocalDateTime.now(), "Example Address", 50000, "MALE", 20, 50, 3, LocalDateTime.now().plusDays(15), "http://example.com/image.jpg", true, 10),
     Study2(2L, "Study2 Title", "Example Study Info", "Example Study Purpose", "Example Study Action", 50L, CategoryEnum.ONLINE, LocalDateTime.now(), "Example Address", 50000, "MALE", 20, 50, 3, LocalDateTime.now().plusDays(30), "http://example.com/image.jpg", true, 10);
     private final Long id;
     private final String title;
@@ -25,13 +25,13 @@ public enum StudyStub {
     private final String subjectGender;
     private final int subjectMinAge;
     private final int subjectMaxAge;
-    private final int repearCount;
+    private final int repeatCount;
     private final LocalDateTime endDate;
     private final String imageURL;
     private final boolean isbookmarked;
     private final int currentApplicantCount;
 
-    StudyStub(Long id, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, CategoryEnum category, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repearCount, LocalDateTime endDate, String imageURL, boolean isbookmarked, int currentApplicantCount) {
+    StudyStub(Long id, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, CategoryEnum category, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repeatCount, LocalDateTime endDate, String imageURL, boolean isbookmarked, int currentApplicantCount) {
         this.id = id;
         this.title = title;
         this.studyInfo = studyInfo;
@@ -45,7 +45,7 @@ public enum StudyStub {
         this.subjectGender = subjectGender;
         this.subjectMinAge = subjectMinAge;
         this.subjectMaxAge = subjectMaxAge;
-        this.repearCount = repearCount;
+        this.repeatCount = repeatCount;
         this.endDate = endDate;
         this.imageURL = imageURL;
         this.isbookmarked = isbookmarked;
@@ -67,7 +67,55 @@ public enum StudyStub {
                 .subjectGender(this.subjectGender)
                 .subjectMinAge(this.subjectMinAge)
                 .subjectMaxAge(this.subjectMaxAge)
-                .repearCount(1)
+                .repeatCount(1)
+                .endDate(this.endDate)
+                .imageURL(this.imageURL)
+                .status(StudyStatusEnum.ONGOING)
+                .category(this.category)
+                .currentApplicantCount(this.currentApplicantCount)
+                .build();
+    }
+
+    public Study of(){
+        return Study.builder()
+                .id(null)
+                .company(new Company())
+                .title(this.title)
+                .studyInfo(this.studyInfo)
+                .studyPurpose(this.studyPurpose)
+                .studyAction(this.studyAction)
+                .subjectCount(this.subjectCount)
+                .date(this.date)
+                .address(this.address)
+                .pay(this.pay)
+                .subjectGender(this.subjectGender)
+                .subjectMinAge(this.subjectMinAge)
+                .subjectMaxAge(this.subjectMaxAge)
+                .repeatCount(1)
+                .endDate(this.endDate)
+                .imageURL(this.imageURL)
+                .status(StudyStatusEnum.ONGOING)
+                .category(this.category)
+                .currentApplicantCount(this.currentApplicantCount)
+                .build();
+    }
+
+    public Study of(Company company){
+        return Study.builder()
+                .id(null)
+                .company(company)
+                .title(this.title)
+                .studyInfo(this.studyInfo)
+                .studyPurpose(this.studyPurpose)
+                .studyAction(this.studyAction)
+                .subjectCount(this.subjectCount)
+                .date(this.date)
+                .address(this.address)
+                .pay(this.pay)
+                .subjectGender(this.subjectGender)
+                .subjectMinAge(this.subjectMinAge)
+                .subjectMaxAge(this.subjectMaxAge)
+                .repeatCount(1)
                 .endDate(this.endDate)
                 .imageURL(this.imageURL)
                 .status(StudyStatusEnum.ONGOING)
@@ -92,7 +140,7 @@ public enum StudyStub {
 //                .subjectGender("male")
 //                .subjectMinAge(20)
 //                .subjectMaxAge(30)
-//                .repearCount(2)
+//                .repeatCount(2)
 //                .endDate(LocalDateTime.now().plusDays(7))
 //                .imageURL("https://example.com/image.jpg")
 //                .status(StudyStatusEnum.ONGOING)

@@ -3,6 +3,7 @@ package com.example.lablink.company.entity;
 import com.example.lablink.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.user.entity.UserRoleEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Company {
 
     @Id
@@ -52,4 +53,18 @@ public class Company {
         this.address = companySignupRequestDto.getAddress();
         this.role = role;
     }
+
+    @Builder
+    public Company(Long id, String email, String password, String companyName, String ownerName, String business, String managerPhone, String address, UserRoleEnum role){
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.companyName = companyName;
+        this.ownerName = ownerName;
+        this.business = business;
+        this.managerPhone = managerPhone;
+        this.address = address;
+        this.role = role;
+    }
+
 }

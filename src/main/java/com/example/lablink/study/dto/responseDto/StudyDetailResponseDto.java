@@ -27,7 +27,7 @@ public class StudyDetailResponseDto {
     private final String subjectGender;
     private final int subjectMinAge;
     private final int subjectMaxAge;
-    private final int repearCount;
+    private final int repeatCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -51,7 +51,7 @@ public class StudyDetailResponseDto {
         this.subjectGender = study.getSubjectGender();
         this.subjectMinAge = study.getSubjectMinAge();
         this.subjectMaxAge = study.getSubjectMaxAge();
-        this.repearCount = study.getRepearCount();
+        this.repeatCount = study.getRepeatCount();
         this.endDate = study.getEndDate();
         this.imageURL = study.getImageURL();
         this.isbookmarked = isbookmarked;

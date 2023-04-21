@@ -78,7 +78,7 @@ class StudyServiceTest {
             .subjectGender("Male")
             .subjectMinAge(20)
             .subjectMaxAge(30)
-            .repearCount(5)
+            .repeatCount(5)
             .endDate(LocalDateTime.now().plusDays(30))
             .image(new MockMultipartFile("image", "image.png", "image/png", new byte[0]))
             .build();
@@ -90,6 +90,7 @@ class StudyServiceTest {
         CompanyDetailsImpl companyDetails = new CompanyDetailsImpl(new Company(), new Company().getEmail());
         S3ResponseDto s3ResponseDto = new S3ResponseDto(new S3Image());
         s3ResponseDto.setUploadFileUrl("test");
+
         Long studyId = 1L;
         Study saveStudy = Study1.of(studyId);
 
@@ -199,7 +200,7 @@ class StudyServiceTest {
                 .subjectGender("Male")
                 .subjectMinAge(20)
                 .subjectMaxAge(30)
-                .repearCount(5)
+                .repeatCount(5)
                 .endDate(LocalDateTime.now().plusDays(30))
                 .build();
         CompanyDetailsImpl companyDetails = new CompanyDetailsImpl(new Company(), new Company().getEmail());
