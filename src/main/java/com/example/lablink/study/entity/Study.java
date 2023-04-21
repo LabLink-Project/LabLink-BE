@@ -59,7 +59,7 @@ public class Study extends Timestamped {
     private int subjectMaxAge;
 
     @Column(nullable = false)
-    private int repearCount;
+    private int repeatCount;
 
     @Column(nullable = false)
     private LocalDateTime endDate;
@@ -79,7 +79,7 @@ public class Study extends Timestamped {
     private int currentApplicantCount; // 지원자 현황
 
     @Builder
-    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repearCount, LocalDateTime endDate, String imageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
+    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repeatCount, LocalDateTime endDate, String imageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
         this.id = id;
         this.company = company;
         this.title = title;
@@ -93,7 +93,7 @@ public class Study extends Timestamped {
         this.subjectGender = subjectGender;
         this.subjectMinAge = subjectMinAge;
         this.subjectMaxAge = subjectMaxAge;
-        this.repearCount = repearCount;
+        this.repeatCount = repeatCount;
         this.endDate = endDate;
         this.imageURL = imageURL;
         this.status = status;
@@ -114,7 +114,7 @@ public class Study extends Timestamped {
         this.subjectGender = requestDto.getSubjectGender();
         this.subjectMinAge = requestDto.getSubjectMinAge();
         this.subjectMaxAge = requestDto.getSubjectMaxAge();
-        this.repearCount = requestDto.getRepearCount();
+        this.repeatCount = requestDto.getRepeatCount();
         this.endDate = requestDto.getEndDate();
         // done: 이미지 null값일 시 썸네일 넣어주기
         this.imageURL = Objects.requireNonNullElse(storedFileName, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
@@ -135,7 +135,7 @@ public class Study extends Timestamped {
         this.subjectGender = requestDto.getSubjectGender();
         this.subjectMinAge = requestDto.getSubjectMinAge();
         this.subjectMaxAge = requestDto.getSubjectMaxAge();
-        this.repearCount = requestDto.getRepearCount();
+        this.repeatCount = requestDto.getRepeatCount();
         this.endDate = requestDto.getEndDate();
         if (storedFileName != null) this.imageURL = storedFileName;
         this.status = status;

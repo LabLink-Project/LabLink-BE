@@ -80,6 +80,7 @@ public class JwtUtil {
             Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("role", user.getRole().toString())
+                .claim("nickname", user.getNickName())
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)

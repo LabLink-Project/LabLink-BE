@@ -86,16 +86,23 @@ public class FeedBackService {
         //컬럼 너비 값
         sheet.setColumnWidth(0,3000);
         sheet.setColumnWidth(1,5000);
-        sheet.setColumnWidth(2,20000);
+        sheet.setColumnWidth(2,5000);
+        sheet.setColumnWidth(3,5000);
+        sheet.setColumnWidth(4,20000);
         // Header
-        row = sheet.createRow(rowNum++);
+
         cell = row.createCell(0);
         cell.setCellValue("이름");
         cell = row.createCell(1);
         cell.setCellValue("이메일");
         cell = row.createCell(2);
+        cell.setCellValue("성별");
+        cell = row.createCell(3);
+        cell.setCellValue("전화번호");
+        cell = row.createCell(4);
         cell.setCellValue("피드백 내용");
 
+        row = sheet.createRow(rowNum++);
         // Body
         for (int i=0; i<feedbacks.size(); i++) {
             row = sheet.createRow(rowNum++);
@@ -104,6 +111,10 @@ public class FeedBackService {
             cell = row.createCell(1);
             cell.setCellValue(result.get(i).getUserEmail());
             cell = row.createCell(2);
+            cell.setCellValue(result.get(i).getUserGender());
+            cell = row.createCell(3);
+            cell.setCellValue(result.get(i).getUserPhone());
+            cell = row.createCell(4);
             cell.setCellValue(result.get(i).getFeedbackMessage());
         }
 

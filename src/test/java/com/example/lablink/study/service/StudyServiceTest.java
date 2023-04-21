@@ -78,7 +78,7 @@ class StudyServiceTest {
             .subjectGender("Male")
             .subjectMinAge(20)
             .subjectMaxAge(30)
-            .repearCount(5)
+            .repeatCount(5)
             .endDate(LocalDateTime.now().plusDays(30))
             .image(new MockMultipartFile("image", "image.png", "image/png", new byte[0]))
             .build();
@@ -90,6 +90,7 @@ class StudyServiceTest {
         CompanyDetailsImpl companyDetails = new CompanyDetailsImpl(new Company(), new Company().getEmail());
         S3ResponseDto s3ResponseDto = new S3ResponseDto(new S3Image());
         s3ResponseDto.setUploadFileUrl("test");
+
         Long studyId = 1L;
         Study saveStudy = Study1.of(studyId);
 
@@ -135,19 +136,6 @@ class StudyServiceTest {
         assertEquals(studyId, studyDetailResponseDto.getId());
         assertTrue(studyDetailResponseDto.isIsbookmarked());
     }
-
-//    @Test
-    // getStudy
-//    @DisplayName("공고 상세 조회 - 공고가 db에 없으면 상세조회 실패")
-//    void getDetailStudy_NotFoundException() {
-        // given
-//        Long studyId = 2L;
-//        given(studyRepository.findById(studyId)).willThrow(new StudyException(StudyErrorCode.STUDY_NOT_FOUND));
-
-        // when & then
-//        assertEquals("등록된 공고가 없습니다", getStudyService.getStudy(studyId), StudyErrorCode.STUDY_NOT_FOUND.getMessage());
-//        assertThrows(StudyException.class, () -> getStudyService.getStudy(studyId));
-//    }
 
     @Test
     @DisplayName("공고 수정 - 이미지까지 수정할 경우")
@@ -199,7 +187,7 @@ class StudyServiceTest {
                 .subjectGender("Male")
                 .subjectMinAge(20)
                 .subjectMaxAge(30)
-                .repearCount(5)
+                .repeatCount(5)
                 .endDate(LocalDateTime.now().plusDays(30))
                 .build();
         CompanyDetailsImpl companyDetails = new CompanyDetailsImpl(new Company(), new Company().getEmail());

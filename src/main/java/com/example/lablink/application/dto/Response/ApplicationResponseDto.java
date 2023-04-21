@@ -4,8 +4,10 @@ import com.example.lablink.company.entity.Company;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.entity.UserInfo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +17,11 @@ public class ApplicationResponseDto {
     private Long studyId;
     private String title;
     private String companyName;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;
+
     private String address;
     private String userName;
     private String userPhone;

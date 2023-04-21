@@ -74,6 +74,9 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<BookmarkResponseDto> getUserBookmark(String category, UserDetailsImpl userDetails) {
+        if(userDetails == null){
+            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+        }
         User user = userDetails.getUser();
         // 해당 유저의 북마크 목록을 가져오고,
         // 그 북마크의 스터디 아이디로 카테고리 온라인인지 오프라인 확인 후 나눠서 보여주기

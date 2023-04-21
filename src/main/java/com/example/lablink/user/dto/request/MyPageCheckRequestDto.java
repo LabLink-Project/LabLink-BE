@@ -2,6 +2,7 @@ package com.example.lablink.user.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.Past;
 import java.util.Date;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class MyPageCheckRequestDto {
     @NotNull(message = "정보를 입력해 주세요")

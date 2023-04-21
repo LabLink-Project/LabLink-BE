@@ -6,6 +6,8 @@ import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
 import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
 import com.example.lablink.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.study.entity.Study;
+import com.example.lablink.study.exception.StudyErrorCode;
+import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.repository.StudyRepository;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
@@ -91,6 +93,16 @@ public class StudySearchService {
         }
     }
 
+    public void deleteSearchKeyword(UserDetailsImpl userDetails, String deleteWord) {
+        if(userDetails != null){
+            User user = userDetails.getUser();
+            String key = user.getId().toString();
+            redisTemplate.opsForZSet().remove(key, deleteWord);
+        } else {
+            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+        }
+    }
+
     // 인기검색어 리스트 1위~10위까지
     public List<SearchRankResponseDto> searchRankList() {
         String key = "ranking";
@@ -102,7 +114,7 @@ public class StudySearchService {
     }
 
     // 공고 정렬 조회
-    private List<Study> getSortedStudies(String sortedType) {
+    public List<Study> getSortedStudies(String sortedType) {
         List<Study> studies = new ArrayList<>();
         // 인기순 == 지원자 많은 순
         if (Objects.equals(sortedType, "popularity")){
