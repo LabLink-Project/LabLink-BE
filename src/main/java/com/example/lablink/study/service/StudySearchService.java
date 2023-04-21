@@ -114,7 +114,7 @@ public class StudySearchService {
     }
 
     // 공고 정렬 조회
-    private List<Study> getSortedStudies(String sortedType) {
+    public List<Study> getSortedStudies(String sortedType) {
         List<Study> studies = new ArrayList<>();
         // 인기순 == 지원자 많은 순
         if (Objects.equals(sortedType, "popularity")){

@@ -10,7 +10,7 @@ import com.example.lablink.application.exception.ApplicationErrorCode;
 import com.example.lablink.application.exception.ApplicationException;
 import com.example.lablink.application.repository.ApplicationRepository;
 import com.example.lablink.company.security.CompanyDetailsImpl;
-import com.example.lablink.study.dto.responseDto.ApplicationFromStudyResponseDto;
+import com.example.lablink.application.dto.Response.ApplicationFromStudyResponseDto;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.service.GetStudyService;
 import com.example.lablink.study.service.StudyService;
