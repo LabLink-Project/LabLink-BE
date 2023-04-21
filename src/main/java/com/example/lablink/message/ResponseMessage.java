@@ -18,6 +18,14 @@ public class ResponseMessage<T> {
     private final String message;
     private final T data;
 
+    public static ResponseMessage ErrorResponse(int statusCode, String message) {
+        return ResponseMessage.builder()
+                        .statusCode(statusCode)
+                        .message(message)
+                        .data("")
+                        .build();
+    }
+
     public static ResponseEntity ErrorResponse(UserErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())

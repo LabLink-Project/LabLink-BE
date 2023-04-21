@@ -3,6 +3,8 @@ package com.example.lablink.jwt;
 
 
 import com.example.lablink.message.ResponseMessage;
+import com.example.lablink.study.exception.StudyErrorCode;
+import com.example.lablink.study.exception.StudyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +82,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
 
         try {
-            String json = new ObjectMapper().writeValueAsString(ResponseMessage.SuccessResponse(msg, "") );
+            String json = new ObjectMapper().writeValueAsString(ResponseMessage.ErrorResponse(statusCode, msg));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());
