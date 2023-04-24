@@ -2,7 +2,7 @@ package com.example.lablink.application.dto.Request;
 
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 public class ApplicationRequestDto {
@@ -16,5 +16,5 @@ public class ApplicationRequestDto {
 
     private String userGender;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 }
