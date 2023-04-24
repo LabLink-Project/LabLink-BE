@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 public class ApplicationFromStudyResponseDto {
@@ -21,7 +21,7 @@ public class ApplicationFromStudyResponseDto {
     // 날짜 형식
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

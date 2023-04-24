@@ -1,15 +1,21 @@
 package com.example.lablink.user.entity;
 
+import com.example.lablink.timestamp.entity.Timestamped;
 import com.example.lablink.user.dto.request.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+// TODO  created, modified, deleted 다 필요한가 ?
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE terms SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
 @NoArgsConstructor
-public class Terms {
+public class Terms extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

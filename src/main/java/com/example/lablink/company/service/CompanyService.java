@@ -115,7 +115,7 @@ public class CompanyService {
     public void deleteCompany(CompanyDetailsImpl companyDetails, HttpServletResponse response) {
         List<Study> studies = studyService.findAllCompanyStudy( companyDetails.getCompany());
         for (Study study1 : studies) {
-            studyService.deleteStudy(study1);
+            studyService.deleteStudy(study1.getId(), companyDetails);
         }
         // 로그아웃 (헤더 null값 만들기)
         companyRepository.delete(companyDetails.getCompany());

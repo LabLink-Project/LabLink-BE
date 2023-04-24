@@ -11,7 +11,6 @@ import com.example.lablink.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.study.dto.responseDto.StudyDetailResponseDto;
 import com.example.lablink.study.entity.CategoryEnum;
 import com.example.lablink.study.entity.Study;
-import com.example.lablink.study.exception.StudyErrorCode;
 import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.repository.StudyRepository;
 import com.example.lablink.user.entity.User;
@@ -324,22 +323,6 @@ class StudyServiceTest {
         assertEquals(2, result.size());
         assertEquals("Study1 Title", result.get(0).getTitle());
         assertEquals("Study2 Title", result.get(1).getTitle());
-    }
-
-
-    @Test
-    @DisplayName("기업 회원 탈퇴시 존재 공고 삭제")
-    void testDeleteStudy() {
-        // given
-        Long studyId = 1L;
-        Company company = new Company();
-        Study study = Study1.of(studyId);
-
-        // when
-        studyService.deleteStudy(study);
-
-        // then
-        verify(studyRepository, times(1)).delete(study);
     }
 
     @Test

@@ -142,11 +142,6 @@ public class StudyService {
         return studyRepository.findAllByCompany(company);
     }
 
-    // 기업 회원 탈퇴시 존재 공고 삭제
-    public void deleteStudy(Study study) {
-        studyRepository.delete(study);
-    }
-
     // todo : checkRole 이랑 동일
     // 기업이 작성한 공고 찾기
     public Study findStudyFromCompany(Long studyId, Company company) {

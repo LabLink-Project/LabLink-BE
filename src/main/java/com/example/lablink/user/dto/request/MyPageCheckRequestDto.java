@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -29,7 +29,7 @@ public class MyPageCheckRequestDto {
         @NotNull(message = "정보를 입력해 주세요")
         @Past(message = "생년월일은 유효한 날짜여야 합니다.")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
-        private Date dateOfBirth;
+        private LocalDate dateOfBirth;
 
         @NotNull(message = "정보를 입력해 주세요")
         @NotBlank(message = "정보를 입력해 주세요")
