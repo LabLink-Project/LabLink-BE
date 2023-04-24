@@ -3,16 +3,18 @@ package com.example.lablink.company.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanySignupRequestDto {
-
     @NotBlank(message = "이메일을 입력하세요.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "유효한 이메일 주소를 입력해 주세요.")
     private String email;
@@ -24,6 +26,8 @@ public class CompanySignupRequestDto {
 
     @NotBlank(message = "회사명을 입력해 주세요.")
     private String companyName;
+
+    private MultipartFile logo;
 
     @NotBlank(message = "대표자명을 입력해 주세요.")
     private String ownerName;
