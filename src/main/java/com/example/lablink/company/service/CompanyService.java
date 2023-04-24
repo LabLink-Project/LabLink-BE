@@ -1,5 +1,7 @@
+
 package com.example.lablink.company.service;
 
+import com.example.lablink.S3Image.dto.S3ResponseDto;
 import com.example.lablink.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.company.dto.request.CompanyNameCheckRequestDto;
@@ -31,12 +33,14 @@ public class CompanyService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final StudyService studyService;
+
+
 //    인증 인가를 담당하는 Service의 보안? 을 위함이기에 단익책임 위반 X
 //    private final CsrfTokenRepository csrfTokenRepository;
 
     // 기업 회원가입
     @Transactional
-    public void companySignup(CompanySignupRequestDto companySignupRequestDto) {
+    public void companySignup(CompanySignupRequestDto companySignupRequestDto, S3ResponseDto s3ResponseDto) {
         String email = companySignupRequestDto.getEmail();
         String password = passwordEncoder.encode(companySignupRequestDto.getPassword());
 
@@ -50,7 +54,15 @@ public class CompanyService {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_COMPANY_NAME);
         }
 
-        companyRepository.save(new Company(password, companySignupRequestDto, UserRoleEnum.BUSINESS));
+        Company company;
+        if(s3ResponseDto != null) {
+            String logoUrl = s3ResponseDto.getUploadFileUrl();
+            company = new Company(password, companySignupRequestDto, logoUrl, UserRoleEnum.BUSINESS);
+        } else {
+            company = new Company(password, companySignupRequestDto, null, UserRoleEnum.BUSINESS);
+        }
+
+        companyRepository.save(company);
     }
 
     // 기업 로그인

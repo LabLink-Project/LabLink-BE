@@ -1,5 +1,7 @@
 package com.example.lablink.company.controller;
 
+import com.example.lablink.S3Image.dto.S3ResponseDto;
+import com.example.lablink.S3Image.service.S3UploaderService;
 import com.example.lablink.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.company.dto.request.CompanyNameCheckRequestDto;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,11 +33,17 @@ import javax.validation.Valid;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final S3UploaderService s3UploaderService;
 
     @Operation(summary = "기업 회원가입", description = "기업 회원가입")
     @PostMapping("/signup")
-    public ResponseEntity companySignup(@Valid @RequestBody CompanySignupRequestDto companySignupRequestDto) {
-        companyService.companySignup(companySignupRequestDto);
+    public ResponseEntity companySignup(@Valid /*@RequestBody */CompanySignupRequestDto companySignupRequestDto) {
+        S3ResponseDto s3ResponseDto = null;
+        if(companySignupRequestDto.getLogo() != null){
+            MultipartFile image = companySignupRequestDto.getLogo();
+            s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
+        }
+        companyService.companySignup(companySignupRequestDto, s3ResponseDto);
         return ResponseMessage.SuccessResponse("회원가입 완료.", "");
     }
 
