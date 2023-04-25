@@ -1,8 +1,10 @@
 package com.example.lablink.application.dto.Request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 public class ApplicationRequestDto {
@@ -16,5 +18,7 @@ public class ApplicationRequestDto {
 
     private String userGender;
 
-    private Date dateOfBirth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
+
 }

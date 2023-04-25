@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +42,7 @@ public class UserMyPageService {
         if(user == null) { throw new UserException(UserErrorCode.INVALID_TOKEN); }
 
         String newUserName = checkRequestDto.getUserName();
-        Date newDateOfBirth = checkRequestDto.getDateOfBirth();
+        LocalDate newDateOfBirth = checkRequestDto.getDateOfBirth();
         String newUserGender = checkRequestDto.getUserGender();
         String newUserPhone = checkRequestDto.getUserPhone();
         String newUserAddress = checkRequestDto.getUserAddress();

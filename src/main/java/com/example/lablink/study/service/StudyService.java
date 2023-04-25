@@ -37,22 +37,27 @@ public class StudyService {
 
     // 게시글 작성
     @Transactional
-    public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails, S3ResponseDto s3ResponseDto) {
+    public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails, S3ResponseDto thumbnailS3ResponseDto, S3ResponseDto detailS3ResponseDto) {
+        // todo : isCompanyLogin 통일
         Company company = isCompanyLogin(companyDetails);
         StudyStatusEnum status = setStatus(requestDto);
         Study study;
-        if (s3ResponseDto != null) {
-            String storedFileName = s3ResponseDto.getUploadFileUrl();
-            study = new Study(requestDto, status, company, storedFileName);
-        } else {
-            study = new Study(requestDto, status, company, null);
+        String thumbnailImageURL = null;
+        String detailImageURL = null;
+        if (thumbnailS3ResponseDto != null) {
+            thumbnailImageURL = thumbnailS3ResponseDto.getUploadFileUrl();
         }
+        if (detailS3ResponseDto != null){
+            detailImageURL = detailS3ResponseDto.getUploadFileUrl();
+        }
+        study = new Study(requestDto, status, company, thumbnailImageURL, detailImageURL);
         studyRepository.save(study);
     }
 
     // 게시글 상세 조회
     @Transactional(readOnly = true)
     public StudyDetailResponseDto getDetailStudy(Long studyId, UserDetailsImpl userDetails) {
+        // todo : userDetails 통일
         User user = userDetails == null ? null : userDetails.getUser();
         Study study = getStudyService.getStudy(studyId);
         boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
@@ -61,25 +66,38 @@ public class StudyService {
 
     // 게시글 수정
     // 이미지 수정 refactoring
-    // todo : 수정 requestDto가 따로 있어야 하나 ?
+    // todo : 수정 requestDto가 따로 있어야 하나 ? or 수정하기 눌렀을 때 내용 보여주기
     @Transactional
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = isCompanyLogin(companyDetails);
         Study study = getStudyService.getStudy(studyId);
         StudyStatusEnum status = setStatus(requestDto);
-        // 만약 수정하기 전 공고에 image가 있었다면 이미지 가져오기
-        S3Image s3Image = s3Service.getS3Image(study.getImageURL());
         checkRole(studyId, company);
-        MultipartFile image = requestDto.getImage();
-        if(image != null){
-            if(s3Image != null){
-                s3UploaderService.deleteFile(s3Image.getId());
+        // 만약 수정하기 전 공고에 image가 있었다면 이미지 가져오기
+        S3Image thumbnailS3Image = s3Service.getS3Image(study.getThumbnailImageURL());
+        S3Image detailS3Image = s3Service.getS3Image(study.getDetailImageURL());
+        MultipartFile thumbnailImage = requestDto.getThumbnailImage();
+        MultipartFile detailImage = requestDto.getThumbnailImage();
+        String thumbnailImageURL = null;
+        String detailImageURL = null;
+        // thumbnailImage
+        if(thumbnailImage != null){
+            if(thumbnailS3Image != null){
+                s3UploaderService.deleteFile(thumbnailS3Image.getId());
             }
-            S3ResponseDto s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
-            study.update(requestDto, status, s3ResponseDto.getUploadFileUrl());
-        } else{
-            study.update(requestDto, status, null);
+            S3ResponseDto thumbnailS3ResponseDto = s3UploaderService.uploadFiles("thumbnail", thumbnailImage);
+            thumbnailImageURL = thumbnailS3ResponseDto.getUploadFileUrl();
         }
+        // detailImage
+        if(detailImage != null){
+            if(detailS3Image != null){
+                s3UploaderService.deleteFile(detailS3Image.getId());
+            }
+            S3ResponseDto detailS3ResponseDto = s3UploaderService.uploadFiles("detail", detailImage);
+            detailImageURL = detailS3ResponseDto.getUploadFileUrl();
+        }
+
+        study.update(requestDto, status, thumbnailImageURL, detailImageURL);
     }
 
     public StudyStatusEnum setStatus(StudyRequestDto requestDto){
@@ -90,6 +108,35 @@ public class StudyService {
             status = StudyStatusEnum.ONGOING;
         }
         return status;
+    }
+
+    // 기본 이미지로 변경 (thumbnail)
+    // xxx : deleteThumbnail(), deleteDetailImage() 2개로 하는게 맞을까 ?
+    @Transactional
+    public void deleteThumbnail(Long studyId, CompanyDetailsImpl companyDetails) {
+        Company company = isCompanyLogin(companyDetails);
+        Study study = getStudyService.getStudy(studyId);
+        checkRole(studyId, company);
+        S3Image thumbnailS3Image = s3Service.getS3Image(study.getThumbnailImageURL());
+        if(thumbnailS3Image != null){
+            s3UploaderService.deleteFile(thumbnailS3Image.getId());
+        }
+        // study update 해주깅
+        study.deleteThumbnail();
+
+    }
+
+    // 기본 이미지로 변경 (detailImage)
+    @Transactional
+    public void deleteDetailImage(Long studyId, CompanyDetailsImpl companyDetails) {
+        Company company = isCompanyLogin(companyDetails);
+        Study study = getStudyService.getStudy(studyId);
+        checkRole(studyId, company);
+        S3Image detailS3Image = s3Service.getS3Image(study.getDetailImageURL());
+        if(detailS3Image != null){
+            s3UploaderService.deleteFile(detailS3Image.getId());
+        }
+        study.deleteDetailImage();
     }
 
     // 게시글 삭제
@@ -106,9 +153,13 @@ public class StudyService {
 
         // image가 있는 공고였다면 s3에서 지워줘야 함
         Study study = getStudyService.getStudy(studyId);
-        S3Image s3Image = s3Service.getS3Image(study.getImageURL());
-        if(s3Image != null){
-            s3UploaderService.deleteFile(s3Image.getId());
+        S3Image thumbnailS3Image = s3Service.getS3Image(study.getThumbnailImageURL());
+        S3Image DetailS3Image = s3Service.getS3Image(study.getDetailImageURL());
+        if(thumbnailS3Image != null){
+            s3UploaderService.deleteFile(thumbnailS3Image.getId());
+        }
+        if(DetailS3Image != null){
+            s3UploaderService.deleteFile(DetailS3Image.getId());
         }
         checkRole(studyId, company);
         studyRepository.deleteById(studyId);
@@ -140,11 +191,6 @@ public class StudyService {
             throw new StudyException(StudyErrorCode.STUDY_NOT_FOUND);
         }
         return studyRepository.findAllByCompany(company);
-    }
-
-    // 기업 회원 탈퇴시 존재 공고 삭제
-    public void deleteStudy(Study study) {
-        studyRepository.delete(study);
     }
 
     // todo : checkRole 이랑 동일

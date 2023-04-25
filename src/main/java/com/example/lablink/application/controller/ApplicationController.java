@@ -43,11 +43,11 @@ public class ApplicationController {
         return ResponseMessage.SuccessResponse("신청서 삭제 성공","");
     }
 
-    @Operation(summary = "신청서 조회", description = "신청서 조회")
+    /*@Operation(summary = "신청서 조회", description = "신청서 조회")
     @GetMapping("/applications/{applicationId}")
     public ResponseEntity getApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
         return ResponseMessage.SuccessResponse("",applicationService.getApplication(userDetails,companyDetails,studyId,applicationId));
-    }
+    }*/
 
     @Operation(summary = "신청서 접수 클릭 시 나오는 정보 값", description = "신청서 접수 클릭 시 나오는 정보 값")
     @PostMapping("/applicationsInfo")

@@ -15,7 +15,6 @@ import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.service.GetStudyService;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.entity.User;
-import com.example.lablink.user.entity.UserInfo;
 import com.example.lablink.user.security.UserDetailsImpl;
 import com.example.lablink.user.service.UserInfoService;
 import com.example.lablink.user.service.UserService;
@@ -105,7 +104,7 @@ public class ApplicationService {
             throw new ApplicationException(ApplicationErrorCode.NOT_HAVE_PERMISSION);
         }
     }
-
+    //신청서 접수 클릭 시 나오는 정보 값
     @Transactional(readOnly = true)
     public ApplicationResponseDto afterApplication(UserDetailsImpl userDetails, Long studyId) {
         User user = userService.getUser(userDetails);
@@ -115,7 +114,7 @@ public class ApplicationService {
 
     // 신청서 승인, 거절
     @Transactional
-    public Application applicationStatus(CompanyDetailsImpl companyDetails, ApplicationStatusRequestDto statusRequestDto, Long studyId, Long applicationId) {
+    public void applicationStatus(CompanyDetailsImpl companyDetails, ApplicationStatusRequestDto statusRequestDto, Long studyId, Long applicationId) {
         if (companyDetails != null) {
             // 공고, 신청서 찾기
             getStudyService.getStudy(studyId);
@@ -127,7 +126,6 @@ public class ApplicationService {
             } else if(statusRequestDto.getApplicationStatus().equals("거절")) {
                 application.statusUpdate(ApprovalStatusEnum.REJECTED.toString());
             }
-            return application;
         } else {
             // 인증된 회사 정보가 없는 경우, 예외 처리
             throw new ApplicationException(ApplicationErrorCode.NOT_HAVE_PERMISSION);
@@ -145,9 +143,7 @@ public class ApplicationService {
         List<Application> applications = applicationRepository.findByStudyId(study.getId());
 
         for (Application application : applications) {
-            User user = userService.findUser(application.getUser().getId());
-            UserInfo userInfo = userInfoService.findUserInfo(user.getUserinfo().getId());
-            applicationDtos.add(new ApplicationFromStudyResponseDto(user, userInfo, application));
+            applicationDtos.add(new ApplicationFromStudyResponseDto(application.getUser(), application.getUser().getUserinfo(), application));
         }
 
         return applicationDtos;

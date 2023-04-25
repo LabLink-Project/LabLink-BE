@@ -10,7 +10,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity(name = "users")
 @Table(name = "users", indexes = {
@@ -40,7 +40,7 @@ public class User extends Timestamped {
     private String userName;
 
     @Column(nullable = true)
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(nullable = true)
     private String userGender;

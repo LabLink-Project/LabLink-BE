@@ -1,15 +1,10 @@
 package com.example.lablink.scheduler;
 
-import com.example.lablink.application.entity.Application;
-import com.example.lablink.application.repository.ApplicationRepository;
-import com.example.lablink.feedback.entity.Feedback;
-import com.example.lablink.feedback.repository.FeedBackRepository;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.entity.StudyStatusEnum;
 import com.example.lablink.study.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Scheduler {
     private final StudyRepository studyRepository;
-//     private final JavaMailSender emailSender;
+//    private final JavaMailSender emailSender;
     // 초, 분, 시, 일, 월, 주 순서
     @Scheduled(cron = "0 0 0 * * *")
     // todo : exception ?

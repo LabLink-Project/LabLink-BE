@@ -3,6 +3,7 @@ package com.example.lablink.company.dto.response;
 import com.example.lablink.study.entity.CategoryEnum;
 import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.entity.StudyStatusEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,11 +14,13 @@ import java.time.LocalDateTime;
 public class ViewMyStudyResponseDto {
     private String title;
     private CategoryEnum category;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime date;
     private int pay;
     private String address;
     private StudyStatusEnum studyStatus;
     private Long subjectCount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime endDate;
 
     public ViewMyStudyResponseDto(Study study) {

@@ -2,18 +2,17 @@ package com.example.lablink.company.entity;
 
 import com.example.lablink.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.user.entity.UserRoleEnum;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor
 //@AllArgsConstructor
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,10 +39,13 @@ public class Company {
     private String address;
 
     @Column(nullable = false)
+    private String logoUrl;
+
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public Company(String password, CompanySignupRequestDto companySignupRequestDto, UserRoleEnum role) {
+    public Company(String password, CompanySignupRequestDto companySignupRequestDto, String logoUrl, UserRoleEnum role) {
         this.email = companySignupRequestDto.getEmail();
         this.password = password;
         this.companyName = companySignupRequestDto.getCompanyName();
@@ -51,6 +53,7 @@ public class Company {
         this.business = companySignupRequestDto.getBusiness();
         this.managerPhone = companySignupRequestDto.getManagerPhone();
         this.address = companySignupRequestDto.getAddress();
+        this.logoUrl = Objects.requireNonNullElse(logoUrl, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
         this.role = role;
     }
 

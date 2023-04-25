@@ -14,6 +14,8 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor
+//@Where(clause = "deleted_at IS NULL")
+//@SQLDelete(sql = "UPDATE study SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
 public class Study extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,8 +66,14 @@ public class Study extends Timestamped {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
+//    @Column(nullable = false)
+//    private String imageURL;
+
     @Column(nullable = false)
-    private String imageURL;
+    private String thumbnailImageURL;
+
+    @Column(nullable = false)
+    private String detailImageURL;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -79,7 +87,7 @@ public class Study extends Timestamped {
     private int currentApplicantCount; // 지원자 현황
 
     @Builder
-    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repeatCount, LocalDateTime endDate, String imageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
+    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repeatCount, LocalDateTime endDate, String thumbnailImageURL, String detailImageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
         this.id = id;
         this.company = company;
         this.title = title;
@@ -95,13 +103,14 @@ public class Study extends Timestamped {
         this.subjectMaxAge = subjectMaxAge;
         this.repeatCount = repeatCount;
         this.endDate = endDate;
-        this.imageURL = imageURL;
+        this.thumbnailImageURL = thumbnailImageURL;
+        this.detailImageURL = detailImageURL;
         this.status = status;
         this.category = category;
         this.currentApplicantCount = currentApplicantCount;
     }
 
-    public Study(StudyRequestDto requestDto, StudyStatusEnum status, Company company, String storedFileName) {
+    public Study(StudyRequestDto requestDto, StudyStatusEnum status, Company company, String thumbnailImageURL, String detailImageURL) {
         this.title = requestDto.getTitle();
         this.company = company;
         this.studyInfo = requestDto.getStudyInfo();
@@ -117,13 +126,14 @@ public class Study extends Timestamped {
         this.repeatCount = requestDto.getRepeatCount();
         this.endDate = requestDto.getEndDate();
         // done: 이미지 null값일 시 썸네일 넣어주기
-        this.imageURL = Objects.requireNonNullElse(storedFileName, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
+        this.thumbnailImageURL = Objects.requireNonNullElse(thumbnailImageURL, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
+        this.detailImageURL = Objects.requireNonNullElse(detailImageURL, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
         this.status = status;
         this.category = requestDto.getCategory();
         this.currentApplicantCount = 0;
     }
 
-    public void update(StudyRequestDto requestDto, StudyStatusEnum status, String storedFileName) {
+    public void update(StudyRequestDto requestDto, StudyStatusEnum status, String thumbnailImageURL, String detailImageURL) {
         this.title = requestDto.getTitle();
         this.studyInfo = requestDto.getStudyInfo();
         this.studyPurpose = requestDto.getStudyPurpose();
@@ -137,7 +147,8 @@ public class Study extends Timestamped {
         this.subjectMaxAge = requestDto.getSubjectMaxAge();
         this.repeatCount = requestDto.getRepeatCount();
         this.endDate = requestDto.getEndDate();
-        if (storedFileName != null) this.imageURL = storedFileName;
+        if (thumbnailImageURL != null) this.thumbnailImageURL = thumbnailImageURL;
+        if (detailImageURL != null) this.detailImageURL = detailImageURL;
         this.status = status;
     }
 
@@ -147,5 +158,13 @@ public class Study extends Timestamped {
 
     public void updateCurrentApplicantCount() {
         ++this.currentApplicantCount;
+    }
+
+    public void deleteThumbnail(){
+        this.thumbnailImageURL = "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png";
+    }
+
+    public void deleteDetailImage(){
+        this.detailImageURL = "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png";
     }
 }
