@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -49,6 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 
+@SpringBootTest
 @WebMvcTest({StudyController.class})
 @MockBean(JpaMetamodelMappingContext.class)
 class StudyControllerTest {
@@ -92,6 +94,7 @@ class StudyControllerTest {
     void createStudy() throws Exception{
         // given
         Company company = Company1.of();
+
 
         // when
         mockMvc.perform(post("/study")

@@ -33,10 +33,12 @@ public class S3UploaderService {
         String uploadFileName = getUuidFileName(originalFileName);
         String uploadFileUrl = "";
 
+        // 파일의 크기와 MIME 타입 등을 지정하는 메타데이터 담음
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
 
+        // InputStream : 바이터 단위로 데이터를 읽어오기 위한 추상클래스 - 파일 데이터를 읽을 수 있음
         try (InputStream inputStream = multipartFile.getInputStream()) {
 
             String keyName = directory + uploadFileName; // ex) 구분/년/월/일/파일.확장자
@@ -44,7 +46,7 @@ public class S3UploaderService {
             amazonS3Client.putObject(
                     new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicReadWrite));
-            // TODO : 외부에 공개하는 파일인 경우 Public Read 권한을 추가, ACL 확인
+            // CannedAccessControlList.PublicReadWrite : 외부에 공개하는 파일인 경우 Public Read 권한을 추가, ACL 확인
             // S3에 업로드한 폴더 및 파일 URL
             uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
 
@@ -89,6 +91,7 @@ public class S3UploaderService {
     }
 
 
+    // 파일 이름의 중복을 막기위해 uuid 사용
     public String getUuidFileName(String fileName) {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID().toString() + "." + ext;

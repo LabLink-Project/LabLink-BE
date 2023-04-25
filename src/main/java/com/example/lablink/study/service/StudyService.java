@@ -38,6 +38,7 @@ public class StudyService {
     // 게시글 작성
     @Transactional
     public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails, S3ResponseDto s3ResponseDto) {
+        // todo : isCompanyLogin 통일
         Company company = isCompanyLogin(companyDetails);
         StudyStatusEnum status = setStatus(requestDto);
         Study study;
@@ -53,6 +54,7 @@ public class StudyService {
     // 게시글 상세 조회
     @Transactional(readOnly = true)
     public StudyDetailResponseDto getDetailStudy(Long studyId, UserDetailsImpl userDetails) {
+        // todo : userDetails 통일
         User user = userDetails == null ? null : userDetails.getUser();
         Study study = getStudyService.getStudy(studyId);
         boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
@@ -61,7 +63,7 @@ public class StudyService {
 
     // 게시글 수정
     // 이미지 수정 refactoring
-    // todo : 수정 requestDto가 따로 있어야 하나 ?
+    // todo : 수정 requestDto가 따로 있어야 하나 ? or 수정하기 눌렀을 때 내용 보여주기
     @Transactional
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = isCompanyLogin(companyDetails);

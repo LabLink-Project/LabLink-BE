@@ -10,8 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-public class
-StudyDetailResponseDto {
+public class StudyDetailResponseDto {
     private final Long id;
     private final String title;
     private final String studyInfo;
@@ -21,7 +20,7 @@ StudyDetailResponseDto {
     private final CategoryEnum category;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private final LocalDateTime date;
     private final String address;
     private final int pay;
@@ -31,7 +30,7 @@ StudyDetailResponseDto {
     private final int repeatCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private final LocalDateTime endDate;
 
     private final String imageURL;

@@ -84,20 +84,20 @@ public class BookmarkService {
         // getStudy().getCategory() == online 이렇게 할 수 있겠는디
         List<Bookmark> bookmarks = findAllByMyBookmark(user);
         List<BookmarkResponseDto> onlineBookmarks = new ArrayList<>();
-        List<BookmarkResponseDto> offlienBookmarks = new ArrayList<>();
+        List<BookmarkResponseDto> offlineBookmarks = new ArrayList<>();
         for (Bookmark bookmark : bookmarks) {
             Study study = getStudyService.getStudy(bookmark.getStudyId());
             CategoryEnum studyCategory = study.getCategory();
             if (studyCategory == CategoryEnum.ONLINE){
-                onlineBookmarks.add(new BookmarkResponseDto(study, bookmark.getId()));
+                onlineBookmarks.add(new BookmarkResponseDto(study, bookmark));
             } else {
-                offlienBookmarks.add(new BookmarkResponseDto(study, bookmark.getId()));
+                offlineBookmarks.add(new BookmarkResponseDto(study, bookmark));
             }
 
         }
         if (Objects.equals(category, "online")) {
             return onlineBookmarks;
         }
-        return offlienBookmarks;
+        return offlineBookmarks;
     }
 }

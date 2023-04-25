@@ -48,7 +48,7 @@ public class StudySearchService {
         if(searchOption.hasValue()){
             studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
 
-            if(searchOption.getKeyword() != null){
+            /*if(searchOption.getKeyword() != null){
                 if(user != null){
                     // 최신검색어 구현
                     Double timestamp = (double) System.currentTimeMillis();
@@ -63,8 +63,8 @@ public class StudySearchService {
                     System.out.println(e.toString());
                 }
                 //score를 1씩 올려준다.
-                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
-            }
+//                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
+            }*/
         }
 
         // 일반 전체 조회
@@ -82,7 +82,8 @@ public class StudySearchService {
     }
 
     // 최근 검색 조회 (유저Id == key)
-    public List<LatestSearchKeyword> latestSearchKeyword(UserDetailsImpl userDetails){
+    // todo : 몇개까지 저장 ?
+    /*public List<LatestSearchKeyword> latestSearchKeyword(UserDetailsImpl userDetails){
         if(userDetails != null){
             User user = userDetails.getUser();
             String key = user.getId().toString();
@@ -112,7 +113,7 @@ public class StudySearchService {
         // score순으로 10개 보여줌
         Set<ZSetOperations.TypedTuple<String>> typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);
         return typedTuples.stream().map(SearchRankResponseDto::convertToResponseRankingDto).collect(Collectors.toList());
-    }
+    }*/
 
     // 공고 정렬 조회
     public List<Study> getSortedStudies(String sortedType) {
