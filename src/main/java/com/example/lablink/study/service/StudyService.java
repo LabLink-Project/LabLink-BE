@@ -110,6 +110,35 @@ public class StudyService {
         return status;
     }
 
+    // 기본 이미지로 변경 (thumbnail)
+    // xxx : deleteThumbnail(), deleteDetailImage() 2개로 하는게 맞을까 ?
+    @Transactional
+    public void deleteThumbnail(Long studyId, CompanyDetailsImpl companyDetails) {
+        Company company = isCompanyLogin(companyDetails);
+        Study study = getStudyService.getStudy(studyId);
+        checkRole(studyId, company);
+        S3Image thumbnailS3Image = s3Service.getS3Image(study.getThumbnailImageURL());
+        if(thumbnailS3Image != null){
+            s3UploaderService.deleteFile(thumbnailS3Image.getId());
+        }
+        // study update 해주깅
+        study.deleteThumbnail();
+
+    }
+
+    // 기본 이미지로 변경 (detailImage)
+    @Transactional
+    public void deleteDetailImage(Long studyId, CompanyDetailsImpl companyDetails) {
+        Company company = isCompanyLogin(companyDetails);
+        Study study = getStudyService.getStudy(studyId);
+        checkRole(studyId, company);
+        S3Image detailS3Image = s3Service.getS3Image(study.getDetailImageURL());
+        if(detailS3Image != null){
+            s3UploaderService.deleteFile(detailS3Image.getId());
+        }
+        study.deleteDetailImage();
+    }
+
     // 게시글 삭제
     // 이미지 삭제 refactoring
     @Transactional

@@ -159,4 +159,12 @@ public class Study extends Timestamped {
     public void updateCurrentApplicantCount() {
         ++this.currentApplicantCount;
     }
+
+    public void deleteThumbnail(){
+        this.thumbnailImageURL = "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png";
+    }
+
+    public void deleteDetailImage(){
+        this.detailImageURL = "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png";
+    }
 }

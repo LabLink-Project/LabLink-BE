@@ -110,6 +110,22 @@ public class StudyController {
         return ResponseMessage.SuccessResponse("공고 수정 성공", "");
     }
 
+    // 기본 이미지로 변경 (thumbnail)
+    // xxx : api 2개로 하는게 맞을까 ?
+    @DeleteMapping("/{studyId}/thumbnail")
+    public ResponseEntity deleteThumbnail(@PathVariable Long studyId, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+        studyService.deleteThumbnail(studyId, companyDetails);
+        return ResponseMessage.SuccessResponse("썸네일 삭제 성공", "");
+    }
+
+
+    // 기본 이미지로 변경 (detailImage)
+    @DeleteMapping("/{studyId}/detailImage")
+    public ResponseEntity deleteDetailImage(@PathVariable Long studyId, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+        studyService.deleteDetailImage(studyId, companyDetails);
+        return ResponseMessage.SuccessResponse("썸네일 삭제 성공", "");
+    }
+
     // 게시글 삭제
     @Operation(summary = "공고 삭제", description = "공고 삭제")
     @DeleteMapping("/{studyId}")
