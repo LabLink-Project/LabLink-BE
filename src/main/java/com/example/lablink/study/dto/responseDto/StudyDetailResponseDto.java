@@ -33,7 +33,9 @@ public class StudyDetailResponseDto {
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private final LocalDateTime endDate;
 
-    private final String imageURL;
+    private final String thumbnailImageURL;
+    private final String detailImageURL;
+
     private final boolean isbookmarked;
     private final int currentApplicantCount;
     private final String companyName;
@@ -54,7 +56,8 @@ public class StudyDetailResponseDto {
         this.subjectMaxAge = study.getSubjectMaxAge();
         this.repeatCount = study.getRepeatCount();
         this.endDate = study.getEndDate();
-        this.imageURL = study.getImageURL();
+        this.thumbnailImageURL = study.getThumbnailImageURL();
+        this.detailImageURL = study.getDetailImageURL();
         this.isbookmarked = isbookmarked;
         this.currentApplicantCount = study.getCurrentApplicantCount();
         this.companyName = study.getCompany().getCompanyName();
