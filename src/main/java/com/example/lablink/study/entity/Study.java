@@ -14,6 +14,8 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor
+//@Where(clause = "deleted_at IS NULL")
+//@SQLDelete(sql = "UPDATE study SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
 public class Study extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
