@@ -63,8 +63,9 @@ public class StudyController {
     }
 
     // done : ResponseEntity로
-    // todo : 최근 검색 기록 삭제 기능 추가
-    @GetMapping("/search/rank")
+    // done : 최근 검색 기록 삭제 기능 추가
+    // todo : redis 복구되면 주석 풀기
+    /*@GetMapping("/search/rank")
     public ResponseEntity searchRankList(){
         return ResponseMessage.SuccessResponse("인기 검색어 조회 성공", studySearchService.searchRankList());
     }
@@ -78,7 +79,7 @@ public class StudyController {
     public ResponseEntity deleteSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String deleteWord){
         studySearchService.deleteSearchKeyword(userDetails, deleteWord);
         return ResponseMessage.SuccessResponse("최신 검색어 삭제 성공", "");
-    }
+    }*/
 
     // 게시글 관심 공고 조회
 //    @GetMapping("/sorting")

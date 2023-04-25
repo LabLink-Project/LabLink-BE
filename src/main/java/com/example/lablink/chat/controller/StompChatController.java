@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StompChatController {
 
-    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
+    private final SimpMessagingTemplate template; // 특정 Broker로 메세지를 전달
     private final ChatService chatService;
 
     // Client가 SEND할 수 있는 경로
@@ -33,6 +33,7 @@ public class StompChatController {
     @MessageMapping("/chat/enter")
     public void enter(ChatMessageDTO message){
         message.setMessage(message.getWriter() + "님이 채팅방에 참여하였습니다.");
+        // /sub/chat/room/{roomId} 경로를 구독하고 있는 클라이언트에게 전달
         template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 

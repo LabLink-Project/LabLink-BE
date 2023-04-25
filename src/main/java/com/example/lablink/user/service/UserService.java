@@ -187,8 +187,12 @@ public class UserService {
         if(userDetails == null || userDetails.equals(" ")) {
             throw new UserException(UserErrorCode.INVALID_TOKEN);
         }
+        // 내가 신청한 목록
+        // 1. application에서 user로 찾아온다
+        // 2. 스터디 정보와 어플리케이션 정보를 찾아서 responseDto에 넣어주려고 한듯 ?
+        // db를 두번 찌르지 않기 위해서 이 query를 썻나 ?
         TypedQuery<MyLabResponseDto> query = em.createQuery(
-            "SELECT New com.example.lablink.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
+            "SELECT new com.example.lablink.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
                 "FROM Study s INNER JOIN Application a ON s.id = a.studyId " +
                 "WHERE a.user = :user", MyLabResponseDto.class);
         query.setParameter("user", userDetails.getUser());

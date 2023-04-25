@@ -49,6 +49,10 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+        // Redis에 데이터를 저장하거나 조회할 때 이를 byte 배열로 변환하여 처리함
+        // 이 때 Key와 Value의 데이터 타입에 따라 Serializer를 설정해주어야 하는데
+        // Serializer는 Java 객체를 Redis에서 사용할 수 있는 byte 배열로 변환하는 역할 수행
+        // 이를 통해 Redis에 데이터를 저장하고 조회할 때 일관된 데이터 타입으로 처리할 수 있음
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
