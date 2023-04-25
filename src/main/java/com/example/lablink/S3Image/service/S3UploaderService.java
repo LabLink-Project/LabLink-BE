@@ -76,7 +76,7 @@ public class S3UploaderService {
                 () -> new StudyException(StudyErrorCode.NOT_FOUND_IMAGE));
 
         try {
-            String keyName = s3Image.getUploadFilePath() + "/" + s3Image.getUploadFileName(); // ex) 구분/년/월/일/파일.확장자
+            String keyName = s3Image.getUploadFilePath() + s3Image.getUploadFileName(); // ex) 구분/년/월/일/파일.확장자
             boolean isObjectExist = amazonS3Client.doesObjectExist(bucketName, keyName);
             if (isObjectExist) {
                 amazonS3Client.deleteObject(bucketName, keyName);

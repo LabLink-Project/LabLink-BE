@@ -38,12 +38,18 @@ public class StudyController {
     public ResponseEntity createStudy(StudyRequestDto requestDto
             , @AuthenticationPrincipal CompanyDetailsImpl companyDetails
             /*, @RequestParam(value="image") MultipartFile image */){
-        S3ResponseDto s3ResponseDto = null;
-        if(requestDto.getImage() != null){
-            MultipartFile image = requestDto.getImage();
-            s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
+        S3ResponseDto thumbnailS3ResponseDto = null;
+        S3ResponseDto detailS3ResponseDto = null;
+        if(requestDto.getThumbnailImage() != null){
+            MultipartFile thumbnailImage = requestDto.getThumbnailImage();
+            thumbnailS3ResponseDto = s3UploaderService.uploadFiles("thumbnail", thumbnailImage);
         }
-        studyService.createStudy(requestDto, companyDetails, s3ResponseDto);
+        if(requestDto.getDetailImage() != null){
+            MultipartFile detailImage = requestDto.getDetailImage();
+            detailS3ResponseDto = s3UploaderService.uploadFiles("detail", detailImage);
+
+        }
+        studyService.createStudy(requestDto, companyDetails, thumbnailS3ResponseDto, detailS3ResponseDto);
         return ResponseMessage.SuccessResponse("게시글 작성 성공", "");
     }
 
@@ -102,6 +108,22 @@ public class StudyController {
     public ResponseEntity updateStudy(@PathVariable Long studyId, StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         studyService.updateStudy(studyId, requestDto, companyDetails);
         return ResponseMessage.SuccessResponse("공고 수정 성공", "");
+    }
+
+    // 기본 이미지로 변경 (thumbnail)
+    // xxx : api 2개로 하는게 맞을까 ?
+    @DeleteMapping("/{studyId}/thumbnail")
+    public ResponseEntity deleteThumbnail(@PathVariable Long studyId, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+        studyService.deleteThumbnail(studyId, companyDetails);
+        return ResponseMessage.SuccessResponse("썸네일 삭제 성공", "");
+    }
+
+
+    // 기본 이미지로 변경 (detailImage)
+    @DeleteMapping("/{studyId}/detailImage")
+    public ResponseEntity deleteDetailImage(@PathVariable Long studyId, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+        studyService.deleteDetailImage(studyId, companyDetails);
+        return ResponseMessage.SuccessResponse("썸네일 삭제 성공", "");
     }
 
     // 게시글 삭제
