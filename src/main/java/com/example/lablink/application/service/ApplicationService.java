@@ -104,7 +104,7 @@ public class ApplicationService {
             throw new ApplicationException(ApplicationErrorCode.NOT_HAVE_PERMISSION);
         }
     }
-
+    //신청서 접수 클릭 시 나오는 정보 값
     @Transactional(readOnly = true)
     public ApplicationResponseDto afterApplication(UserDetailsImpl userDetails, Long studyId) {
         User user = userService.getUser(userDetails);

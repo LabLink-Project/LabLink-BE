@@ -14,8 +14,8 @@
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
         <!-- rollover daily -->
-        <!-- 일자지 지정했기때문에 일자마다 로그 파일이 생성된다.-->
-        <fileNamePattern>${LOGS_PATH}log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+        <!-- 일자까지 지정했기때문에 일자마다 로그 파일이 생성된다.-->
+        <fileNamePattern>${LOGS_PATH}log-%d{yyyy-MM-dd-HH}.%i.txt</fileNamePattern>
         <timeBasedFileNamingAndTriggeringPolicy
                 class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
             <!-- or whenever the file size reaches 100MB -->
