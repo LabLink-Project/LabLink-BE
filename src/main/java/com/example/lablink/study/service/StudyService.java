@@ -40,7 +40,7 @@ public class StudyService {
     public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails, S3ResponseDto thumbnailS3ResponseDto, S3ResponseDto detailS3ResponseDto) {
         // todo : isCompanyLogin 통일
         Company company = isCompanyLogin(companyDetails);
-        StudyStatusEnum status = setStatus(requestDto);
+        StudyStatusEnum status = setStatus(requestDto.getEndDate());
         Study study;
         String thumbnailImageURL = null;
         String detailImageURL = null;
@@ -66,18 +66,36 @@ public class StudyService {
 
     // 게시글 수정
     // 이미지 수정 refactoring
-    // todo : 수정 requestDto가 따로 있어야 하나 ? or 수정하기 눌렀을 때 내용 보여주기
+    // 수정 requestDto가 따로 있어야 하나 ? or 수정하기 눌렀을 때 내용 보여주기 -> patch
     @Transactional
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = isCompanyLogin(companyDetails);
         Study study = getStudyService.getStudy(studyId);
-        StudyStatusEnum status = setStatus(requestDto);
         checkRole(studyId, company);
+
+//        ModelMapper modelMapper = new ModelMapper();
+//
+//        PropertyMap<StudyRequestDto, Study> propertyMap = new PropertyMap<StudyRequestDto, Study>() {
+//            @Override
+//            protected void configure() {
+//                skip().setStatus(null);
+//                skip().setThumbnailImageURL(null);
+//                skip().setDetailImageURL(null);
+//            }
+//        };
+//
+//        modelMapper.addMappings(propertyMap);
+//
+//        study = modelMapper.map(requestDto, Study.class);
+
+        StudyStatusEnum status = study.getStatus();
+        if(requestDto.getEndDate() != null) status = setStatus(requestDto.getEndDate());
+
         // 만약 수정하기 전 공고에 image가 있었다면 이미지 가져오기
         S3Image thumbnailS3Image = s3Service.getS3Image(study.getThumbnailImageURL());
         S3Image detailS3Image = s3Service.getS3Image(study.getDetailImageURL());
         MultipartFile thumbnailImage = requestDto.getThumbnailImage();
-        MultipartFile detailImage = requestDto.getThumbnailImage();
+        MultipartFile detailImage = requestDto.getDetailImage();
         String thumbnailImageURL = null;
         String detailImageURL = null;
         // thumbnailImage
@@ -97,12 +115,12 @@ public class StudyService {
             detailImageURL = detailS3ResponseDto.getUploadFileUrl();
         }
 
-        study.update(requestDto, status, thumbnailImageURL, detailImageURL);
+        study.update(status, thumbnailImageURL, detailImageURL);
     }
 
-    public StudyStatusEnum setStatus(StudyRequestDto requestDto){
+    public StudyStatusEnum setStatus(LocalDateTime endDate){
         StudyStatusEnum status;
-        if (requestDto.getEndDate().isBefore(LocalDateTime.now())) {
+        if (endDate.isBefore(LocalDateTime.now())) {
             status = StudyStatusEnum.CLOSED;
         } else{
             status = StudyStatusEnum.ONGOING;
@@ -123,7 +141,6 @@ public class StudyService {
         }
         // study update 해주깅
         study.deleteThumbnail();
-
     }
 
     // 기본 이미지로 변경 (detailImage)
