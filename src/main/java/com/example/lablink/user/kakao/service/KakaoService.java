@@ -1,5 +1,6 @@
 package com.example.lablink.user.kakao.service;
 
+import com.example.lablink.user.entity.UserInfo;
 import com.example.lablink.user.exception.UserErrorCode;
 import com.example.lablink.user.exception.UserException;
 import com.example.lablink.user.kakao.dto.KakaoUserInfoDto;
@@ -132,7 +133,8 @@ public class KakaoService {
             throw new UserException(UserErrorCode.NEED_AGREE_REQUIRE_TERMS);
         }*/
 
-        User user = userRepository.save(new User(kakaoId, nickname, email, UserRoleEnum.USER));
+        UserInfo userInfo = userInfoService.saveKakaoUserInfo(kakaoUserInfo);
+        User user = userRepository.save(new User(kakaoId, nickname, email, userInfo, UserRoleEnum.USER));
 //        termsService.saveSocialTerms(termsRequestDto, user);
     }
 }

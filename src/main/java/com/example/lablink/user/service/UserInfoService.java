@@ -4,6 +4,7 @@ import com.example.lablink.user.dto.request.SignupRequestDto;
 import com.example.lablink.user.entity.UserInfo;
 import com.example.lablink.user.exception.UserErrorCode;
 import com.example.lablink.user.exception.UserException;
+import com.example.lablink.user.kakao.dto.KakaoUserInfoDto;
 import com.example.lablink.user.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ public class UserInfoService {
     // 회원가입시 UserInfo DB에 저장
     public UserInfo saveUserInfo(SignupRequestDto signupRequestDto) {
         return userInfoRepository.save(new UserInfo(signupRequestDto));
+    }
+
+    public UserInfo saveKakaoUserInfo(KakaoUserInfoDto kakaoUserInfoDto){
+        return userInfoRepository.save(new UserInfo(kakaoUserInfoDto));
     }
 
     // UserInfo 찾기
