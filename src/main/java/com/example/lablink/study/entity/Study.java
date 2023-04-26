@@ -6,6 +6,9 @@ import com.example.lablink.timestamp.entity.Timestamped;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,9 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
-//@Where(clause = "deleted_at IS NULL")
-//@SQLDelete(sql = "UPDATE study SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE study SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
 public class Study extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,20 +137,7 @@ public class Study extends Timestamped {
         this.currentApplicantCount = 0;
     }
 
-    public void update(StudyRequestDto requestDto, StudyStatusEnum status, String thumbnailImageURL, String detailImageURL) {
-        this.title = requestDto.getTitle();
-        this.studyInfo = requestDto.getStudyInfo();
-        this.studyPurpose = requestDto.getStudyPurpose();
-        this.studyAction = requestDto.getStudyAction();
-        this.subjectCount = requestDto.getSubjectCount();
-        this.date = requestDto.getDate();
-        this.address = requestDto.getAddress();
-        this.pay = requestDto.getPay();
-        this.subjectGender = requestDto.getSubjectGender();
-        this.subjectMinAge = requestDto.getSubjectMinAge();
-        this.subjectMaxAge = requestDto.getSubjectMaxAge();
-        this.repeatCount = requestDto.getRepeatCount();
-        this.endDate = requestDto.getEndDate();
+    public void update(StudyStatusEnum status, String thumbnailImageURL, String detailImageURL) {
         if (thumbnailImageURL != null) this.thumbnailImageURL = thumbnailImageURL;
         if (detailImageURL != null) this.detailImageURL = detailImageURL;
         this.status = status;

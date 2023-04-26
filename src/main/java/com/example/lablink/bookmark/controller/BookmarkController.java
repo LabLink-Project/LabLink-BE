@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class BookmarkController {
     private final BookmarkService bookmarkService;
 
-    // TODO : 내가 찜한 목록(online, offline)
-    // todo : 북마크 조회한 화면에서 북마크 취소 ?
+    // done : 내가 찜한 목록(online, offline)
+    // todo : 북마크 조회한 화면에서 북마크 취소 ? - 구현이 되어있는 듯 하다 .. ? (FE이랑 테스트해보기)
     // 유저가 북마크 조회
     @GetMapping("/bookmark")
     public ResponseEntity getUserBookmark(@RequestParam String category, @AuthenticationPrincipal UserDetailsImpl userDetails){

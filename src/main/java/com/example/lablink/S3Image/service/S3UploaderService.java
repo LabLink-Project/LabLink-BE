@@ -70,7 +70,6 @@ public class S3UploaderService {
     /**
      * S3에 업로드된 파일 삭제
      */
-    // todo : s3에 삭제 안됨
     public void deleteFile(Long id) {
         S3Image s3Image = s3ImageRepository.findById(id).orElseThrow(
                 () -> new StudyException(StudyErrorCode.NOT_FOUND_IMAGE));
