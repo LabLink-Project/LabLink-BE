@@ -95,4 +95,17 @@ public class User extends Timestamped {
         this.userGender = applicationRequestDto.getUserGender();
     }
 
+    public User googleIdUpdate(String googleEmail) {
+        this.googleEmail = googleEmail;
+        return this;
+    }
+
+    public User(String username, String password, String nickname, UserRoleEnum role, String googleEmail) {
+        this.userName = username;
+        this.password = password;
+        this.nickName = nickname;
+        this.role = role;
+        this.googleEmail = googleEmail;
+    }
+
 }

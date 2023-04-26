@@ -26,6 +26,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final String google = "google";
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입")
     @PostMapping("/signup")
@@ -71,4 +72,9 @@ public class UserController {
         return ResponseMessage.SuccessResponse("조회 성공", userService.getMyLabs(userDetails));
     }
 
+    //test
+    @GetMapping("/test")
+    public ResponseEntity getUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseMessage.SuccessResponse("조회 성공", userService.getUser(userDetails));
+    }
 }

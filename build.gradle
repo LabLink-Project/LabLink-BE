@@ -75,6 +75,21 @@ dependencies {
     // Mail
     implementation "org.springframework.boot:spring-boot-starter-mail"
 
+    // 소셜로그인
+    implementation 'com.google.api-client:google-api-client:1.32.1'
+    implementation 'com.google.oauth-client:google-oauth-client:1.32.1'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.32.1'
+    implementation 'com.google.http-client:google-http-client-jackson2:1.40.1'
+    compileOnly('org.springframework.boot:spring-boot-starter-oauth2-client')
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.2'
+//    implementation 'com.google.api-client:google-api-client:1.31.5'
+//    implementation 'com.google.oauth-client:google-oauth-client:1.31.5'
+//    implementation 'com.google.apis:google-api-services-oauth2:v2-rev141-1.25.0'
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+//    implementation 'com.google.api-client:google-api-client:1.32.1'
+
     // modelmapper
 //    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 

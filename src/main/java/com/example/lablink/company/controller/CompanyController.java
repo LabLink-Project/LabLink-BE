@@ -41,7 +41,7 @@ public class CompanyController {
         S3ResponseDto s3ResponseDto = null;
         if(companySignupRequestDto.getLogo() != null){
             MultipartFile image = companySignupRequestDto.getLogo();
-            s3ResponseDto = s3UploaderService.uploadFiles("thumbnail", image);
+            s3ResponseDto = s3UploaderService.uploadFiles("logo", image);
         }
         companyService.companySignup(companySignupRequestDto, s3ResponseDto);
         return ResponseMessage.SuccessResponse("회원가입 완료.", "");
