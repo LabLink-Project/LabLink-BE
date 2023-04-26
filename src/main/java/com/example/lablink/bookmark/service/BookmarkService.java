@@ -93,7 +93,6 @@ public class BookmarkService {
             } else {
                 offlineBookmarks.add(new BookmarkResponseDto(study, bookmark));
             }
-
         }
         if (Objects.equals(category, "online")) {
             return onlineBookmarks;
