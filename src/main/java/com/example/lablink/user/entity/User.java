@@ -33,7 +33,8 @@ public class User extends Timestamped {
     @Column(nullable = false, unique = true)
     private String nickName;
 
-    @Column(nullable = false)
+    // xxx :  카카오 로그인은 password 없으니까 .. ?
+    @Column(nullable = true)
     private String password;
 
     @Column(nullable = true)
@@ -44,6 +45,10 @@ public class User extends Timestamped {
 
     @Column(nullable = true)
     private String userGender;
+
+    // xxx : kakaoid 추가했슴니다 ..
+    @Column(nullable = false, unique = true)
+    private Long kakaoId;
 
     @Column(unique = true)
     private String kakaoEmail;
@@ -71,6 +76,14 @@ public class User extends Timestamped {
         this.dateOfBirth = getDateOfBirth();
         this.userGender = getUserGender();
         this.userinfo = userinfo;
+        this.role = role;
+    }
+
+    // 카카오 로그인시
+    public User(Long kakaoId, String nickname, String email, UserRoleEnum role){
+        this.kakaoId = kakaoId;
+        this.nickName = nickname;
+        this.email = email;
         this.role = role;
     }
 

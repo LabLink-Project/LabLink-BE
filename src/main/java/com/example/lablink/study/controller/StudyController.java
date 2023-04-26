@@ -104,14 +104,14 @@ public class StudyController {
 
     // 게시글 수정
     @Operation(summary = "공고 수정", description = "공고 수정")
-    @PutMapping("/{studyId}")
+    @PatchMapping("/{studyId}")
     public ResponseEntity updateStudy(@PathVariable Long studyId, StudyRequestDto requestDto, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         studyService.updateStudy(studyId, requestDto, companyDetails);
         return ResponseMessage.SuccessResponse("공고 수정 성공", "");
     }
 
     // 기본 이미지로 변경 (thumbnail)
-    // xxx : api 2개로 하는게 맞을까 ?
+    // todo : patch로 변경
     @DeleteMapping("/{studyId}/thumbnail")
     public ResponseEntity deleteThumbnail(@PathVariable Long studyId, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         studyService.deleteThumbnail(studyId, companyDetails);
