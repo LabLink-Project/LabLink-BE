@@ -1,0 +1,62 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Login with Google</title>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Login with Google</h1>-->
+<!--<button id="loginWithGoogle">Login with Google</button>-->
+<!--<script>-->
+<!--    document.getElementById('loginWithGoogle').addEventListener('click', function() {-->
+<!--        var authUrl = "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&access_type=online&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:8080/auth/google/callback&response_type=code&client_id=918104246723-jueakgl226uiblvc6cfii15fact37d2e.apps.googleusercontent.com";-->
+<!--        window.location.href = authUrl;-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google OAuth Login Example</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="1037318704574-3hujk7ftivb5rhd49tha2mjpcv71edcs.apps.googleusercontent.com">
+</head>
+<body>
+<h1>Google OAuth Login Example</h1>
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<button onclick="signOut()" style="display:none" id="signOutButton">Sign out</button>
+
+<script>
+    function onSignIn(googleUser) {
+        // Get ID token and access token
+        var id_token = googleUser.getAuthResponse().id_token;
+        var access_token = googleUser.getAuthResponse().access_token;
+
+        // Get user profile information
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId());
+        console.log('Name: ' + profile.getName());
+        console.log('Email: ' + profile.getEmail());
+
+        // Show sign-out button
+        document.getElementById('signOutButton').style.display = 'block';
+
+        // Send the ID token to your server for verification and further processing
+        // ...
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+
+            // Hide sign-out button
+            document.getElementById('signOutButton').style.display = 'none';
+        });
+    }
+</script>
+</body>
+</html>
