@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class OauthController {
     private final OauthService oauthService;
 
-    @GetMapping("/auth/google/callback")
+    @GetMapping("/users/google/login")
     public ResponseEntity googleLogin(@RequestParam String code, @RequestParam String scope, HttpServletResponse response) throws JsonProcessingException {
         System.out.println("__________code" + code);
         System.out.println("__________scope" + scope);

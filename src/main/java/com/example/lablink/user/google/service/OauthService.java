@@ -51,7 +51,7 @@ public class OauthService {
 
     public void googleLogin(String code, String scope, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
-        // 인가코드 -> 로그인 후 서비스제공자(카카오)로부터 받는 임시 코드
+        // 인가코드 -> 로그인 후 서비스제공자(구글)로부터 받는 임시 코드
         // 인가코드는 일회성 그리고 짧은 시간내에 사용되어야함
         String accessToken = getToken(code, scope);
 
@@ -82,7 +82,8 @@ public class OauthService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", "1037318704574-3hujk7ftivb5rhd49tha2mjpcv71edcs.apps.googleusercontent.com");
         body.add("client_secret", "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");
-        body.add("redirect_uri", "http://localhost:8080/auth/google/callback");
+//        body.add("redirect_uri", "http://localhost:8080/auth/google/callback");
+        body.add("redirect_uri", "http://localhost:3000/users/google/login");
 //        body.add("client_id", CLIENT_ID);
 //        body.add("client_secret", CLIENT_SECRET);
 //        body.add("redirect_uri", REDIRECT_URI);
