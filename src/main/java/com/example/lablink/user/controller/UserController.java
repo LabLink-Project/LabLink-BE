@@ -26,6 +26,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final String google = "google";
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입")
     @PostMapping("/signup")

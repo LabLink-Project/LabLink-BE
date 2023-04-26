@@ -182,6 +182,8 @@ public class UserService {
     }
 
     // 내 실험 관리 - 신청한 목록
+    // TODO 쿼리 사용 & 쿼리 x 성능차이 확인
+    // TODO User 권한 없으면 한번에 예외 발생 처리 - 현재 각 메서드별 처리
     @Transactional
     public List<MyLabResponseDto> getMyLabs(UserDetailsImpl userDetails) {
         if(userDetails == null || userDetails.equals(" ")) {
