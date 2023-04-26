@@ -24,7 +24,6 @@ public class BookmarkResponseDto {
     private final int pay;
     private final String companyName;
     private final boolean isbookmarked;
-    // todo : 하트 한번 더 누르면 북마크 삭제되게 만들깅
 
     public BookmarkResponseDto(Study study, Bookmark bookmark) {
         this.id = bookmark.getId();
