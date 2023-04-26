@@ -47,7 +47,7 @@ public class User extends Timestamped {
     private String userGender;
 
     // xxx : kakaoid 추가했슴니다 ..
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private Long kakaoId;
 
     @Column(unique = true)
@@ -80,10 +80,11 @@ public class User extends Timestamped {
     }
 
     // 카카오 로그인시
-    public User(Long kakaoId, String nickname, String email, UserRoleEnum role){
+    public User(Long kakaoId, String nickname, String email, UserInfo userInfo, UserRoleEnum role){
         this.kakaoId = kakaoId;
         this.nickName = nickname;
         this.email = email;
+        this.userinfo = userInfo;
         this.role = role;
     }
 
