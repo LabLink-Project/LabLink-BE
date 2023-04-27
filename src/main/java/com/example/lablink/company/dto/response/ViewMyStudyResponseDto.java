@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class ViewMyStudyResponseDto {
+    private Long id;
     private String title;
     private CategoryEnum category;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
@@ -24,6 +25,7 @@ public class ViewMyStudyResponseDto {
     private LocalDateTime endDate;
 
     public ViewMyStudyResponseDto(Study study) {
+        this.id = study.getId();
         this.title = study.getTitle();
         this.category = study.getCategory();
         this.date = study.getDate();

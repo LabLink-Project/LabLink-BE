@@ -43,12 +43,6 @@ public class ApplicationController {
         return ResponseMessage.SuccessResponse("신청서 삭제 성공","");
     }
 
-    /*@Operation(summary = "신청서 조회", description = "신청서 조회")
-    @GetMapping("/applications/{applicationId}")
-    public ResponseEntity getApplication(@AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
-        return ResponseMessage.SuccessResponse("",applicationService.getApplication(userDetails,companyDetails,studyId,applicationId));
-    }*/
-
     @Operation(summary = "신청서 접수 클릭 시 나오는 정보 값", description = "신청서 접수 클릭 시 나오는 정보 값")
     @PostMapping("/applicationsInfo")
     public ResponseEntity afterApplication(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long studyId){
@@ -62,10 +56,21 @@ public class ApplicationController {
         return ResponseMessage.SuccessResponse("완료.", "");
     }
 
-    @Operation(summary = "공고별 신청서 확인", description = "공고별 신청서 확인")
+    @Operation(summary = "공고별 전체 신청서 확인", description = "공고별 전체 신청서 확인")
     @GetMapping("/applications")
     public ResponseEntity applicationFromStudy(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId) {
         return ResponseMessage.SuccessResponse("조회 성공", applicationService.applicationFromStudy(companyDetails, studyId));
     }
 
+    @Operation(summary = "기업의 상세 신청서 확인", description = "기업의 상세 신청서 확인")
+    @GetMapping("/applications/{applicationId}")
+    public ResponseEntity companyDetailApplicationFromStudy(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
+        return ResponseMessage.SuccessResponse("",applicationService.companyDetailApplicationFromStudy(companyDetails,studyId,applicationId));
+    }
+//
+//    @Operation(summary = "유저의 상세 신청서 확인", description = "유저의 상세 신청서 확인")
+//    @GetMapping("/applications/{applicationId}/user")
+//    public ResponseEntity userDetailApplicationFromStudy(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
+//        return ResponseMessage.SuccessResponse("",applicationService.userDetailApplicationFromStudy(userDetails, studyId,applicationId));
+//    }
 }

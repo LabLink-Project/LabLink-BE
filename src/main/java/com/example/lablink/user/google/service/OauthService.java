@@ -1,8 +1,9 @@
 package com.example.lablink.user.google.service;
 
-import com.example.lablink.jwt.JwtUtil;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.entity.UserRoleEnum;
+import com.example.lablink.user.exception.UserErrorCode;
+import com.example.lablink.user.exception.UserException;
 import com.example.lablink.user.google.dto.GoogleUserInfoDto;
 import com.example.lablink.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,20 +37,13 @@ public class OauthService {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String CLIENT_SECRET;
 
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private String REDIRECT_URI;
-//
-//    @Value("${sns.google.url}")
-//    private String URI;
-//
-//    @Value("${sns.google.token-url}")
-//    private String TOKEN_URI;
-//    private static final String REDIRECT_URI = "http://localhost:8080/users/google/callback";
+//    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+//    private String REDIRECT_URI;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
-    public void googleLogin(String code, String scope, HttpServletResponse response) throws JsonProcessingException {
+    public User googleLogin(String code, String scope, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         // 인가코드 -> 로그인 후 서비스제공자(구글)로부터 받는 임시 코드
         // 인가코드는 일회성 그리고 짧은 시간내에 사용되어야함
@@ -62,12 +56,13 @@ public class OauthService {
         GoogleUserInfoDto googleUserInfo = getGoogleUserInfo(accessToken);
 
         // 3. 필요시에 회원가입
-        User googleUser = registerGoogleUserIfNeeded(googleUserInfo);
+        registerGoogleUserIfNeeded(googleUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken =  jwtUtil.createUserToken(googleUser);
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
+//        String createToken =  jwtUtil.createUserToken(googleUser);
+//        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 //        return createToken;
+        return userRepository.findByGoogleEmail(googleUserInfo.getEmail()).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
     }
 
 
@@ -80,13 +75,13 @@ public class OauthService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "1037318704574-3hujk7ftivb5rhd49tha2mjpcv71edcs.apps.googleusercontent.com");
-        body.add("client_secret", "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");
+//        body.add("client_id", "1037318704574-3hujk7ftivb5rhd49tha2mjpcv71edcs.apps.googleusercontent.com");
+//        body.add("client_secret", "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");
+        body.add("client_id", CLIENT_ID);
+        body.add("client_secret", CLIENT_SECRET);
 //        body.add("redirect_uri", "http://localhost:8080/auth/google/callback");
+//        body.add("redirect_uri", "http://localhost:8080/users/google/login");
         body.add("redirect_uri", "http://localhost:3000/users/google/login");
-//        body.add("client_id", CLIENT_ID);
-//        body.add("client_secret", CLIENT_SECRET);
-//        body.add("redirect_uri", REDIRECT_URI);
         body.add("scope", scope);
         body.add("code", code);
 
@@ -144,7 +139,7 @@ public class OauthService {
 
 
     // 3. 필요시에 회원가입
-    private User registerGoogleUserIfNeeded(GoogleUserInfoDto googleUserInfo) {
+    private void registerGoogleUserIfNeeded(GoogleUserInfoDto googleUserInfo) {
         // DB 에 중복된 구글 Id 가 있는지 확인
         Long googleId = googleUserInfo.getId();
         User googleUser = userRepository.findById(googleId)
@@ -171,7 +166,6 @@ public class OauthService {
 
             userRepository.save(googleUser);
         }
-        return googleUser;
     }
 
 

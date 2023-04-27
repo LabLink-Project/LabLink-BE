@@ -39,6 +39,9 @@ public class Company {
     private String address;
 
     @Column(nullable = false)
+    private String detailAddress;
+
+    @Column(nullable = false)
     private String logoUrl;
 
     @Column(nullable = false)
@@ -53,12 +56,13 @@ public class Company {
         this.business = companySignupRequestDto.getBusiness();
         this.managerPhone = companySignupRequestDto.getManagerPhone();
         this.address = companySignupRequestDto.getAddress();
+        this.detailAddress = companySignupRequestDto.getDetailAddress();
         this.logoUrl = Objects.requireNonNullElse(logoUrl, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
         this.role = role;
     }
 
     @Builder
-    public Company(Long id, String email, String password, String companyName, String ownerName, String business, String managerPhone, String address, UserRoleEnum role){
+    public Company(Long id, String email, String password, String companyName, String ownerName, String business, String managerPhone, String address, String detailAddress, UserRoleEnum role){
         this.id = id;
         this.email = email;
         this.password = password;
@@ -67,6 +71,7 @@ public class Company {
         this.business = business;
         this.managerPhone = managerPhone;
         this.address = address;
+        this.detailAddress = detailAddress;
         this.role = role;
     }
 
