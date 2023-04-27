@@ -20,6 +20,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findAllByOrderByCurrentApplicantCountDesc();
     List<Study> findAllByCompany(Company company);
 
+    List<Study> findAllByEmailSendIsFalse();
+
     // todo : 방금 올린 공고 못 찾는 이슈 해결 ..
 //    @Query(value = "ALTER TABLE study ADD FULLTEXT key (title, study_info, study_purpose, study_action)", nativeQuery = true);
 
