@@ -16,7 +16,6 @@ import com.example.lablink.study.service.GetStudyService;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
-import com.example.lablink.user.service.UserInfoService;
 import com.example.lablink.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,6 @@ public class ApplicationService {
     private final UserService userService;
     private final GetStudyService getStudyService;
     private final StudyService studyService;
-    private final UserInfoService userInfoService;
 
     //신청서 추가
     @Transactional
@@ -78,32 +76,36 @@ public class ApplicationService {
         applicationRepository.delete(application);
     }
 
-    // 신청서 조회
+    // 기업의 신청서 조회
     @Transactional
-    public Application getApplication(UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails, Long studyId, Long applicationId) {
-        if (userDetails != null) {
-            Application application = applicationRepository.findByIdAndUserEmail(applicationId, userDetails.getUser().getEmail()).orElseThrow(
-                () -> new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
-            );
+    public ApplicationFromStudyResponseDto companyDetailApplicationFromStudy(CompanyDetailsImpl companyDetails, Long studyId, Long applicationId) {
+        // 기업이 작성한 공고 찾기
+        studyService.findStudyFromCompany(studyId, companyDetails.getCompany());
+        // 해당 공고의 신청서 찾기
+        Application application  = applicationRepository.findById(applicationId).orElseThrow(
+            ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
+        );
 
-            if (!application.getStudyId().equals(studyId) || !application.getUser().getId().equals(userDetails.getUser().getId())) {
-                throw new ApplicationException(ApplicationErrorCode.NOT_AUTHOR);
-            }
-            return application;
-        }
-        if (companyDetails != null) {
-            Application application = applicationRepository.findById(applicationId).orElseThrow(
-                ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
-            );
+        String applicationViewStatusEnum = ApplicationViewStatusEnum.VIEWED.toString();
+        application.viewStatusUpdate(applicationViewStatusEnum);
 
-            String applicationViewStatusEnum = ApplicationViewStatusEnum.VIEWED.toString();
-            application.viewStatusUpdate(applicationViewStatusEnum);
-            return application;
-
-        } else {
-            throw new ApplicationException(ApplicationErrorCode.NOT_HAVE_PERMISSION);
-        }
+        ApplicationFromStudyResponseDto dto = new ApplicationFromStudyResponseDto(application.getUser(), application.getUser().getUserinfo(), application);
+        return dto;
     }
+//
+//    // 유저의 신청서 조회
+//    public ApplicationFromStudyResponseDto userDetailApplicationFromStudy(UserDetailsImpl userDetails, Long studyId, Long applicationId) {
+//        Application application = applicationRepository.findByIdAndUserEmail(applicationId, userDetails.getUser().getEmail()).orElseThrow(
+//            () -> new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
+//        );
+//
+//        if (!application.getStudyId().equals(studyId) || !application.getUser().getId().equals(userDetails.getUser().getId())) {
+//            throw new ApplicationException(ApplicationErrorCode.NOT_AUTHOR);
+//        }
+//        ApplicationFromStudyResponseDto dto = new ApplicationFromStudyResponseDto(userDetails.getUser(), userDetails.getUser().getUserinfo(), application);
+//        return dto;
+//    }
+
     //신청서 접수 클릭 시 나오는 정보 값
     @Transactional(readOnly = true)
     public ApplicationResponseDto afterApplication(UserDetailsImpl userDetails, Long studyId) {
@@ -121,9 +123,9 @@ public class ApplicationService {
             Application application = applicationRepository.findById(applicationId).orElseThrow(
                 ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND));
 
-            if(statusRequestDto.getApplicationStatus().equals("승인")) {
+            if(statusRequestDto.getApprovalStatus().equals("승인")) {
                 application.statusUpdate(ApprovalStatusEnum.APPROVED.toString());
-            } else if(statusRequestDto.getApplicationStatus().equals("거절")) {
+            } else if(statusRequestDto.getApprovalStatus().equals("거절")) {
                 application.statusUpdate(ApprovalStatusEnum.REJECTED.toString());
             }
         } else {
@@ -132,7 +134,7 @@ public class ApplicationService {
         }
     }
 
-    // 공고별 신청서 확인
+    // 공고별 전체 신청서 확인
     @Transactional
     public List<ApplicationFromStudyResponseDto> applicationFromStudy(CompanyDetailsImpl companyDetails, Long studyId) {
         // 1. 기업이 작성한 공고의id를 사용해 새로운 공고에 저장. -> 로그인 기업이 작성한 공고
