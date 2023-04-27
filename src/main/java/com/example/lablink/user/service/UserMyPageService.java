@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +20,7 @@ public class UserMyPageService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     // 비밀번호 확인
     public UserModifyResponseDto checkUser(UserDetailsImpl userDetails, MyPageCheckRequestDto checkRequestDto) {
@@ -41,17 +41,27 @@ public class UserMyPageService {
         User user = userDetails.getUser();
         if(user == null) { throw new UserException(UserErrorCode.INVALID_TOKEN); }
 
-        String newUserName = checkRequestDto.getUserName();
-        LocalDate newDateOfBirth = checkRequestDto.getDateOfBirth();
-        String newUserGender = checkRequestDto.getUserGender();
-        String newUserPhone = checkRequestDto.getUserPhone();
-        String newUserAddress = checkRequestDto.getUserAddress();
+        userMapper.updateUserModifyDto(checkRequestDto, user);
 
-        user.setUserName(newUserName);
-        user.setDateOfBirth(newDateOfBirth);
-        user.setUserGender(newUserGender);
-        user.getUserinfo().setUserPhone(newUserPhone);
-        user.getUserinfo().setUserAddress(newUserAddress);
+//        if (checkRequestDto.getUserName() != null && !checkRequestDto.getUserName().isBlank()) {
+//            user.setUserName(checkRequestDto.getUserName());
+//        }
+//
+//        if (checkRequestDto.getDateOfBirth() != null) {
+//            user.setDateOfBirth(checkRequestDto.getDateOfBirth());
+//        }
+//
+//        if (checkRequestDto.getUserGender() != null && !checkRequestDto.getUserGender().isBlank()) {
+//            user.setUserGender(checkRequestDto.getUserGender());
+//        }
+//
+//        if (checkRequestDto.getUserPhone() != null && !checkRequestDto.getUserPhone().isBlank()) {
+//            user.getUserinfo().setUserPhone(checkRequestDto.getUserPhone());
+//        }
+//
+//        if (checkRequestDto.getUserAddress() != null && !checkRequestDto.getUserAddress().isBlank()) {
+//            user.getUserinfo().setUserAddress(checkRequestDto.getUserAddress());
+//        }
         userRepository.save(user);
     }
 

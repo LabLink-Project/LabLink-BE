@@ -66,7 +66,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("**").permitAll()
-                .antMatchers("/auth/google/callback").permitAll()
+//                .antMatchers("/auth/google/callback").permitAll()
 //                .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()// Swagger 리소스에 대한 접근 허용
 //                .antMatchers("/users/signup").permitAll()
 //                .antMatchers("/companies/signup").permitAll()

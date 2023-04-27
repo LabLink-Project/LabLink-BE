@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class ApplicationStatusRequestDto {
-    private String applicationStatus;
+    private String approvalStatus;
 }
