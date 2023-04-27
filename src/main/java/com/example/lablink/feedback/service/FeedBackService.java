@@ -14,6 +14,7 @@ import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -76,13 +77,13 @@ public class FeedBackService {
         String fileName = "FeedBack.xlsx";//다운로드 파일 이음
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-
+        XSSFSheet sheet = workbook.createSheet("FeedBack");
         Row row = null;
         Cell cell = null;
         int rowNum = 0;
 
         // 빈 Sheet를 생성
-        XSSFSheet sheet = workbook.createSheet("FeedBack");
+
         //컬럼 너비 값
         sheet.setColumnWidth(0,3000);
         sheet.setColumnWidth(1,5000);
@@ -127,6 +128,115 @@ public class FeedBackService {
             out.close();
         }
     }
+
+    public XSSFWorkbook emailSendFeedBack(Long studyId){
+        List<Feedback> feedbacks= feedBackRepository.findAllByStudyId(studyId);
+        List<FeedBackResponseDto> result = new ArrayList<>();
+        for (Feedback feedback: feedbacks) {
+            result.add(new FeedBackResponseDto(feedback));
+        }
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("FeedBack");
+        Row row = sheet.createRow(0);
+        Cell cell = null;
+        int rowNum = 0;
+
+        // 빈 Sheet를 생성
+        out.println("------------------------1");
+        //컬럼 너비 값
+        sheet.autoSizeColumn(0);
+        sheet.setColumnWidth(1,5000);
+        sheet.setColumnWidth(2,5000);
+        sheet.setColumnWidth(3,5000);
+        sheet.setColumnWidth(4,20000);
+        // Header
+        out.println("------------------------2");
+        cell = row.createCell(0);
+        cell.setCellValue("이름");
+        cell = row.createCell(1);
+        cell.setCellValue("이메일");
+        cell = row.createCell(2);
+        cell.setCellValue("성별");
+        cell = row.createCell(3);
+        cell.setCellValue("전화번호");
+        cell = row.createCell(4);
+        cell.setCellValue("피드백 내용");
+
+        out.println("------------------------3");
+        // Body
+        for (int i=0; i<result.size(); i++) {
+
+            row = sheet.createRow(rowNum++);
+            cell = row.createCell(0);
+            cell.setCellValue(result.get(i).getUserName());
+            cell = row.createCell(1);
+            cell.setCellValue(result.get(i).getUserEmail());
+            cell = row.createCell(2);
+            cell.setCellValue(result.get(i).getUserGender());
+            cell = row.createCell(3);
+            cell.setCellValue(result.get(i).getUserPhone());
+            cell = row.createCell(4);
+            cell.setCellValue(result.get(i).getFeedbackMessage());
+        }
+
+        return workbook;
+
+    }
+
+    public XSSFWorkbook studentExcelDownloadXSSF (Long studyId) throws Exception {
+
+        List<Feedback> feedbacks= feedBackRepository.findAllByStudyId(studyId);
+        List<FeedBackResponseDto> result = new ArrayList<>();
+        for (Feedback feedback: feedbacks) {
+            result.add(new FeedBackResponseDto(feedback));
+
+        }
+        String filePath = "../..//Downloads";//다운로드 경로
+        String fileName = "FeedBack.xlsx";//다운로드 파일 이음
+        //엑셀 다운 시작
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //엑셀 시트명 생성
+        Sheet sheet = workbook.createSheet("FeedBack");
+        //행,열
+        Row row = null;
+        Cell cell = null;
+        int bodyNUm=0;
+        //헤더명
+        String[] headerKey = {"이름", "이메일", "성별", "전화번호", "피드백 내용"};
+        String[] BodyKey = {result.get(bodyNUm).getUserName(), result.get(bodyNUm).getUserEmail(), result.get(bodyNUm).getUserGender(),result.get(bodyNUm).getUserPhone(), result.get(bodyNUm).getFeedbackMessage()};
+
+
+        row = sheet.createRow(0);
+        for(int i=0; i<headerKey.length; i++) {		//헤더 구성
+            cell = row.createCell(i);
+            cell.setCellValue(headerKey[i]);
+
+        }
+
+        for(int i=0; i<result.size(); i++) {	//데이터 구성
+            cell = row.createCell(i);
+            cell.setCellValue(BodyKey[i]);
+
+        }
+
+        //셀 넓이 자동 조정
+        for (int i=0; i<headerKey.length; i++) {
+            sheet.autoSizeColumn(i);
+            sheet.setColumnWidth(i, sheet.getColumnWidth(i));
+        }
+
+        try {
+            FileOutputStream out = new FileOutputStream(new File(filePath, fileName));
+            workbook.write(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return workbook;
+    }
+
+
 
     private boolean isMatchCompany(Long studyId, CompanyDetailsImpl companyDetails) {
 
