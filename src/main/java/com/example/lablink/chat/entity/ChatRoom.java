@@ -1,35 +1,40 @@
 package com.example.lablink.chat.entity;
 
-import com.example.lablink.timestamp.entity.Timestamped;
+import com.example.lablink.company.entity.Company;
+import com.example.lablink.study.entity.Study;
+import com.example.lablink.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE chat_room SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
-public class ChatRoom extends Timestamped {
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "user_id")
-    private Long userId;
+    @Column(nullable = false)
+    private String roomId;
 
-    @JoinColumn(name = "company_id")
-    private Long companyId;
+    @ManyToOne
+    private Study study;
 
-    public ChatRoom(Long userId, Long companyId) {
-        this.userId = userId;
-        this.companyId = companyId;
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private Company owner;
+
+    public ChatRoom(Study study, User user, Company owner) {
+        this.roomId = UUID.randomUUID().toString().substring(0, 8);
+        this.study = study;
+        this.user = user;
+        this.owner = owner;
     }
 }
