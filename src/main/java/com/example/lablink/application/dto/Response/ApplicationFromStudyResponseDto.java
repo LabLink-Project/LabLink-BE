@@ -13,22 +13,22 @@ import java.time.LocalDateTime;
 @Getter
 public class ApplicationFromStudyResponseDto {
 
-    private Long id;
-    private String userName;
-    private String userPhone;
-    private String userGender;
+    private final Long id;
+    private final String userName;
+    private final String userPhone;
+    private final String userGender;
 
     // 날짜 형식
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDate dateOfBirth;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private final LocalDate dateOfBirth;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
 
-    private String userAddress;
-    private String message;
+    private final String userAddress;
+    private final String message;
+    private final String approvalStatusEnum;
 
     public ApplicationFromStudyResponseDto(User user, UserInfo userInfo , Application applicationString) {
         this.id = user.getId();
@@ -39,5 +39,6 @@ public class ApplicationFromStudyResponseDto {
         this.createdAt = applicationString.getCreatedAt();
         this.userAddress = userInfo.getUserAddress();
         this.message = applicationString.getMessage();
+        this.approvalStatusEnum = applicationString.getApprovalStatusEnum();
     }
 }

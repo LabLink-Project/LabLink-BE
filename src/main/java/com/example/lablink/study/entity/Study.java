@@ -88,6 +88,8 @@ public class Study extends Timestamped {
     private CategoryEnum category;
 
     @Column(nullable = false)
+    private boolean emailSend;
+    @Column(nullable = false)
     private int currentApplicantCount; // 지원자 현황
 
     @Builder
@@ -134,6 +136,7 @@ public class Study extends Timestamped {
         this.detailImageURL = Objects.requireNonNullElse(detailImageURL, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
         this.status = status;
         this.category = requestDto.getCategory();
+        this.emailSend =false;
         this.currentApplicantCount = 0;
     }
 
@@ -145,6 +148,10 @@ public class Study extends Timestamped {
 
     public void updateStatus(StudyStatusEnum status) {
         this.status = status;
+    }
+
+    public void updateEmailSend() {
+        this.emailSend = true;
     }
 
     public void updateCurrentApplicantCount() {

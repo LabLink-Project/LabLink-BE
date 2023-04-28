@@ -13,7 +13,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     boolean existsByKakaoId(Long kakaoId);
 
     Optional<User> findByNickName(String nickName);
-
+    Optional<User> findByGoogleEmail(String email);
+    
     // native쿼리 사용 방식 -> from에 테이블 입력
     // 그냥 쿼리문은 from에 객체(Entity) 입력
 //    @Query(value = "select * from users where email = :email" , nativeQuery = true )

@@ -36,8 +36,13 @@ public class CompanySignupRequestDto {
     private String business;
 
     @NotBlank(message = "담당자 연락처를 입력해 주세요.")
+    @Size(min = 1, max = 11, message = "11자리 이내의 번호를 입력해 주세요.")
+    @Pattern(regexp = "^\\d{11}$", message = "'-'를 제외한 숫자만 입력해 주세요.")
     private String managerPhone;
 
     @NotBlank(message = "회사 주소를 입력해 주세요.")
     private String address;
+
+    @NotBlank(message = "회사 상세 주소를 입력해 주세요.")
+    private String detailAddress;
 }
