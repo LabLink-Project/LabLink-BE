@@ -1,8 +1,6 @@
 package com.example.lablink.user.service;
 
-import com.example.lablink.application.entity.Application;
 import com.example.lablink.application.service.ApplicationService;
-import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.jwt.JwtUtil;
 
@@ -165,15 +163,11 @@ public class UserService {
     @Transactional
     public String deleteUser(UserDetailsImpl userDetails, HttpServletResponse response) {
         // 북마크 제거
-        List<Bookmark> bookmarks = bookmarkService.findAllByMyBookmark(userDetails.getUser());
-        for (Bookmark bookmark : bookmarks) {
-            bookmarkService.deleteAllBookmark(bookmark);
-        }
+        bookmarkService.findAllByMyBookmark(userDetails.getUser()).forEach(bookmarkService::deleteAllBookmark);
+
         // 신청서 삭제
-        List<Application> applications = applicationService.findAllByMyApplication(userDetails.getUser());
-        for (Application application : applications) {
-            applicationService.deleteApplication(application);
-        }
+        applicationService.findAllByMyApplication(userDetails.getUser()).forEach(applicationService::deleteApplication);
+
         // 로그아웃 (헤더 null값 만들기)
         termsService.deleteTerms(userDetails.getUser());
         userRepository.delete(userDetails.getUser());
