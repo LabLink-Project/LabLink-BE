@@ -209,4 +209,7 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
     }
 
+    public User getUserByNickname(String nickName) {
+        return userRepository.findByNickName(nickName).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+    }
 }

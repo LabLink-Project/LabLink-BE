@@ -14,7 +14,7 @@
 
         console.log(roomName + ", " + roomId + ", " + username);
 
-        var sockJs = new SockJS("/stomp/chat");
+        var sockJs = new SockJS("/ws");
         //1. SockJS를 내부에 들고있는 stomp를 내어줌
         var stomp = Stomp.over(sockJs);
 
