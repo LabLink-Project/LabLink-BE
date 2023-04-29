@@ -98,6 +98,7 @@ public class JwtUtil {
             Jwts.builder()
                 .setSubject(company.getEmail())
                 .claim("role",company.getRole().toString())
+                .claim("companyName",company.getCompanyName())
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)
