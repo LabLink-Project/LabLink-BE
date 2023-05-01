@@ -9,6 +9,7 @@ import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.exception.StudyErrorCode;
 import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.repository.StudyRepository;
+import com.example.lablink.study.repository.StudySearchQueryRepository;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,13 @@ import java.util.stream.Collectors;
 public class StudySearchService {
 
     private final StudyRepository studyRepository;
+    private final StudySearchQueryRepository studySearchQueryRepository;
     private final BookmarkService bookmarkService;
     private final RedisTemplate<String, String> redisTemplate;
 
     // 게시글 조회 (전체 조회 및 검색 조회 등)
     @Transactional(readOnly = true)
-    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails) {
+    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, String keyword, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails) {
         User user = userDetails == null ? null : userDetails.getUser();
         List<Study> studies = new ArrayList<>();
         List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
@@ -45,9 +47,13 @@ public class StudySearchService {
             studies = getSortedStudies(sortedType);
         }
 
+        // 상세 검색
         if(searchOption.hasValue()){
             studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
+        }
 
+        if(keyword != null){
+            studies = studySearchQueryRepository.searchStudies(keyword, pageIndex, pageCount);
             /*if(searchOption.getKeyword() != null){
                 if(user != null){
                     // 최신검색어 구현

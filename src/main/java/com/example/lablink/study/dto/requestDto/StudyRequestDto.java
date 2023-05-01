@@ -25,11 +25,11 @@ public class StudyRequestDto {
     private LocalDateTime date;
 
     private String address;
-    private int pay;
+    private Integer pay;
     private String subjectGender;
-    private int subjectMinAge;
-    private int subjectMaxAge;
-    private int repeatCount;
+    private Integer subjectMinAge;
+    private Integer subjectMaxAge;
+    private Integer repeatCount;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")

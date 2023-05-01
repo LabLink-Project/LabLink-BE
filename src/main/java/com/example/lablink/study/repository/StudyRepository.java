@@ -33,7 +33,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             "AND (:gender IS NULL OR LOWER(subject_gender) LIKE LOWER(CONCAT('%', :gender, '%'))) " +
             "AND ((:age IS NULL) OR ((:age >= subject_min_age) AND (:age <= subject_max_age))) " +
             // todo : fulltext.. 123qweasd -> 123qwe으로 검색하면 안나옴 수정
-            "AND (:keyword IS NULL OR LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+//            "AND (:keyword IS NULL OR LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
 //            "AND (:keyword IS NULL OR MATCH (title, study_info, study_purpose, study_action) AGAINST (:keyword IN BOOLEAN MODE)) " +
 //            "AND (:keyword IS NULL OR MATCH(title, study_info, study_purpose, study_action) AGAINST(:keyword IN BOOLEAN MODE)) " +
             "ORDER BY created_at DESC " +
@@ -47,7 +47,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             @Param("searchTime") LocalTime searchTime,
             @Param("gender") String gender,
             @Param("age") String age,
-            @Param("keyword") String keyword,
+//            @Param("keyword") String keyword,
             @Param("pageIndex") int pageIndex,
             @Param("pageCount") int pageCount
     );
@@ -60,11 +60,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
         LocalTime searchTime = searchOption.getSearchTime();
         String gender = searchOption.getGender();
         String age = searchOption.getAge();
-        String keyword = searchOption.getKeyword();
-//        if (keyword != null) {
-//            keyword = keyword.replace("+", " +").replace("-", " -").replace("\"", "");
-//        }
-        return searchStudiesNativeQuery(category, address, searchDate, searchTime, gender, age, keyword, pageIndex, pageCount);
+//        String keyword = searchOption.getKeyword();
+        return searchStudiesNativeQuery(category, address, searchDate, searchTime, gender, age, pageIndex, pageCount);
     }
 
 }
