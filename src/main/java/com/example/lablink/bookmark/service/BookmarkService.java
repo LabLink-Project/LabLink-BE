@@ -3,11 +3,9 @@ package com.example.lablink.bookmark.service;
 import com.example.lablink.bookmark.dto.BookmarkResponseDto;
 import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.repository.BookmarkRepository;
+import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsImpl;
-import com.example.lablink.study.entity.CategoryEnum;
 import com.example.lablink.study.entity.Study;
-import com.example.lablink.study.exception.StudyErrorCode;
-import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.service.GetStudyService;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +24,12 @@ public class BookmarkService {
 
     @Transactional
     public String bookmark(Long studyId, UserDetailsImpl userDetails) {
-        User user = isLogin(userDetails);
+//        User user = isLogin(userDetails);
+        User user = userDetails.getUser();
         getStudyService.getStudy(studyId);
 
         String result = "북마크 성공";
-        if (checkBookmark(studyId, user)){
+        if (checkBookmark(studyId, user)) {
             deleteBookmark(studyId, user);
             result = "북마크 취소";
         } else {
@@ -40,14 +38,22 @@ public class BookmarkService {
         return result;
     }
 
-    private User isLogin(UserDetailsImpl userDetails){
-        if (userDetails != null){
-            return userDetails.getUser();
-        } else{
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+    @Transactional
+    public String bookmark(Long studyId, CompanyDetailsImpl companyDetails) {
+        Company company = companyDetails.getCompany();
+        getStudyService.getStudy(studyId);
+
+        String result = "북마크 성공";
+        if (checkBookmark(studyId, company)) {
+            deleteBookmark(studyId, company);
+            result = "북마크 취소";
+        } else {
+            saveBookmark(studyId, company);
         }
+        return result;
     }
 
+    // USER
     @Transactional
     public boolean checkBookmark(Long studyId, User user) {
         return bookmarkRepository.existsByStudyIdAndUser(studyId, user);
@@ -56,6 +62,7 @@ public class BookmarkService {
     private void saveBookmark(Long studyId, User user) {
         bookmarkRepository.saveAndFlush(new Bookmark(studyId, user));
     }
+
     public void deleteBookmark(Long studyId, User user) {
         bookmarkRepository.deleteByStudyIdAndUser(studyId, user);
     }
@@ -66,37 +73,50 @@ public class BookmarkService {
 
     public void deleteAllBookmark(Bookmark bookmark) {
         bookmarkRepository.delete(bookmark);
-    };
+    }
 
-    public void deleteByStudyId(long studyId){
+    // company
+    @Transactional
+    public boolean checkBookmark(Long studyId, Company company) {
+        return bookmarkRepository.existsByStudyIdAndCompany(studyId, company);
+    }
+    private void saveBookmark(Long studyId, Company company) {
+        bookmarkRepository.saveAndFlush(new Bookmark(studyId, company));
+    }
+
+    public void deleteBookmark(Long studyId, Company company) {
+        bookmarkRepository.deleteByStudyIdAndCompany(studyId, company);
+    }
+
+    public List<Bookmark> findAllByMyBookmark(Company company) {
+        return bookmarkRepository.findAllByCompany(company);
+    }
+
+    public void deleteByStudyId(long studyId) {
         bookmarkRepository.deleteByStudyId(studyId);
     }
 
     @Transactional(readOnly = true)
-    public List<BookmarkResponseDto> getUserBookmark(String category, UserDetailsImpl userDetails) {
-        if(userDetails == null){
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
-        }
+    public List<BookmarkResponseDto> getUserBookmark(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        // 해당 유저의 북마크 목록을 가져오고,
-        // 그 북마크의 스터디 아이디로 카테고리 온라인인지 오프라인 확인 후 나눠서 보여주기
-        // 만약 북마크가 study랑 연관관계가 지어져 있다면 ?
-        // getStudy().getCategory() == online 이렇게 할 수 있겠는디
         List<Bookmark> bookmarks = findAllByMyBookmark(user);
-        List<BookmarkResponseDto> onlineBookmarks = new ArrayList<>();
-        List<BookmarkResponseDto> offlineBookmarks = new ArrayList<>();
+        List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
         for (Bookmark bookmark : bookmarks) {
             Study study = getStudyService.getStudy(bookmark.getStudyId());
-            CategoryEnum studyCategory = study.getCategory();
-            if (studyCategory == CategoryEnum.ONLINE){
-                onlineBookmarks.add(new BookmarkResponseDto(study, bookmark));
-            } else {
-                offlineBookmarks.add(new BookmarkResponseDto(study, bookmark));
-            }
+            bookmarkResponseDtos.add(new BookmarkResponseDto(study, bookmark));
         }
-        if (Objects.equals(category, "online")) {
-            return onlineBookmarks;
+        return bookmarkResponseDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookmarkResponseDto> getCompanyBookmark(CompanyDetailsImpl companyDetails) {
+        Company company = companyDetails.getCompany();
+        List<Bookmark> bookmarks = findAllByMyBookmark(company);
+        List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
+        for (Bookmark bookmark : bookmarks) {
+            Study study = getStudyService.getStudy(bookmark.getStudyId());
+            bookmarkResponseDtos.add(new BookmarkResponseDto(study, bookmark));
         }
-        return offlineBookmarks;
+        return bookmarkResponseDtos;
     }
 }

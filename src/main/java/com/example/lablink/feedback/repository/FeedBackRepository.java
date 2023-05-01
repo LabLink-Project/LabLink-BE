@@ -8,5 +8,4 @@ import java.util.List;
 public interface FeedBackRepository extends JpaRepository<Feedback,Long> {
 
     List<Feedback> findAllByStudyId(Long id);
-
 }

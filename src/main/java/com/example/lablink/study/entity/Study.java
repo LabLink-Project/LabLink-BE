@@ -70,9 +70,6 @@ public class Study extends Timestamped {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
-//    @Column(nullable = false)
-//    private String imageURL;
-
     @Column(nullable = false)
     private String thumbnailImageURL;
 
@@ -88,31 +85,34 @@ public class Study extends Timestamped {
     private CategoryEnum category;
 
     @Column(nullable = false)
+    private boolean emailSend;
+
+    @Column(nullable = false)
     private int currentApplicantCount; // 지원자 현황
 
-    @Builder
-    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repeatCount, LocalDateTime endDate, String thumbnailImageURL, String detailImageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
-        this.id = id;
-        this.company = company;
-        this.title = title;
-        this.studyInfo = studyInfo;
-        this.studyPurpose = studyPurpose;
-        this.studyAction = studyAction;
-        this.subjectCount = subjectCount;
-        this.date = date;
-        this.address = address;
-        this.pay = pay;
-        this.subjectGender = subjectGender;
-        this.subjectMinAge = subjectMinAge;
-        this.subjectMaxAge = subjectMaxAge;
-        this.repeatCount = repeatCount;
-        this.endDate = endDate;
-        this.thumbnailImageURL = thumbnailImageURL;
-        this.detailImageURL = detailImageURL;
-        this.status = status;
-        this.category = category;
-        this.currentApplicantCount = currentApplicantCount;
-    }
+//    @Builder
+//    public Study(Long id, Company company, String title, String studyInfo, String studyPurpose, String studyAction, Long subjectCount, LocalDateTime date, String address, int pay, String subjectGender, int subjectMinAge, int subjectMaxAge, int repeatCount, LocalDateTime endDate, String thumbnailImageURL, String detailImageURL, StudyStatusEnum status, CategoryEnum category, int currentApplicantCount) {
+//        this.id = id;
+//        this.company = company;
+//        this.title = title;
+//        this.studyInfo = studyInfo;
+//        this.studyPurpose = studyPurpose;
+//        this.studyAction = studyAction;
+//        this.subjectCount = subjectCount;
+//        this.date = date;
+//        this.address = address;
+//        this.pay = pay;
+//        this.subjectGender = subjectGender;
+//        this.subjectMinAge = subjectMinAge;
+//        this.subjectMaxAge = subjectMaxAge;
+//        this.repeatCount = repeatCount;
+//        this.endDate = endDate;
+//        this.thumbnailImageURL = thumbnailImageURL;
+//        this.detailImageURL = detailImageURL;
+//        this.status = status;
+//        this.category = category;
+//        this.currentApplicantCount = currentApplicantCount;
+//    }
 
     public Study(StudyRequestDto requestDto, StudyStatusEnum status, Company company, String thumbnailImageURL, String detailImageURL) {
         this.title = requestDto.getTitle();
@@ -134,6 +134,7 @@ public class Study extends Timestamped {
         this.detailImageURL = Objects.requireNonNullElse(detailImageURL, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");
         this.status = status;
         this.category = requestDto.getCategory();
+        this.emailSend =false;
         this.currentApplicantCount = 0;
     }
 
@@ -145,6 +146,10 @@ public class Study extends Timestamped {
 
     public void updateStatus(StudyStatusEnum status) {
         this.status = status;
+    }
+
+    public void updateEmailSend() {
+        this.emailSend = true;
     }
 
     public void updateCurrentApplicantCount() {

@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-// TODO : 기업온도 (추가 기능으로 변경)
+// 기업온도 (추가 기능으로 변경)
 // region or address? -> address!
 @Getter
 public class StudyResponseDto {

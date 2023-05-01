@@ -5,6 +5,7 @@ import com.example.lablink.S3Image.entity.S3Image;
 import com.example.lablink.S3Image.service.S3Service;
 import com.example.lablink.S3Image.service.S3UploaderService;
 import com.example.lablink.bookmark.service.BookmarkService;
+import com.example.lablink.chat.service.ChatService;
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
@@ -34,6 +35,7 @@ public class StudyService {
     private final BookmarkService bookmarkService;
     private final S3UploaderService s3UploaderService;
     private final S3Service s3Service;
+    private final ChatService chatService;
 
     // 게시글 작성
     @Transactional
@@ -167,6 +169,11 @@ public class StudyService {
         // -> 삭제된 공고입니다를 달아주느게 더 나을 것 같은데
         // xxx : 북마크에서 지워버리는게 아니라 '삭제된 공고입니다'로 리팩토링 해주기
         bookmarkService.deleteByStudyId(studyId);
+
+        // 채팅방 지우기
+        chatService.deleteByStudyId(studyId);
+        // 채팅메시지 지우기
+        chatService.deleteMessagesByStudyId(studyId);
 
         // image가 있는 공고였다면 s3에서 지워줘야 함
         Study study = getStudyService.getStudy(studyId);
