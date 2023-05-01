@@ -52,9 +52,9 @@ public class StudySearchService {
             studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
         }
 
-        if(keyword != null){
+        /*if(keyword != null){
             studies = studySearchQueryRepository.searchStudies(keyword, pageIndex, pageCount);
-            /*if(searchOption.getKeyword() != null){
+            if(searchOption.getKeyword() != null){
                 if(user != null){
                     // 최신검색어 구현
                     Double timestamp = (double) System.currentTimeMillis();
@@ -70,8 +70,8 @@ public class StudySearchService {
                 }
                 //score를 1씩 올려준다.
 //                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
-            }*/
-        }
+            }
+        }*/
 
         // 일반 전체 조회
         if(sortedType == null && !searchOption.hasValue()){

@@ -24,7 +24,7 @@ public class StudySearchOption {
 
     // 사용자 정의 메서드
     public boolean hasValue() {
-        return category != null || address != null || searchDate != null || searchTime != null || gender != null || age != null;
+        return category != null || address != null || searchDate != null || searchTime != null || gender != null || age != null || keyword != null;
     }
 }
 
