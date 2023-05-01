@@ -2,6 +2,7 @@ package com.example.lablink.user.entity;
 
 import com.example.lablink.timestamp.entity.Timestamped;
 import com.example.lablink.user.dto.request.SignupRequestDto;
+import com.example.lablink.user.dto.request.TermsRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -46,6 +47,15 @@ public class Terms extends Timestamped {
         this.privacyPolicyConsent = signupRequestDto.isPrivacyPolicyConsent();
         this.sensitiveInfoConsent = signupRequestDto.isSensitiveInfoConsent();
         this.marketingOptIn = signupRequestDto.isMarketingOptIn();
+        this.user = user;
+    }
+
+    public Terms(TermsRequestDto termsRequestDto, User user) {
+        this.ageCheck = termsRequestDto.isAgeCheck();
+        this.termsOfServiceAgreement = termsRequestDto.isTermsOfServiceAgreement();
+        this.privacyPolicyConsent = termsRequestDto.isPrivacyPolicyConsent();
+        this.sensitiveInfoConsent = termsRequestDto.isSensitiveInfoConsent();
+        this.marketingOptIn = termsRequestDto.isMarketingOptIn();
         this.user = user;
     }
 }

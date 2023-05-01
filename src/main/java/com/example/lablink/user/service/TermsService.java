@@ -1,6 +1,7 @@
 package com.example.lablink.user.service;
 
 import com.example.lablink.user.dto.request.SignupRequestDto;
+import com.example.lablink.user.dto.request.TermsRequestDto;
 import com.example.lablink.user.entity.Terms;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.repository.TermsRepository;
@@ -16,6 +17,11 @@ public class TermsService {
     // 약관 저장
     public Terms saveTerms(SignupRequestDto signupRequestDto, User user) {
         return termsRepository.save(new Terms(signupRequestDto, user));
+    }
+
+    // 약관 저장
+    public Terms saveSocialTerms(TermsRequestDto termsRequestDto, User user) {
+        return termsRepository.save(new Terms(termsRequestDto, user));
     }
 
     //약관 삭제
