@@ -5,10 +5,7 @@ import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.repository.BookmarkRepository;
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsImpl;
-import com.example.lablink.study.entity.CategoryEnum;
 import com.example.lablink.study.entity.Study;
-import com.example.lablink.study.exception.StudyErrorCode;
-import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.service.GetStudyService;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +38,7 @@ public class BookmarkService {
         return result;
     }
 
+    @Transactional
     public String bookmark(Long studyId, CompanyDetailsImpl companyDetails) {
         Company company = companyDetails.getCompany();
         getStudyService.getStudy(studyId);
@@ -56,6 +53,7 @@ public class BookmarkService {
         return result;
     }
 
+    // USER
     @Transactional
     public boolean checkBookmark(Long studyId, User user) {
         return bookmarkRepository.existsByStudyIdAndUser(studyId, user);

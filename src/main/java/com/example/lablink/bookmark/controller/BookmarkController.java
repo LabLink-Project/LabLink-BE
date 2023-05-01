@@ -30,10 +30,10 @@ public class BookmarkController {
     public ResponseEntity getUserBookmark(@AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
         List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
         if (userDetails != null){
-            bookmarkService.getUserBookmark(userDetails);
+            bookmarkResponseDtos= bookmarkService.getUserBookmark(userDetails);
         }
         if (companyDetails != null){
-            bookmarkService.getCompanyBookmark(companyDetails);
+            bookmarkResponseDtos = bookmarkService.getCompanyBookmark(companyDetails);
         }
         if (userDetails == null && companyDetails == null){
             throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
