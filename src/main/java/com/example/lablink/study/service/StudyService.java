@@ -193,6 +193,7 @@ public class StudyService {
     // xxx: isCompanyLogin() testcode짜려면 public으로 바꿔야하는데
     //  1. public으로 바꾸고 테스트코드 짜는게 좋을까
     //  2. private으로 하고 테스트코드 안짜는게 나을까?
+    @Transactional
     public Company isCompanyLogin(CompanyDetailsImpl companyDetails){
         if (companyDetails != null){
             return companyDetails.getCompany();
@@ -201,7 +202,7 @@ public class StudyService {
         }
     }
 
-
+    @Transactional
     // checkRole 게시글 권한 확인 (해당 게시글을 작성자와 똑같은지 확인)
     public void checkRole(Long studyId, Company company){
         studyRepository.findByIdAndCompany(studyId, company).orElseThrow(
@@ -209,6 +210,7 @@ public class StudyService {
         );
     }
 
+    @Transactional
     // 기업별 공고 찾기
     public List<Study> findAllCompanyStudy(Company company) {
         if (company == null) {
@@ -216,6 +218,8 @@ public class StudyService {
         }
         return studyRepository.findAllByCompany(company);
     }
+
+    @Transactional
 
     // todo : checkRole 이랑 동일
     // 기업이 작성한 공고 찾기

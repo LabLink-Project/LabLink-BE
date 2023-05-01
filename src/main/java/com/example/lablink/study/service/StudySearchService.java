@@ -79,6 +79,7 @@ public class StudySearchService {
         // 일반 전체 조회
         if(sortedType == null && !searchOption.hasValue()){
             studies = studyRepository.findAllByOrderByEndDateDesc();
+//            studies = studyRepository.findAll();
         }
 
         for (Study study : studies){
@@ -95,7 +96,6 @@ public class StudySearchService {
 
         return studyResponseDtos;
     }
-
     // 최근 검색 조회 (유저Id == key)
     // todo : 몇개까지 저장 ?
     /*public List<LatestSearchKeyword> latestSearchKeyword(UserDetailsImpl userDetails){
@@ -130,6 +130,7 @@ public class StudySearchService {
         return typedTuples.stream().map(SearchRankResponseDto::convertToResponseRankingDto).collect(Collectors.toList());
     }*/
 
+    @Transactional
     // 공고 정렬 조회
     public List<Study> getSortedStudies(String sortedType) {
         List<Study> studies = new ArrayList<>();

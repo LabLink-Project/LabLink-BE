@@ -22,7 +22,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findAllByEmailSendIsFalse();
 
-    // todo : 방금 올린 공고 못 찾는 이슈 해결 ..
+    // done : 방금 올린 공고 못 찾는 이슈 해결 ..
 //    @Query(value = "ALTER TABLE study ADD FULLTEXT key (title, study_info, study_purpose, study_action)", nativeQuery = true);
 
     @Query(value = "SELECT * FROM study " +
@@ -32,7 +32,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             "AND (:searchTime IS NULL OR LOWER(date) LIKE LOWER(CONCAT('%', :searchTime, '%'))) " +
             "AND (:gender IS NULL OR LOWER(subject_gender) LIKE LOWER(CONCAT('%', :gender, '%'))) " +
             "AND ((:age IS NULL) OR ((:age >= subject_min_age) AND (:age <= subject_max_age))) " +
-            // todo : fulltext.. 123qweasd -> 123qwe으로 검색하면 안나옴 수정
             "AND (:keyword IS NULL OR LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
 //            "AND (:keyword IS NULL OR MATCH (title, study_info, study_purpose, study_action) AGAINST (:keyword IN BOOLEAN MODE)) " +
 //            "AND (:keyword IS NULL OR MATCH(title, study_info, study_purpose, study_action) AGAINST(:keyword IN BOOLEAN MODE)) " +
