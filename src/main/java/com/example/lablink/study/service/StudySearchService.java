@@ -1,6 +1,8 @@
 package com.example.lablink.study.service;
 
 import com.example.lablink.bookmark.service.BookmarkService;
+import com.example.lablink.company.entity.Company;
+import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
 import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
@@ -38,8 +40,9 @@ public class StudySearchService {
 
     // 게시글 조회 (전체 조회 및 검색 조회 등)
     @Transactional(readOnly = true)
-    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, String keyword, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails) {
+    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, String keyword, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails) {
         User user = userDetails == null ? null : userDetails.getUser();
+        Company company = companyDetails == null ? null : companyDetails.getCompany();
         List<Study> studies = new ArrayList<>();
         List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
         // 정렬 조건이 들어온다면
@@ -79,8 +82,14 @@ public class StudySearchService {
         }
 
         for (Study study : studies){
-            // 북마크 기능 추가
-            boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
+            boolean isBookmarked = false;
+            if(user != null){
+                // 북마크 기능 추가
+                isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
+            }
+            if(company != null){
+                isBookmarked = bookmarkService.checkBookmark(study.getId(), company);
+            }
             studyResponseDtos.add(new StudyResponseDto(study, isBookmarked));
         }
 
