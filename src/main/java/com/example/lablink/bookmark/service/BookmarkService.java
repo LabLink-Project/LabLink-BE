@@ -3,6 +3,7 @@ package com.example.lablink.bookmark.service;
 import com.example.lablink.bookmark.dto.BookmarkResponseDto;
 import com.example.lablink.bookmark.entity.Bookmark;
 import com.example.lablink.bookmark.repository.BookmarkRepository;
+import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.entity.CategoryEnum;
 import com.example.lablink.study.entity.Study;
@@ -27,7 +28,8 @@ public class BookmarkService {
 
     @Transactional
     public String bookmark(Long studyId, UserDetailsImpl userDetails) {
-        User user = isLogin(userDetails);
+//        User user = isLogin(userDetails);
+        User user = userDetails.getUser();
         getStudyService.getStudy(studyId);
 
         String result = "북마크 성공";
@@ -40,12 +42,18 @@ public class BookmarkService {
         return result;
     }
 
-    private User isLogin(UserDetailsImpl userDetails) {
-        if (userDetails != null) {
-            return userDetails.getUser();
+    public String bookmark(Long studyId, CompanyDetailsImpl companyDetails) {
+        Company company = companyDetails.getCompany();
+        getStudyService.getStudy(studyId);
+
+        String result = "북마크 성공";
+        if (checkBookmark(studyId, company)) {
+            deleteBookmark(studyId, company);
+            result = "북마크 취소";
         } else {
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+            saveBookmark(studyId, company);
         }
+        return result;
     }
 
     @Transactional
@@ -69,7 +77,22 @@ public class BookmarkService {
         bookmarkRepository.delete(bookmark);
     }
 
-    ;
+    // company
+    @Transactional
+    public boolean checkBookmark(Long studyId, Company company) {
+        return bookmarkRepository.existsByStudyIdAndCompany(studyId, company);
+    }
+    private void saveBookmark(Long studyId, Company company) {
+        bookmarkRepository.saveAndFlush(new Bookmark(studyId, company));
+    }
+
+    public void deleteBookmark(Long studyId, Company company) {
+        bookmarkRepository.deleteByStudyIdAndCompany(studyId, company);
+    }
+
+    public List<Bookmark> findAllByMyBookmark(Company company) {
+        return bookmarkRepository.findAllByCompany(company);
+    }
 
     public void deleteByStudyId(long studyId) {
         bookmarkRepository.deleteByStudyId(studyId);
@@ -77,11 +100,20 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<BookmarkResponseDto> getUserBookmark(UserDetailsImpl userDetails) {
-        if (userDetails == null) {
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
-        }
         User user = userDetails.getUser();
         List<Bookmark> bookmarks = findAllByMyBookmark(user);
+        List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
+        for (Bookmark bookmark : bookmarks) {
+            Study study = getStudyService.getStudy(bookmark.getStudyId());
+            bookmarkResponseDtos.add(new BookmarkResponseDto(study, bookmark));
+        }
+        return bookmarkResponseDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookmarkResponseDto> getCompanyBookmark(CompanyDetailsImpl companyDetails) {
+        Company company = companyDetails.getCompany();
+        List<Bookmark> bookmarks = findAllByMyBookmark(company);
         List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
         for (Bookmark bookmark : bookmarks) {
             Study study = getStudyService.getStudy(bookmark.getStudyId());
