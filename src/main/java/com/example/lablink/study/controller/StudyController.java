@@ -61,11 +61,11 @@ public class StudyController {
             @RequestParam(defaultValue = "1") int pageIndex,
             @RequestParam(defaultValue = "10") int pageCount,
             @RequestParam(required = false) String sortedType,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails) {
         // searchOption 객체를 사용하여 검색 조건을 처리합니다.
         // pageIndex와 pageCount 파라미터는 기본값을 설정하여 받습니다.
         return ResponseMessage.SuccessResponse("조회 성공",
-                studySearchService.getStudies(searchOption, pageIndex, pageCount, sortedType, userDetails));
+                studySearchService.getStudies(searchOption, searchOption.getKeyword(), pageIndex, pageCount, sortedType, userDetails, companyDetails));
     }
 
     // done : ResponseEntity로

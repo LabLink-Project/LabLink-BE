@@ -1,6 +1,8 @@
 package com.example.lablink.study.service;
 
 import com.example.lablink.bookmark.service.BookmarkService;
+import com.example.lablink.company.entity.Company;
+import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
 import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
@@ -9,6 +11,7 @@ import com.example.lablink.study.entity.Study;
 import com.example.lablink.study.exception.StudyErrorCode;
 import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.repository.StudyRepository;
+import com.example.lablink.study.repository.StudySearchQueryRepository;
 import com.example.lablink.user.entity.User;
 import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +34,15 @@ import java.util.stream.Collectors;
 public class StudySearchService {
 
     private final StudyRepository studyRepository;
+    private final StudySearchQueryRepository studySearchQueryRepository;
     private final BookmarkService bookmarkService;
     private final RedisTemplate<String, String> redisTemplate;
 
     // 게시글 조회 (전체 조회 및 검색 조회 등)
     @Transactional(readOnly = true)
-    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails) {
+    public List<StudyResponseDto> getStudies(StudySearchOption searchOption, String keyword, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails) {
         User user = userDetails == null ? null : userDetails.getUser();
+        Company company = companyDetails == null ? null : companyDetails.getCompany();
         List<Study> studies = new ArrayList<>();
         List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
         // 정렬 조건이 들어온다면
@@ -45,10 +50,14 @@ public class StudySearchService {
             studies = getSortedStudies(sortedType);
         }
 
+        // 상세 검색
         if(searchOption.hasValue()){
             studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
+        }
 
-            /*if(searchOption.getKeyword() != null){
+        /*if(keyword != null){
+            studies = studySearchQueryRepository.searchStudies(keyword, pageIndex, pageCount);
+            if(searchOption.getKeyword() != null){
                 if(user != null){
                     // 최신검색어 구현
                     Double timestamp = (double) System.currentTimeMillis();
@@ -64,8 +73,8 @@ public class StudySearchService {
                 }
                 //score를 1씩 올려준다.
 //                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
-            }*/
-        }
+            }
+        }*/
 
         // 일반 전체 조회
         if(sortedType == null && !searchOption.hasValue()){
@@ -73,8 +82,14 @@ public class StudySearchService {
         }
 
         for (Study study : studies){
-            // 북마크 기능 추가
-            boolean isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
+            boolean isBookmarked = false;
+            if(user != null){
+                // 북마크 기능 추가
+                isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
+            }
+            if(company != null){
+                isBookmarked = bookmarkService.checkBookmark(study.getId(), company);
+            }
             studyResponseDtos.add(new StudyResponseDto(study, isBookmarked));
         }
 

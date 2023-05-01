@@ -61,10 +61,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
         String gender = searchOption.getGender();
         String age = searchOption.getAge();
         String keyword = searchOption.getKeyword();
-//        if (keyword != null) {
-//            keyword = keyword.replace("+", " +").replace("-", " -").replace("\"", "");
-//        }
         return searchStudiesNativeQuery(category, address, searchDate, searchTime, gender, age, keyword, pageIndex, pageCount);
     }
-
 }
