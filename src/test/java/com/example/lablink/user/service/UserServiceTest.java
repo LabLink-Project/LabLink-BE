@@ -262,6 +262,7 @@ class UserServiceTest {
         // then
         verify(userRepository).deleteUserAndData(user.getId());
         verify(response).setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
+
     }
 
     @Test
