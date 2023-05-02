@@ -6,7 +6,7 @@ name: LabLink_Dev
 # 브랜치 구분 없이 이벤트를 지정하고 싶을 경우에는 아래와 같이 작성 가능
 # on: [push, pull_request]
 on:
-  pull_request:
+  push:
     branches: [dev]
 
   # 해당 옵션을 통해 사용자가 직접 Actions 탭에서 Workflow를 실행 가능
@@ -50,7 +50,7 @@ jobs:
           cd ./src/main/resources
           touch ./application.properties
           echo ">> copy application.properties"
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./application.properties
+          echo "${{ secrets.APPLICATION_PROPERTIES_DEV }}" >> ./application.properties
           
       - name: make application.properties
         run: |
