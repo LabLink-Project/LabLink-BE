@@ -1,10 +1,10 @@
 package com.example.lablink.user.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,7 +25,8 @@ public class MyPageCheckRequestDto {
         private String userName;
 
         @Past(message = "생년월일은 유효한 날짜여야 합니다.")
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
+//        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dateOfBirth;
 
         private String userGender;
@@ -33,6 +34,8 @@ public class MyPageCheckRequestDto {
         private String userPhone;
 
         private String userAddress;
+
+        private String userDetailAddress;
     }
 
 }

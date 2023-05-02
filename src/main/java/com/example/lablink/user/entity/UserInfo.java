@@ -22,6 +22,9 @@ public class UserInfo {
     @Column(nullable = true)
     private String userAddress;
 
+    @Column(nullable = true)
+    private String userDetailAddress;
+
     // xxx : 카카오로그인 phone 번호 못 받아서 true로 바꿈니다 ㅠ
     @Column(nullable = true)
     private String userPhone;
@@ -35,5 +38,6 @@ public class UserInfo {
 
     public void updateUserInfo(ApplicationRequestDto applicationRequestDto) {
         this.userAddress = applicationRequestDto.getUserAddress();
+        this.userDetailAddress = applicationRequestDto.getUserDetailAddress();
     }
 }
