@@ -16,6 +16,8 @@ public class ApplicationRequestDto {
 
     private String userAddress;
 
+    private String userDetailAddress;
+
     private String userGender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

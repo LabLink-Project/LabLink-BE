@@ -7,7 +7,6 @@ import com.example.lablink.message.ResponseMessage;
 import com.example.lablink.study.dto.StudySearchOption;
 import com.example.lablink.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
-import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
 import com.example.lablink.study.service.StudySearchService;
 import com.example.lablink.study.service.StudyService;
 import com.example.lablink.user.security.UserDetailsImpl;
@@ -20,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -70,22 +70,33 @@ public class StudyController {
 
     // done : ResponseEntity로
     // done : 최근 검색 기록 삭제 기능 추가
-    // todo : redis 복구되면 주석 풀기
-    /*@GetMapping("/search/rank")
+    @GetMapping("/search/rank")
     public ResponseEntity searchRankList(){
         return ResponseMessage.SuccessResponse("인기 검색어 조회 성공", studySearchService.searchRankList());
     }
 
     @GetMapping("/search/latest")
-    public ResponseEntity latestSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseMessage.SuccessResponse("최신 검색어 조회 성공", studySearchService.latestSearchKeyword(userDetails));
+    public ResponseEntity latestSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails){
+        List<LatestSearchKeyword> latestSearchKeywords = new ArrayList<>();
+        if(userDetails != null){
+            latestSearchKeywords = studySearchService.latestSearchKeyword(userDetails);
+        }
+        if(companyDetails != null){
+            latestSearchKeywords = studySearchService.latestSearchKeywordCompany(companyDetails);
+        }
+        return ResponseMessage.SuccessResponse("최신 검색어 조회 성공", latestSearchKeywords);
     }
 
     @DeleteMapping("/search/latest")
-    public ResponseEntity deleteSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String deleteWord){
-        studySearchService.deleteSearchKeyword(userDetails, deleteWord);
+    public ResponseEntity deleteSearchKeyword(@AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails, @RequestParam String deleteWord){
+        if(companyDetails != null){
+            studySearchService.deleteSearchKeywordCompany(companyDetails, deleteWord);
+        }
+        if(userDetails != null){
+            studySearchService.deleteSearchKeyword(userDetails, deleteWord);
+        }
         return ResponseMessage.SuccessResponse("최신 검색어 삭제 성공", "");
-    }*/
+    }
 
     // 게시글 관심 공고 조회
 //    @GetMapping("/sorting")

@@ -4,6 +4,7 @@ import com.example.lablink.S3Image.dto.S3ResponseDto;
 import com.example.lablink.S3Image.entity.S3Image;
 import com.example.lablink.S3Image.service.S3Service;
 import com.example.lablink.S3Image.service.S3UploaderService;
+import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.chat.service.ChatService;
 import com.example.lablink.company.entity.Company;
@@ -36,6 +37,7 @@ public class StudyService {
     private final S3UploaderService s3UploaderService;
     private final S3Service s3Service;
     private final ChatService chatService;
+    private final ApplicationService applicationService;
 
     // 게시글 작성
     @Transactional
@@ -63,7 +65,8 @@ public class StudyService {
         User user = userDetails == null ? null : userDetails.getUser();
         Study study = getStudyService.getStudy(studyId);
         boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
-        return new StudyDetailResponseDto(study, isbookmarked);
+        boolean isApplied = applicationService.checkApplication(study.getId(), user);
+        return new StudyDetailResponseDto(study, isbookmarked, isApplied);
     }
 
     // 게시글 수정
@@ -193,6 +196,7 @@ public class StudyService {
     // xxx: isCompanyLogin() testcode짜려면 public으로 바꿔야하는데
     //  1. public으로 바꾸고 테스트코드 짜는게 좋을까
     //  2. private으로 하고 테스트코드 안짜는게 나을까?
+    @Transactional
     public Company isCompanyLogin(CompanyDetailsImpl companyDetails){
         if (companyDetails != null){
             return companyDetails.getCompany();
@@ -201,7 +205,7 @@ public class StudyService {
         }
     }
 
-
+    @Transactional
     // checkRole 게시글 권한 확인 (해당 게시글을 작성자와 똑같은지 확인)
     public void checkRole(Long studyId, Company company){
         studyRepository.findByIdAndCompany(studyId, company).orElseThrow(
@@ -209,6 +213,7 @@ public class StudyService {
         );
     }
 
+    @Transactional
     // 기업별 공고 찾기
     public List<Study> findAllCompanyStudy(Company company) {
         if (company == null) {
@@ -216,6 +221,8 @@ public class StudyService {
         }
         return studyRepository.findAllByCompany(company);
     }
+
+    @Transactional
 
     // todo : checkRole 이랑 동일
     // 기업이 작성한 공고 찾기

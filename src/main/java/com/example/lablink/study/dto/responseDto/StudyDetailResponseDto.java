@@ -39,8 +39,9 @@ public class StudyDetailResponseDto {
     private final boolean isbookmarked;
     private final int currentApplicantCount;
     private final String companyName;
+    private final boolean isapplied;
 
-    public StudyDetailResponseDto(Study study, boolean isbookmarked) {
+    public StudyDetailResponseDto(Study study, boolean isbookmarked, boolean isapplied) {
         this.id = study.getId();
         this.title = study.getTitle();
         this.studyInfo = study.getStudyInfo();
@@ -61,5 +62,6 @@ public class StudyDetailResponseDto {
         this.isbookmarked = isbookmarked;
         this.currentApplicantCount = study.getCurrentApplicantCount();
         this.companyName = study.getCompany().getCompanyName();
+        this.isapplied = isapplied;
     }
 }

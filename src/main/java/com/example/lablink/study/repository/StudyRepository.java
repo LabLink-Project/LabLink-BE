@@ -22,22 +22,26 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findAllByEmailSendIsFalse();
 
-    // todo : 방금 올린 공고 못 찾는 이슈 해결 ..
+    @Query(value = "select * from study as s where s.end_date < now()", nativeQuery = true)
+    List<Study> getAllByEndDate();
+
+    // done : 방금 올린 공고 못 찾는 이슈 해결 ..
 //    @Query(value = "ALTER TABLE study ADD FULLTEXT key (title, study_info, study_purpose, study_action)", nativeQuery = true);
 
+
+    // todo : offset -> limit, lastid로 바꿔주기
+    //  offset은 fullscan이기 때문에 성능 저하를 일으킨다
+    //  무한스크롤시 몇번째 페이지로 이동이 없기 때문에 굳이 fullscan을 할 필요 없음
     @Query(value = "SELECT * FROM study " +
-            "WHERE (:category IS NULL OR LOWER(category) LIKE LOWER(CONCAT('%', :category, '%'))) " +
-            "AND (:address IS NULL OR LOWER(address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
-            "AND (:searchDate IS NULL OR LOWER(date) LIKE LOWER(CONCAT('%', :searchDate, '%'))) " +
-            "AND (:searchTime IS NULL OR LOWER(date) LIKE LOWER(CONCAT('%', :searchTime, '%'))) " +
-            "AND (:gender IS NULL OR LOWER(subject_gender) LIKE LOWER(CONCAT('%', :gender, '%'))) " +
-            "AND ((:age IS NULL) OR ((:age >= subject_min_age) AND (:age <= subject_max_age))) " +
-            // todo : fulltext.. 123qweasd -> 123qwe으로 검색하면 안나옴 수정
-            "AND (:keyword IS NULL OR LOWER(title) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-//            "AND (:keyword IS NULL OR MATCH (title, study_info, study_purpose, study_action) AGAINST (:keyword IN BOOLEAN MODE)) " +
-//            "AND (:keyword IS NULL OR MATCH(title, study_info, study_purpose, study_action) AGAINST(:keyword IN BOOLEAN MODE)) " +
+            "WHERE (:category is null or lower(category) like lower(concat('%', :category, '%'))) " +
+            "AND (:address is null or lower(address) like lower(concat('%', :address, '%'))) " +
+            "AND (:searchDate is null or lower(date) like lower(concat('%', :searchDate, '%'))) " +
+            "AND (:searchTime is null or lower(date) like lower(concat('%', :searchTime, '%'))) " +
+            "AND (:gender is null or lower(subject_gender) like lower(concat('%', :gender, '%'))) " +
+            "AND ((:age is null) or ((:age >= subject_min_age) and (:age <= subject_max_age))) " +
+            "AND (:keyword is null or lower(title) like lower(concat('%', :keyword, '%'))) " +
             "ORDER BY created_at DESC " +
-            "LIMIT :pageIndex, :pageCount",
+            "LIMIT :pageCount OFFSET :offset",
             nativeQuery = true)
 
     List<Study> searchStudiesNativeQuery(
@@ -48,7 +52,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             @Param("gender") String gender,
             @Param("age") String age,
             @Param("keyword") String keyword,
-            @Param("pageIndex") int pageIndex,
+            @Param("offset") int offset,
+//            @Param("pageIndex") int pageIndex,
             @Param("pageCount") int pageCount
     );
 
@@ -61,6 +66,8 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
         String gender = searchOption.getGender();
         String age = searchOption.getAge();
         String keyword = searchOption.getKeyword();
-        return searchStudiesNativeQuery(category, address, searchDate, searchTime, gender, age, keyword, pageIndex, pageCount);
+        int offset = (pageIndex - 1) * pageCount;
+
+        return searchStudiesNativeQuery(category, address, searchDate, searchTime, gender, age, keyword, offset, pageCount);
     }
 }

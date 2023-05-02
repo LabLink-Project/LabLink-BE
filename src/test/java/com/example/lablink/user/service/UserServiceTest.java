@@ -256,29 +256,13 @@ class UserServiceTest {
         User user = new User();
         UserDetailsImpl userDetails = new UserDetailsImpl(user, user.getEmail());
 
-        Bookmark bookmark1 = new Bookmark();
-        List<Bookmark> bookmarks = new ArrayList<>();
-        bookmarks.add(bookmark1);
-
-        Application application1 = new Application();
-        List<Application> applications = new ArrayList<>();
-        applications.add(application1);
-
-        given(bookmarkService.findAllByMyBookmark(userDetails.getUser())).willReturn(bookmarks);
-        given(applicationService.findAllByMyApplication(userDetails.getUser())).willReturn(applications);
-
         // when
         userService.deleteUser(userDetails, response);
 
         // then
-        // bookmarks 모든 요소 반복, 스터빙한 메소드를 검증하는 verify() 메서드를 호출하여
-        // verify() -> () 안의가짜 객체가 정말 뒤의 메서드를 실행했는지?
-        // bookmarkService의 deleteAllBookmark() 메서드가 현재 bookmark 개체와 함께 호출되었는지 확인
-        bookmarks.forEach(bookmark -> verify(bookmarkService).deleteAllBookmark(bookmark));
-        applications.forEach(application -> verify(applicationService).deleteApplication(application));
-        verify(termsService).deleteTerms(user);
-        verify(userRepository).delete(user);
+        verify(userRepository).deleteUserAndData(user.getId());
         verify(response).setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
+
     }
 
     @Test
