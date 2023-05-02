@@ -52,29 +52,30 @@ public class StudySearchService {
 
         // 상세 검색
         if(searchOption.hasValue()){
-            studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
+//            studies = studyRepository.searchStudiesBySearchOption(searchOption, pageIndex, pageCount);
+            studies = studySearchQueryRepository.searchStudies(searchOption, pageIndex, pageCount);
         }
 
-        /*if(keyword != null){
-            studies = studySearchQueryRepository.searchStudies(keyword, pageIndex, pageCount);
-            if(searchOption.getKeyword() != null){
-                if(user != null){
-                    // 최신검색어 구현
-                    Double timestamp = (double) System.currentTimeMillis();
-                    redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
-                }
-                // 인기검색어 구현
-                Double score = 0.0;
-                try {
-                    // 검색을하면 해당검색어를 value에 저장하고, score를 1 준다
-                    redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), 1);
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                }
-                //score를 1씩 올려준다.
-//                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
-            }
-        }*/
+        if(keyword != null){
+            studies = studySearchQueryRepository.searchStudiesByKeyword(keyword, pageIndex, pageCount);
+//            if(searchOption.getKeyword() != null){
+//                if(user != null){
+//                    // 최신검색어 구현
+//                    Double timestamp = (double) System.currentTimeMillis();
+//                    redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
+//                }
+//                // 인기검색어 구현
+//                Double score = 0.0;
+//                try {
+//                    // 검색을하면 해당검색어를 value에 저장하고, score를 1 준다
+//                    redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), 1);
+//                } catch (Exception e) {
+//                    System.out.println(e.toString());
+//                }
+//                //score를 1씩 올려준다.
+////                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
+//            }
+        }
 
         // 일반 전체 조회
         if(sortedType == null && !searchOption.hasValue()){
