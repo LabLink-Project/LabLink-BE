@@ -1,7 +1,5 @@
 package com.example.lablink.user.service;
 
-import com.example.lablink.application.service.ApplicationService;
-import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.jwt.JwtUtil;
 
 import com.example.lablink.user.dto.request.LoginRequestDto;
@@ -17,8 +15,7 @@ import com.example.lablink.user.exception.UserErrorCode;
 import com.example.lablink.user.exception.UserException;
 import com.example.lablink.user.repository.UserRepository;
 import com.example.lablink.user.security.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,43 +26,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TermsService termsService;
     private final JwtUtil jwtUtil;
-    private final ApplicationService applicationService;
-    private final BookmarkService bookmarkService;
     private final UserInfoService userInfoService;
     private final EntityManager em;
-//    private final StudyService studyService;
-
-
-    // 순환 종속성 해결을 위한 생성자 주입 & Lazy
-    @Autowired
-    public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       TermsService termsService,
-                       JwtUtil jwtUtil,
-                       @Lazy ApplicationService applicationService,
-                       BookmarkService bookmarkService,
-                       UserInfoService userInfoService,
-                       EntityManager em
-                       /*StudyService studyService*/) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.termsService = termsService;
-        this.jwtUtil = jwtUtil;
-        this.applicationService = applicationService;
-        this.bookmarkService = bookmarkService;
-        this.userInfoService = userInfoService;
-        this.em = em;
-//        this.studyService = studyService;
-    }
-//    인증 인가를 담당하는 Service의 보안? 을 위함이기에 단익책임 위반 X
-//    private final CsrfTokenRepository csrfTokenRepository;
 
     // 유저 회원가입
     @Transactional
@@ -162,15 +131,17 @@ public class UserService {
     // 회원 탈퇴
     @Transactional
     public String deleteUser(UserDetailsImpl userDetails, HttpServletResponse response) {
-        // 북마크 제거
-        bookmarkService.findAllByMyBookmark(userDetails.getUser()).forEach(bookmarkService::deleteAllBookmark);
-
-        // 신청서 삭제
-        applicationService.findAllByMyApplication(userDetails.getUser()).forEach(applicationService::deleteApplication);
-
-        // 로그아웃 (헤더 null값 만들기)
-        termsService.deleteTerms(userDetails.getUser());
-        userRepository.delete(userDetails.getUser());
+////        북마크 제거
+//        bookmarkService.findAllByMyBookmark(userDetails.getUser()).forEach(bookmarkService::deleteAllBookmark);
+////        신청서 삭제
+//        applicationService.findAllByMyApplication(userDetails.getUser()).forEach(applicationService::deleteApplication);
+////        약관 삭제
+//        termsService.deleteTerms(userDetails.getUser());
+////        유저 삭제
+//        userRepository.delete(userDetails.getUser());
+//
+        userRepository.deleteUserAndData(userDetails.getUser().getId());
+//        로그아웃 (헤더 null값 만들기)
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
         return "탈퇴 완료.";
     }
@@ -183,6 +154,15 @@ public class UserService {
         if(userDetails == null || userDetails.equals(" ")) {
             throw new UserException(UserErrorCode.INVALID_TOKEN);
         }
+        /*내가 작성한 신청서를 찾아 리스트에 넣는다*/
+//        List<Application> applcations = applicationService.findAllByMyApplication(userDetails.getUser());
+//        List<MyLabResponseDto> myLabs = new ArrayList<>();
+//        for (Application applcation : applcations) {
+//            Study study = getStudyService.getStudy(applcation.getStudyId());
+//            myLabs.add(new MyLabResponseDto(study, applcation.getApprovalStatusEnum(), applcation.getApplicationViewStatusEnum()));
+//        }
+//        return myLabs;
+
         // 내가 신청한 목록
         // 1. application에서 user로 찾아온다
         // 2. 스터디 정보와 어플리케이션 정보를 찾아서 responseDto에 넣어주려고 한듯 ?
