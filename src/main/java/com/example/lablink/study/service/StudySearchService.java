@@ -1,15 +1,12 @@
 package com.example.lablink.study.service;
 
+import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.company.entity.Company;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.study.dto.StudySearchOption;
-import com.example.lablink.study.dto.responseDto.LatestSearchKeyword;
-import com.example.lablink.study.dto.responseDto.SearchRankResponseDto;
 import com.example.lablink.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.study.entity.Study;
-import com.example.lablink.study.exception.StudyErrorCode;
-import com.example.lablink.study.exception.StudyException;
 import com.example.lablink.study.repository.StudyRepository;
 import com.example.lablink.study.repository.StudySearchQueryRepository;
 import com.example.lablink.user.entity.User;
@@ -17,15 +14,12 @@ import com.example.lablink.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -85,14 +79,17 @@ public class StudySearchService {
 
         for (Study study : studies){
             boolean isBookmarked = false;
+            boolean isApplied = false;
             if(user != null){
                 // 북마크 기능 추가
                 isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
+                /*// 지원 현황 추가
+                isApplied = applicationService.checkApplication(study.getId(), user);*/
             }
             if(company != null){
                 isBookmarked = bookmarkService.checkBookmark(study.getId(), company);
             }
-            studyResponseDtos.add(new StudyResponseDto(study, isBookmarked));
+            studyResponseDtos.add(new StudyResponseDto(study, isBookmarked/*, isApplied*/));
         }
 
         return studyResponseDtos;
