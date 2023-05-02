@@ -22,6 +22,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findAllByEmailSendIsFalse();
 
+    @Query(value = "select * from study as s where s.end_date < now()", nativeQuery = true)
+    List<Study> getAllByEndDate();
+
     // done : 방금 올린 공고 못 찾는 이슈 해결 ..
 //    @Query(value = "ALTER TABLE study ADD FULLTEXT key (title, study_info, study_purpose, study_action)", nativeQuery = true);
 
@@ -40,7 +43,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             "ORDER BY created_at DESC " +
             "LIMIT :pageCount OFFSET :offset",
             nativeQuery = true)
-
 
     List<Study> searchStudiesNativeQuery(
             @Param("category") String category,

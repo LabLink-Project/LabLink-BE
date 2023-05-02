@@ -4,6 +4,7 @@ import com.example.lablink.S3Image.dto.S3ResponseDto;
 import com.example.lablink.S3Image.entity.S3Image;
 import com.example.lablink.S3Image.service.S3Service;
 import com.example.lablink.S3Image.service.S3UploaderService;
+import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.bookmark.service.BookmarkService;
 import com.example.lablink.chat.service.ChatService;
 import com.example.lablink.company.entity.Company;
@@ -36,6 +37,7 @@ public class StudyService {
     private final S3UploaderService s3UploaderService;
     private final S3Service s3Service;
     private final ChatService chatService;
+    private final ApplicationService applicationService;
 
     // 게시글 작성
     @Transactional
@@ -63,7 +65,8 @@ public class StudyService {
         User user = userDetails == null ? null : userDetails.getUser();
         Study study = getStudyService.getStudy(studyId);
         boolean isbookmarked = bookmarkService.checkBookmark(study.getId(), user);
-        return new StudyDetailResponseDto(study, isbookmarked);
+        boolean isApplied = applicationService.checkApplication(study.getId(), user);
+        return new StudyDetailResponseDto(study, isbookmarked, isApplied);
     }
 
     // 게시글 수정

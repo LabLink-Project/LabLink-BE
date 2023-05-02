@@ -2,6 +2,7 @@ package com.example.lablink.application.controller;
 
 import com.example.lablink.application.dto.Request.ApplicationRequestDto;
 import com.example.lablink.application.dto.Request.ApplicationStatusRequestDto;
+import com.example.lablink.application.service.ApplicationCompanyService;
 import com.example.lablink.application.service.ApplicationService;
 import com.example.lablink.company.security.CompanyDetailsImpl;
 import com.example.lablink.message.ResponseMessage;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApplicationController {
 
     private final ApplicationService applicationService;
+    private final ApplicationCompanyService applicationCompanyService;
 
     @Operation(summary = "신청서 작성", description = "신청서 작성")
     @PostMapping("/applications")
@@ -52,20 +54,20 @@ public class ApplicationController {
     @Operation(summary = "신청서 승인, 거절", description = "신청서 승인, 거절")
     @PatchMapping("/applications/{applicationId}/status")
     public ResponseEntity applicationStatus(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @RequestBody ApplicationStatusRequestDto statusRequestDto, @PathVariable Long studyId, @PathVariable Long applicationId){
-        applicationService.applicationStatus(companyDetails, statusRequestDto, studyId, applicationId);
+        applicationCompanyService.applicationStatus(companyDetails, statusRequestDto, studyId, applicationId);
         return ResponseMessage.SuccessResponse("완료.", "");
     }
 
     @Operation(summary = "공고별 전체 신청서 확인", description = "공고별 전체 신청서 확인")
     @GetMapping("/applications")
     public ResponseEntity applicationFromStudy(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId) {
-        return ResponseMessage.SuccessResponse("조회 성공", applicationService.applicationFromStudy(companyDetails, studyId));
+        return ResponseMessage.SuccessResponse("조회 성공", applicationCompanyService.applicationFromStudy(companyDetails, studyId));
     }
 
     @Operation(summary = "기업의 상세 신청서 확인", description = "기업의 상세 신청서 확인")
     @GetMapping("/applications/{applicationId}")
     public ResponseEntity companyDetailApplicationFromStudy(@AuthenticationPrincipal CompanyDetailsImpl companyDetails, @PathVariable Long studyId,@PathVariable Long applicationId){
-        return ResponseMessage.SuccessResponse("",applicationService.companyDetailApplicationFromStudy(companyDetails,studyId,applicationId));
+        return ResponseMessage.SuccessResponse("",applicationCompanyService.companyDetailApplicationFromStudy(companyDetails,studyId,applicationId));
     }
 //
 //    @Operation(summary = "유저의 상세 신청서 확인", description = "유저의 상세 신청서 확인")

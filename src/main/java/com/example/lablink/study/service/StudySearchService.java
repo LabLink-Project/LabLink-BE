@@ -58,23 +58,28 @@ public class StudySearchService {
 
         if(keyword != null){
             studies = studySearchQueryRepository.searchStudiesByKeyword(keyword, pageIndex, pageCount);
-//            if(searchOption.getKeyword() != null){
-//                if(user != null){
-//                    // 최신검색어 구현
-//                    Double timestamp = (double) System.currentTimeMillis();
-//                    redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
-//                }
-//                // 인기검색어 구현
-//                Double score = 0.0;
-//                try {
-//                    // 검색을하면 해당검색어를 value에 저장하고, score를 1 준다
-//                    redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), 1);
-//                } catch (Exception e) {
-//                    System.out.println(e.toString());
-//                }
-//                //score를 1씩 올려준다.
-////                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
-//            }
+            if(searchOption.getKeyword() != null){
+                if(user != null){
+                    // 최신검색어 구현
+                    Double timestamp = (double) System.currentTimeMillis();
+                    redisTemplate.opsForZSet().add(user.getId().toString(),  searchOption.getKeyword(), timestamp);
+                }
+                if(company != null){
+                    // 최신검색어 구현
+                    Double timestamp = (double) System.currentTimeMillis();
+                    redisTemplate.opsForZSet().add(company.getCompanyName(),  searchOption.getKeyword(), timestamp);
+                }
+                // 인기검색어 구현
+                Double score = 0.0;
+                try {
+                    // 검색을하면 해당검색어를 value에 저장하고, score를 1 준다
+                    redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), 1);
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+                //score를 1씩 올려준다.
+//                redisTemplate.opsForZSet().incrementScore("ranking", searchOption.getKeyword(), score);
+            }
         }
 
         // 일반 전체 조회
@@ -85,24 +90,40 @@ public class StudySearchService {
 
         for (Study study : studies){
             boolean isBookmarked = false;
+            boolean isApplied = false;
             if(user != null){
                 // 북마크 기능 추가
                 isBookmarked = bookmarkService.checkBookmark(study.getId(), user);
+                /*// 지원 현황 추가
+                isApplied = applicationService.checkApplication(study.getId(), user);*/
             }
             if(company != null){
                 isBookmarked = bookmarkService.checkBookmark(study.getId(), company);
             }
-            studyResponseDtos.add(new StudyResponseDto(study, isBookmarked));
+            studyResponseDtos.add(new StudyResponseDto(study, isBookmarked/*, isApplied*/));
         }
 
         return studyResponseDtos;
     }
+
     // 최근 검색 조회 (유저Id == key)
     // todo : 몇개까지 저장 ?
-    /*public List<LatestSearchKeyword> latestSearchKeyword(UserDetailsImpl userDetails){
+    public List<LatestSearchKeyword> latestSearchKeyword(UserDetailsImpl userDetails){
         if(userDetails != null){
             User user = userDetails.getUser();
             String key = user.getId().toString();
+            ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+            Set<ZSetOperations.TypedTuple<String>> typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);
+            return typedTuples.stream().map(LatestSearchKeyword::convertToLatestSearchKeyword).collect(Collectors.toList());
+        } else{
+            return null;
+        }
+    }
+
+    public List<LatestSearchKeyword> latestSearchKeywordCompany(CompanyDetailsImpl companyDetails){
+        if(companyDetails != null){
+            Company company = companyDetails.getCompany();
+            String key = company.getCompanyName();
             ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
             Set<ZSetOperations.TypedTuple<String>> typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);
             return typedTuples.stream().map(LatestSearchKeyword::convertToLatestSearchKeyword).collect(Collectors.toList());
@@ -121,6 +142,16 @@ public class StudySearchService {
         }
     }
 
+    public void deleteSearchKeywordCompany(CompanyDetailsImpl companyDetails, String deleteWord) {
+        if(companyDetails != null){
+            Company company = companyDetails.getCompany();
+            String key = company.getCompanyName();
+            redisTemplate.opsForZSet().remove(key, deleteWord);
+        } else {
+            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+        }
+    }
+
     // 인기검색어 리스트 1위~10위까지
     public List<SearchRankResponseDto> searchRankList() {
         String key = "ranking";
@@ -129,7 +160,7 @@ public class StudySearchService {
         // score순으로 10개 보여줌
         Set<ZSetOperations.TypedTuple<String>> typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);
         return typedTuples.stream().map(SearchRankResponseDto::convertToResponseRankingDto).collect(Collectors.toList());
-    }*/
+    }
 
     @Transactional
     // 공고 정렬 조회
