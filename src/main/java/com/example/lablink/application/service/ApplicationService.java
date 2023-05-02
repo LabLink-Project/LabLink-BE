@@ -31,7 +31,7 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserService userService;
     private final GetStudyService getStudyService;
-    private final StudyService studyService;
+//    private final StudyService studyService;
 
     //신청서 추가
     @Transactional
@@ -76,7 +76,7 @@ public class ApplicationService {
         applicationRepository.delete(application);
     }
 
-    // 기업의 신청서 조회
+    /*// 기업의 신청서 조회
     @Transactional
     public ApplicationFromStudyResponseDto companyDetailApplicationFromStudy(CompanyDetailsImpl companyDetails, Long studyId, Long applicationId) {
         // 기업이 작성한 공고 찾기
@@ -91,7 +91,7 @@ public class ApplicationService {
 
         ApplicationFromStudyResponseDto dto = new ApplicationFromStudyResponseDto(application.getUser(), application.getUser().getUserinfo(), application);
         return dto;
-    }
+    }*/
 //
 //    // 유저의 신청서 조회
 //    public ApplicationFromStudyResponseDto userDetailApplicationFromStudy(UserDetailsImpl userDetails, Long studyId, Long applicationId) {
@@ -114,7 +114,7 @@ public class ApplicationService {
         return new ApplicationResponseDto(study.getCompany(),study,user,user.getUserinfo());
     }
 
-    // 신청서 승인, 거절
+    /*// 신청서 승인, 거절
     @Transactional
     public void applicationStatus(CompanyDetailsImpl companyDetails, ApplicationStatusRequestDto statusRequestDto, Long studyId, Long applicationId) {
         if (companyDetails != null) {
@@ -149,7 +149,7 @@ public class ApplicationService {
         }
 
         return applicationDtos;
-    }
+    }*/
 
     // 내가 쓴 신청서 확인
     public List<Application> findAllByMyApplication(User user) {
@@ -161,4 +161,7 @@ public class ApplicationService {
         applicationRepository.delete(application);
     }
 
+    public boolean checkApplication(Long studyId, User user) {
+        return applicationRepository.existsByStudyIdAndUser(studyId, user);
+    }
 }
