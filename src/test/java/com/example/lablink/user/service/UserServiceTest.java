@@ -275,8 +275,9 @@ class UserServiceTest {
         UserDetailsImpl userDetails = new UserDetailsImpl(user, user.getEmail());
         String approvalStatus = "";
         String viewStatus = "";
+        Long id = 1L;
 
-        MyLabResponseDto myLab1 = new MyLabResponseDto(study, approvalStatus, viewStatus);
+        MyLabResponseDto myLab1 = new MyLabResponseDto(study, id, approvalStatus, viewStatus);
         List<MyLabResponseDto> myLabs = new ArrayList<>();
         myLabs.add(myLab1);
 
