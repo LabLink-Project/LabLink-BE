@@ -37,13 +37,11 @@ public class StudySearchQueryRepository {
     private BooleanExpression searchCondition(String keyword) {
         BooleanExpression titleCondition = keyword != null ? study.title.containsIgnoreCase(keyword) : null;
         BooleanExpression studyInfoCondition = keyword != null ?  study.studyInfo.containsIgnoreCase(keyword) : null;
-        BooleanExpression studyPurposeCondition = keyword != null ? study.studyPurpose.containsIgnoreCase(keyword) : null;
-        BooleanExpression studyActionCondition = keyword != null ? study.studyAction.containsIgnoreCase(keyword) : null;
+        BooleanExpression descriptionCondition = keyword != null ? study.description.containsIgnoreCase(keyword) : null;
 
         return titleCondition
                 .or(studyInfoCondition)
-                .or(studyPurposeCondition)
-                .or(studyActionCondition);
+                .or(descriptionCondition);
     }
 
 

@@ -36,14 +36,10 @@ public class Study extends Timestamped {
 
     @Lob
     @Column(nullable = false)
-    private String studyPurpose;
+    private String description;
 
-    @Lob
-    @Column(nullable = false)
-    private String studyAction;
-
-    @Column(nullable = false)
-    private Long subjectCount;
+    @Column(nullable = true)
+    private String benefit;
 
     @Column(nullable = false)
     private LocalDateTime date;
@@ -62,9 +58,6 @@ public class Study extends Timestamped {
 
     @Column(nullable = false)
     private int subjectMaxAge;
-
-    @Column(nullable = false)
-    private int repeatCount;
 
     @Column(nullable = false)
     private LocalDateTime endDate;
@@ -117,16 +110,14 @@ public class Study extends Timestamped {
         this.title = requestDto.getTitle();
         this.company = company;
         this.studyInfo = requestDto.getStudyInfo();
-        this.studyPurpose = requestDto.getStudyPurpose();
-        this.studyAction = requestDto.getStudyAction();
-        this.subjectCount = requestDto.getSubjectCount();
+        this.description = requestDto.getDescription();
+        this.benefit = requestDto.getBenefit();
         this.date = requestDto.getDate();
         this.address = requestDto.getAddress();
         this.pay = requestDto.getPay();
         this.subjectGender = requestDto.getSubjectGender();
         this.subjectMinAge = requestDto.getSubjectMinAge();
         this.subjectMaxAge = requestDto.getSubjectMaxAge();
-        this.repeatCount = requestDto.getRepeatCount();
         this.endDate = requestDto.getEndDate();
         // done: 이미지 null값일 시 썸네일 넣어주기
         this.thumbnailImageURL = Objects.requireNonNullElse(thumbnailImageURL, "https://cdn.icon-icons.com/icons2/931/PNG/512/empty_file_icon-icons.com_72420.png");

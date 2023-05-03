@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 public class StudyRequestDto {
     private String title;
     private String studyInfo;
-    private String studyPurpose;
-    private String studyAction;
-    private Long subjectCount;
+    private String description;
+    private String benefit; // 우대사항
     private CategoryEnum category;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -28,7 +27,6 @@ public class StudyRequestDto {
     private String subjectGender;
     private Integer subjectMinAge;
     private Integer subjectMaxAge;
-    private Integer repeatCount;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
