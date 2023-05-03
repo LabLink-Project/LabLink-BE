@@ -1,1 +1,1 @@
-# LabLink-BE.
+# LabLink-BE
