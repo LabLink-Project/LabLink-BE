@@ -1,22 +1,20 @@
 package com.example.lablink.support;
 
-import com.example.lablink.company.entity.Company;
-import com.example.lablink.user.entity.UserRoleEnum;
-
-import javax.persistence.*;
+import com.example.lablink.domain.company.entity.Company;
+import com.example.lablink.domain.user.entity.UserRoleEnum;
 
 public enum CompanyStub {
     Company1(1L, "test@test.com", "password", "Test Company", "John Doe", "IT", "123-456-7890", "123 Test Street", UserRoleEnum.BUSINESS);
 
-    private Long id;
-    private String email;
-    private String password;
-    private String companyName;
-    private String ownerName;
-    private String business;
-    private String managerPhone;
-    private String address;
-    private UserRoleEnum role;
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final String companyName;
+    private final String ownerName;
+    private final String business;
+    private final String managerPhone;
+    private final String address;
+    private final UserRoleEnum role;
 
     CompanyStub(Long id, String email, String password, String companyName, String ownerName, String business, String managerPhone, String address, UserRoleEnum role) {
         this.id = id;

@@ -1,10 +1,11 @@
 package com.example.lablink.user.service;
 
-import com.example.lablink.user.dto.request.SignupRequestDto;
-import com.example.lablink.user.entity.UserInfo;
-import com.example.lablink.user.exception.UserErrorCode;
-import com.example.lablink.user.exception.UserException;
-import com.example.lablink.user.repository.UserInfoRepository;
+import com.example.lablink.domain.user.dto.request.SignupRequestDto;
+import com.example.lablink.domain.user.entity.UserInfo;
+import com.example.lablink.domain.user.exception.UserErrorCode;
+import com.example.lablink.domain.user.exception.UserException;
+import com.example.lablink.domain.user.repository.UserInfoRepository;
+import com.example.lablink.domain.user.service.UserInfoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
