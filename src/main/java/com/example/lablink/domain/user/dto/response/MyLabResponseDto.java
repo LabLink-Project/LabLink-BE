@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class MyLabResponseDto {
+    private Long id; // applicationId
     private String title;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime applicationDate; // 신청 날짜 -> timestamped create
@@ -20,7 +21,8 @@ public class MyLabResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime date; // 진행한, 진행할 테스트 날짜
 
-    public MyLabResponseDto(Study study, String approvalStatus, String viewStatus) {
+    public MyLabResponseDto(Study study, Long id, String approvalStatus, String viewStatus) {
+        this.id = id;
         this.title = study.getTitle();
         this.applicationDate = study.getCreatedAt();
         this.pay = study.getPay();
