@@ -12,9 +12,8 @@ public class StudyDetailResponseDto {
     private final Long id;
     private final String title;
     private final String studyInfo;
-    private final String studyPurpose;
-    private final String studyAction;
-    private final Long subjectCount;
+    private final String description;
+    private final String benefit;
     private final CategoryEnum category;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -25,7 +24,6 @@ public class StudyDetailResponseDto {
     private final String subjectGender;
     private final int subjectMinAge;
     private final int subjectMaxAge;
-    private final int repeatCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -43,9 +41,8 @@ public class StudyDetailResponseDto {
         this.id = study.getId();
         this.title = study.getTitle();
         this.studyInfo = study.getStudyInfo();
-        this.studyPurpose = study.getStudyPurpose();
-        this.studyAction = study.getStudyAction();
-        this.subjectCount = study.getSubjectCount();
+        this.description = study.getDescription();
+        this.benefit = study.getBenefit();
         this.category = study.getCategory();
         this.date = study.getDate();
         this.address = study.getAddress();
@@ -53,7 +50,6 @@ public class StudyDetailResponseDto {
         this.subjectGender = study.getSubjectGender();
         this.subjectMinAge = study.getSubjectMinAge();
         this.subjectMaxAge = study.getSubjectMaxAge();
-        this.repeatCount = study.getRepeatCount();
         this.endDate = study.getEndDate();
         this.thumbnailImageURL = study.getThumbnailImageURL();
         this.detailImageURL = study.getDetailImageURL();

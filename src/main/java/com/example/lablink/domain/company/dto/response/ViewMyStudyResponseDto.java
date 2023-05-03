@@ -32,7 +32,7 @@ public class ViewMyStudyResponseDto {
         this.pay = study.getPay();
         this.address = study.getAddress();
         this.studyStatus = study.getStatus();
-        this.subjectCount = study.getSubjectCount();
+//        this.subjectCount = study.getSubjectCount();
         this.endDate = study.getEndDate();
     }
 }
