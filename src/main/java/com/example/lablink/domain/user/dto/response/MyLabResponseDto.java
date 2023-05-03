@@ -20,9 +20,11 @@ public class MyLabResponseDto {
     private String approvalStatus; // 기업이 내 신청에대한 "승인", "거절", "대기"
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime date; // 진행한, 진행할 테스트 날짜
+    private String companyName;
 
-    public MyLabResponseDto(Study study, Long id, String approvalStatus, String viewStatus) {
+    public MyLabResponseDto(Study study, Long id, String viewStatus, String approvalStatus) {
         this.id = id;
+        this.companyName = study.getCompany().getCompanyName();
         this.title = study.getTitle();
         this.applicationDate = study.getCreatedAt();
         this.pay = study.getPay();
