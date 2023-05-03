@@ -1,7 +1,7 @@
 package com.example.lablink.domain.study.repository;
 
 import com.example.lablink.domain.study.dto.StudySearchOption;
-import com.example.lablink.study.entity.QStudy;
+import com.example.lablink.domain.study.entity.QStudy;
 import com.example.lablink.domain.study.entity.Study;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
