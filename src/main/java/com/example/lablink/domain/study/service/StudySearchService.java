@@ -84,8 +84,8 @@ public class StudySearchService {
 
         // 일반 전체 조회
         if(sortedType == null && !searchOption.hasValue()){
-            studies = studyRepository.findAllByOrderByEndDateDesc();
-//            studies = studyRepository.findAll();
+//            studies = studyRepository.findAllByOrderByEndDateDesc();
+            studies = studyRepository.findAllByOrderByCreatedAtDesc();
         }
 
         for (Study study : studies){
