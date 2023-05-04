@@ -49,7 +49,8 @@ public class UserController {
     @Operation(summary = "유저 이메일 중복 체크", description = "유저 이메일 중복 체크")
     @PostMapping("/signup/email-check")
     public ResponseEntity emailCheck(@RequestBody @Valid SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
-        return ResponseMessage.SuccessResponse(userService.emailCheck(signupEmailCheckRequestDto), "");
+        userService.emailCheck(signupEmailCheckRequestDto);
+        return ResponseMessage.SuccessResponse("사용 가능합니다.", "");
     }
 
     @Operation(summary = "유저 로그아웃", description = "유저 로그아웃")

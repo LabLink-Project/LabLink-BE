@@ -116,16 +116,16 @@ public class UserService {
 
     // 유저 이메일 중복 체크
     @Transactional(readOnly = true)
-    public String emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
-        if(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
+    public void emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
+        String email = findEmail(signupEmailCheckRequestDto.getEmail());
+        if(userRepository.existsByEmail(email)) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
 
         CompanyService companyService = companyServiceProvider.get();
-        if(companyService.existEmail(signupEmailCheckRequestDto.getEmail())) {
+        if(companyService.existEmail(email)) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
-        return "사용 가능합니다.";
     }
 
     // 유저 닉네임 중복 확인
@@ -207,5 +207,9 @@ public class UserService {
     }
     public boolean existEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+    public String findEmail(String email) {
+        userRepository.findByEmail(email);
+        return email;
     }
 }

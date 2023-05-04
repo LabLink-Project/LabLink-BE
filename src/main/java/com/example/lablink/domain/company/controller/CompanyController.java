@@ -1,5 +1,6 @@
 package com.example.lablink.domain.company.controller;
 
+import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.global.S3Image.service.S3UploaderService;
 import com.example.lablink.domain.company.dto.request.CompanyLoginRequestDto;
