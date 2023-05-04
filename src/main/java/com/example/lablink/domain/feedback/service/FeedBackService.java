@@ -7,6 +7,7 @@ import com.example.lablink.domain.feedback.dto.Response.FeedBackResponseDto;
 import com.example.lablink.domain.feedback.exception.FeedBackErrorCode;
 import com.example.lablink.domain.feedback.exception.FeedBackException;
 import com.example.lablink.domain.feedback.repository.FeedBackRepository;
+import com.example.lablink.domain.study.service.StudyService;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.domain.feedback.entity.Feedback;
 import com.example.lablink.domain.study.entity.Study;
@@ -33,6 +34,8 @@ public class FeedBackService {
 
     private final FeedBackRepository feedBackRepository;
     private final GetStudyService getStudyService;
+    private final StudyService studyService;
+
     @Transactional
     public void addFeedBack(UserDetailsImpl userDetails, Long studyId, FeedBackRequestDto feedBackRequestDto) {
         Study study = getStudyService.getStudy(studyId);
@@ -41,9 +44,7 @@ public class FeedBackService {
     }
     @Transactional(readOnly = true)
     public List<FeedBackResponseDto> getFeedBack(CompanyDetailsImpl companyDetails, Long studyId) {
-        if(!isMatchCompany(studyId,companyDetails)) {
-            throw new FeedBackException(FeedBackErrorCode.NOT_HAVE_PERMISSION);
-        }
+        studyService.checkRole(studyId,companyDetails.getCompany());
 
         List<Feedback> feedbacks= feedBackRepository.findAllByStudyId(studyId);
         List<FeedBackResponseDto> result = new ArrayList<>();
@@ -54,9 +55,7 @@ public class FeedBackService {
     }
     @Transactional
     public DetailFeedBackResponseDto getDetailFeedBack(CompanyDetailsImpl companyDetails, Long studyId, Long feedbackId) {
-        if(!isMatchCompany(studyId,companyDetails)){
-            throw new FeedBackException(FeedBackErrorCode.NOT_HAVE_PERMISSION);
-        }
+        studyService.checkRole(studyId,companyDetails.getCompany());
         Feedback feedback = feedBackRepository.findById(feedbackId).orElseThrow(
                 () -> new FeedBackException(FeedBackErrorCode.FeedBack_NOT_FOUND)
         );
@@ -65,9 +64,7 @@ public class FeedBackService {
     }
 
     public void excelDownloadFeedBack(CompanyDetailsImpl companyDetails, Long studyId){
-        if(!isMatchCompany(studyId,companyDetails)){
-            throw new FeedBackException(FeedBackErrorCode.NOT_HAVE_PERMISSION);
-        }
+        studyService.checkRole(studyId,companyDetails.getCompany());
         List<Feedback> feedbacks= feedBackRepository.findAllByStudyId(studyId);
         List<FeedBackResponseDto> result = new ArrayList<>();
         for (Feedback feedback: feedbacks) {
@@ -234,13 +231,6 @@ public class FeedBackService {
         }
 
         return workbook;
-    }
-
-
-
-    private boolean isMatchCompany(Long studyId, CompanyDetailsImpl companyDetails) {
-
-        return studyId.equals(companyDetails.getCompany().getId());
     }
 
 }
