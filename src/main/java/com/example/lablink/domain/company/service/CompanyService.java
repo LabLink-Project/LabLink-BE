@@ -120,6 +120,11 @@ public class CompanyService {
         if(companyRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
+
+        UserService userService = userServiceProvider.get();
+        if(userService.existEmail(signupEmailCheckRequestDto.getEmail())) {
+            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+        }
     }
 
     // 기업명 중복 체크

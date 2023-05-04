@@ -120,6 +120,11 @@ public class UserService {
         if(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
+
+        CompanyService companyService = companyServiceProvider.get();
+        if(companyService.existEmail(signupEmailCheckRequestDto.getEmail())) {
+            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+        }
         return "사용 가능합니다.";
     }
 
