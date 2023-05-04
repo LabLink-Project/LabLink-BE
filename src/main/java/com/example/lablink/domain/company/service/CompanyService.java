@@ -1,7 +1,6 @@
 
 package com.example.lablink.domain.company.service;
 
-import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.service.UserService;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.domain.company.dto.request.CompanyLoginRequestDto;
@@ -118,13 +117,12 @@ public class CompanyService {
     // 기업 이메일 중복 체크
     @Transactional(readOnly = true)
     public void emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
-        String email = findEmail(signupEmailCheckRequestDto.getEmail());
-        if(companyRepository.existsByEmail(email)) {
+        if(companyRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
 
         UserService userService = userServiceProvider.get();
-        if(userService.existEmail(email)) {
+        if(userService.existEmail(signupEmailCheckRequestDto.getEmail())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
     }
@@ -173,10 +171,6 @@ public class CompanyService {
 
     public boolean existEmail(String email) {
         return companyRepository.existsByEmail(email);
-    }
-    public String findEmail(String email) {
-        companyRepository.findByEmail(email);
-        return email;
     }
 }
 
