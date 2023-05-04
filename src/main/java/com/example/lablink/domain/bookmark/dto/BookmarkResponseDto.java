@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class BookmarkResponseDto {
     // title, company, pay, date, category, address
 
+//    private final Long id;
     private final Long id;
-    private final Long studyId;
     private final String title;
     private final CategoryEnum category;
 
@@ -27,8 +27,8 @@ public class BookmarkResponseDto {
     private final boolean isbookmarked;
 
     public BookmarkResponseDto(Study study, Bookmark bookmark) {
-        this.id = bookmark.getId();
-        this.studyId = study.getId();
+//        this.id = bookmark.getId();
+        this.id = study.getId();
         this.isbookmarked = true;
         this.title = study.getTitle();
         this.category = study.getCategory();
