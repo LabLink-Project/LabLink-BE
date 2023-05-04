@@ -1,12 +1,13 @@
 package com.example.lablink.domain.user.service;
 
-import com.example.lablink.domain.user.dto.request.UserEmailCheckRequestDto;
+import com.example.lablink.domain.company.service.CompanyService;
 import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
 import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
+import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
 import com.example.lablink.global.jwt.JwtUtil;
 
 import com.example.lablink.domain.user.dto.request.LoginRequestDto;
@@ -16,10 +17,13 @@ import com.example.lablink.domain.user.dto.response.MyLabResponseDto;
 import com.example.lablink.domain.user.entity.UserInfo;
 import com.example.lablink.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +39,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final UserInfoService userInfoService;
     private final EntityManager em;
+    private final @Lazy @Qualifier("companyService") Provider<CompanyService> companyServiceProvider;
 
     // 유저 회원가입
     @Transactional
@@ -43,7 +48,11 @@ public class UserService {
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         // 가입 이메일 중복 확인
-        if (userRepository.existsByEmail(email)) {
+        checkEmail(email);
+
+        // 기업과 유저의 이메일 중복 확인
+        CompanyService companyService = companyServiceProvider.get();
+        if(companyService.existEmail(email)) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
 
@@ -107,8 +116,8 @@ public class UserService {
 
     // 유저 이메일 중복 체크
     @Transactional(readOnly = true)
-    public String emailCheck(UserEmailCheckRequestDto userEmailCheckRequestDto) {
-        if(userRepository.existsByEmail(userEmailCheckRequestDto.getEmail())) {
+    public String emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
+        if(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
         return "사용 가능합니다.";
@@ -183,5 +192,15 @@ public class UserService {
 
     public User getUserByNickname(String nickName) {
         return userRepository.findByNickName(nickName).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+    }
+
+    // 가입 이메일 중복 확인
+    public void checkEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+        }
+    }
+    public boolean existEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
