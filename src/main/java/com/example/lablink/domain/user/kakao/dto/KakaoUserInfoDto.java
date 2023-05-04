@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KakaoUserInfoDto {
     private Long id;
-    private String email;
+//    private String email;
     private String nickname;
     // userPhone도 받아야함
 
-    public KakaoUserInfoDto(Long id, String nickname, String email) {
+    public KakaoUserInfoDto(Long id, String nickname/*, String email*/) {
         this.id = id;
         this.nickname = nickname;
-        this.email = email;
+//        this.email = email;
     }
 }
