@@ -63,7 +63,7 @@ public class KakaoService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "413b7a48bac324a9a2db2d78b3136b08");
+        body.add("client_id", "45c008c7a51161fa2ba863d313f92c10");
         body.add("redirect_uri", "http://lablink.site/users/kakao/login");
         body.add("code", code);
 
@@ -111,19 +111,19 @@ public class KakaoService {
         Long id = jsonNode.get("id").asLong();
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
-        String email = jsonNode.get("kakao_account")
-                .get("email").asText();
+//        String email = jsonNode.get("kakao_account")
+//                .get("email").asText();
 
 
-        log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
-        return new KakaoUserInfoDto(id, nickname, email);
+        log.info("카카오 사용자 정보: " + id + ", " + nickname/* + ", " + email*/);
+        return new KakaoUserInfoDto(id, nickname/*, email*/);
     }
 
     // 3. 회원가입
     private void signupIfNeeded(KakaoUserInfoDto kakaoUserInfo/*, TermsRequestDto termsRequestDto*/) {
         Long kakaoId = kakaoUserInfo.getId();
         String nickname = kakaoUserInfo.getNickname();
-        String email = kakaoUserInfo.getEmail();
+//        String email = kakaoUserInfo.getEmail();
 
         // 이미 회원가입한 사용자인지 확인
         if (userRepository.existsByKakaoId(kakaoId)) {
@@ -137,7 +137,7 @@ public class KakaoService {
         }*/
 
         UserInfo userInfo = userInfoService.saveKakaoUserInfo(kakaoUserInfo);
-        User user = userRepository.save(new User(kakaoId, nickname, email, userInfo, UserRoleEnum.USER));
+        User user = userRepository.save(new User(kakaoId, nickname/*, email*/, userInfo, UserRoleEnum.USER));
 //        termsService.saveSocialTerms(termsRequestDto, user);
     }
 }

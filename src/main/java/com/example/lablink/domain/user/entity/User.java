@@ -80,10 +80,10 @@ public class User extends Timestamped {
     }
 
     // 카카오 로그인시
-    public User(Long kakaoId, String nickname, String email, UserInfo userInfo, UserRoleEnum role){
+    public User(Long kakaoId, String nickname/*, String email*/, UserInfo userInfo, UserRoleEnum role){
         this.kakaoId = kakaoId;
         this.nickName = nickname;
-        this.email = email;
+//        this.email = email;
         this.userinfo = userInfo;
         this.role = role;
     }
