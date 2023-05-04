@@ -91,6 +91,8 @@ public class KakaoService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        
+        log.info("headers : " + headers);
 
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
@@ -101,6 +103,7 @@ public class KakaoService {
                 kakaoUserInfoRequest,
                 String.class
         );
+        log.info("response : " + response);
 
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
