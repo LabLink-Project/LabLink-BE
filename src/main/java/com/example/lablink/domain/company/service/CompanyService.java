@@ -1,8 +1,8 @@
 
 package com.example.lablink.domain.company.service;
 
+import com.example.lablink.domain.user.service.UserService;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
-import com.example.lablink.domain.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanyNameCheckRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
@@ -14,13 +14,17 @@ import com.example.lablink.domain.company.repository.CompanyRepository;
 import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
+import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
 import com.example.lablink.global.jwt.JwtUtil;
 import com.example.lablink.domain.study.service.StudyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class CompanyService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final StudyService studyService;
-
+    private final @Lazy @Qualifier("userService") Provider<UserService> userServiceProvider;
 
 //    인증 인가를 담당하는 Service의 보안? 을 위함이기에 단익책임 위반 X
 //    private final CsrfTokenRepository csrfTokenRepository;
@@ -45,7 +49,11 @@ public class CompanyService {
         String password = passwordEncoder.encode(companySignupRequestDto.getPassword());
 
         // 가입 이메일 중복 확인
-        if (companyRepository.existsByEmail(email)) {
+        checkEmail(email);
+
+        // 유저와 기업의 이메일 중복 검사
+        UserService userService = userServiceProvider.get();
+        if(userService.existEmail(email)) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
 
@@ -108,8 +116,8 @@ public class CompanyService {
 
     // 기업 이메일 중복 체크
     @Transactional(readOnly = true)
-    public void emailCheck(CompanyEmailCheckRequestDto companyEmailCheckRequestDto) {
-        if(companyRepository.existsByEmail(companyEmailCheckRequestDto.getEmail())) {
+    public void emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
+        if(companyRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
             throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
         }
     }
@@ -148,6 +156,16 @@ public class CompanyService {
         }
 
         return views;
+    }
+
+    public void checkEmail(String email) {
+        if (companyRepository.existsByEmail(email)) {
+            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+        }
+    }
+
+    public boolean existEmail(String email) {
+        return companyRepository.existsByEmail(email);
     }
 }
 

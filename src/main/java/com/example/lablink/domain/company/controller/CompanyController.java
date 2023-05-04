@@ -2,12 +2,12 @@ package com.example.lablink.domain.company.controller;
 
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.global.S3Image.service.S3UploaderService;
-import com.example.lablink.domain.company.dto.request.CompanyEmailCheckRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanyNameCheckRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.company.service.CompanyService;
+import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
 import com.example.lablink.global.message.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,8 +56,8 @@ public class CompanyController {
 
     @Operation(summary = "기업 이메일 체크", description = "기업 이메일 체크")
     @PostMapping("/signup/email-check")
-    public ResponseEntity emailCheck(@RequestBody @Valid CompanyEmailCheckRequestDto companyEmailCheckRequestDto) {
-        companyService.emailCheck(companyEmailCheckRequestDto);
+    public ResponseEntity emailCheck(@RequestBody @Valid SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
+        companyService.emailCheck(signupEmailCheckRequestDto);
         return ResponseMessage.SuccessResponse("사용 가능합니다.", "");
     }
 
