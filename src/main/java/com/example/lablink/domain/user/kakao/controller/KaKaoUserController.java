@@ -20,7 +20,7 @@ public class KaKaoUserController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/kakao/login")
-    public ResponseEntity kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public synchronized ResponseEntity kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
         User kakaoUser = kakaoService.kakaoLogin(code, response);
         String createToken =  jwtUtil.createUserToken(kakaoUser);
