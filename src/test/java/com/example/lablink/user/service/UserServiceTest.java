@@ -5,13 +5,11 @@ import com.example.lablink.domain.bookmark.service.BookmarkService;
 import com.example.lablink.domain.user.service.TermsService;
 import com.example.lablink.domain.user.service.UserInfoService;
 import com.example.lablink.domain.user.service.UserService;
+import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
 import com.example.lablink.global.jwt.JwtUtil;
-import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.user.dto.request.LoginRequestDto;
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
-import com.example.lablink.domain.user.dto.request.UserEmailCheckRequestDto;
 import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
-import com.example.lablink.domain.user.dto.response.MyLabResponseDto;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.exception.UserErrorCode;
 import com.example.lablink.domain.user.exception.UserException;
@@ -27,15 +25,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -178,10 +172,10 @@ class UserServiceTest {
     @DisplayName("회원가입 - 이메일 사용 가능")
     void signup_can_use_email() {
         // given
-        UserEmailCheckRequestDto userEmailRequestDto = new UserEmailCheckRequestDto("wrongTest01@naver.com");
-        given(userRepository.existsByEmail(userEmailRequestDto.getEmail())).willReturn(false);
+        SignupEmailCheckRequestDto signupEmailCheckRequestDto = new SignupEmailCheckRequestDto("wrongTest01@naver.com");
+        given(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())).willReturn(false);
         // when
-        String result = userService.emailCheck(userEmailRequestDto);
+        String result = userService.emailCheck(signupEmailCheckRequestDto);
         // then
         assertEquals("사용 가능합니다.", result);
     }
@@ -190,12 +184,12 @@ class UserServiceTest {
     @DisplayName("회원가입 실패 - 이메일 사용 불가")
     void signup_emailDuplicationCheck() {
         // given
-        UserEmailCheckRequestDto userEmailRequestDto = new UserEmailCheckRequestDto("wrongTest01@naver.com");
-        given(userRepository.existsByEmail(userEmailRequestDto.getEmail())).willReturn(true);
+        SignupEmailCheckRequestDto signupEmailCheckRequestDto = new SignupEmailCheckRequestDto("wrongTest01@naver.com");
+        given(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())).willReturn(true);
 
         // when & then
         assertThrows(UserException.class,
-            () -> userService.emailCheck(userEmailRequestDto), UserErrorCode.DUPLICATE_EMAIL.getMessage());
+            () -> userService.emailCheck(signupEmailCheckRequestDto), UserErrorCode.DUPLICATE_EMAIL.getMessage());
     }
 
     @Test

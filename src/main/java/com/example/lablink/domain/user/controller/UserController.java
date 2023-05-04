@@ -1,8 +1,8 @@
 package com.example.lablink.domain.user.controller;
 
-import com.example.lablink.domain.user.dto.request.UserEmailCheckRequestDto;
 import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
+import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
 import com.example.lablink.global.message.ResponseMessage;
 import com.example.lablink.domain.user.dto.request.LoginRequestDto;
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
@@ -48,8 +48,8 @@ public class UserController {
 
     @Operation(summary = "유저 이메일 중복 체크", description = "유저 이메일 중복 체크")
     @PostMapping("/signup/email-check")
-    public ResponseEntity emailCheck(@RequestBody @Valid UserEmailCheckRequestDto userEmailCheckRequestDto) {
-        return ResponseMessage.SuccessResponse(userService.emailCheck(userEmailCheckRequestDto), "");
+    public ResponseEntity emailCheck(@RequestBody @Valid SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
+        return ResponseMessage.SuccessResponse(userService.emailCheck(signupEmailCheckRequestDto), "");
     }
 
     @Operation(summary = "유저 로그아웃", description = "유저 로그아웃")
