@@ -36,8 +36,10 @@ public class KakaoService {
 
     @Transactional
     public User kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
+        log.info("code : " + code);
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
+        log.info("accessToken : " + accessToken);
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
@@ -99,6 +101,7 @@ public class KakaoService {
                 kakaoUserInfoRequest,
                 String.class
         );
+        log.info("response : " + response);
 
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -106,19 +109,19 @@ public class KakaoService {
         Long id = jsonNode.get("id").asLong();
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
-//        String email = jsonNode.get("kakao_account")
-//                .get("email").asText();
+        String email = jsonNode.get("kakao_account")
+                .get("email").asText();
 
 
-        log.info("카카오 사용자 정보: " + id + ", " + nickname/* + ", " + email*/);
-        return new KakaoUserInfoDto(id, nickname/*, email*/);
+        log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
+        return new KakaoUserInfoDto(id, nickname, email);
     }
 
     // 3. 회원가입
     private void signupIfNeeded(KakaoUserInfoDto kakaoUserInfo/*, TermsRequestDto termsRequestDto*/) {
         Long kakaoId = kakaoUserInfo.getId();
         String nickname = kakaoUserInfo.getNickname();
-//        String email = kakaoUserInfo.getEmail();
+        String email = kakaoUserInfo.getEmail();
 
         // 이미 회원가입한 사용자인지 확인
         if (userRepository.existsByKakaoId(kakaoId)) {
@@ -132,7 +135,7 @@ public class KakaoService {
         }*/
 
         UserInfo userInfo = userInfoService.saveKakaoUserInfo(kakaoUserInfo);
-        User user = userRepository.save(new User(kakaoId, nickname/*, email*/, userInfo, UserRoleEnum.USER));
+        User user = userRepository.save(new User(kakaoId, nickname, email, userInfo, UserRoleEnum.USER));
 //        termsService.saveSocialTerms(termsRequestDto, user);
     }
 }
