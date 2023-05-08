@@ -20,9 +20,10 @@ public class ViewMyStudyResponseDto {
     private int pay;
     private String address;
     private StudyStatusEnum studyStatus;
-    private Long subjectCount;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime endDate;
+    private int currentApplicantCount;
+
 
     public ViewMyStudyResponseDto(Study study) {
         this.id = study.getId();
@@ -32,7 +33,7 @@ public class ViewMyStudyResponseDto {
         this.pay = study.getPay();
         this.address = study.getAddress();
         this.studyStatus = study.getStatus();
-//        this.subjectCount = study.getSubjectCount();
         this.endDate = study.getEndDate();
+        this.currentApplicantCount = study.getCurrentApplicantCount();
     }
 }
