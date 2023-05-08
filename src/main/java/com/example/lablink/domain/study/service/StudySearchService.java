@@ -58,7 +58,7 @@ public class StudySearchService {
 
         if(keyword != null){
             studies = studySearchQueryRepository.searchStudiesByKeyword(keyword, pageIndex, pageCount);
-            if(searchOption.getKeyword() != null){
+            if(searchOption.getKeyword() != null && !keyword.trim().isEmpty()){
                 if(user != null){
                     // 최신검색어 구현
                     Double timestamp = (double) System.currentTimeMillis();
