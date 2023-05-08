@@ -1,7 +1,11 @@
 # LabLink-BE
 ### 더 빠르고 더 나은 연구 매칭 플랫폼, LabLink
 
-![브로셔2](https://user-images.githubusercontent.com/101865071/236612097-c2bead5f-6132-417c-952b-69f22fa06e18.jpg)
+![브로셔](https://user-images.githubusercontent.com/101865071/236771616-23d0cfe4-5f2d-445d-9feb-802a5755359e.jpeg)
+<!-- ![브로셔 연](https://user-images.githubusercontent.com/101865071/236771594-87cefe68-1f44-4e7c-a2df-c0bc4f6ef7d2.jpeg) 
+![KakaoTalk_Photo_2023-05-08-12-40-03](https://user-images.githubusercontent.com/101865071/236771627-5f7ad8d0-35af-48b9-9051-5712694554fa.jpeg) -->
+
+
 **LabLink**는 연구를 위한 지원자를 모집하는 기업/단체와 단기 알바를 원하는 유저간의 매칭을 더 간편하게 도와주는 서비스입니다.
 
 ❓실험 연구나 유저테스트 등 테스터를 모집하고 싶었는데 어떻게 모집해야 할 지 모르겠을 때   
@@ -221,3 +225,7 @@ dependencies {
 </details>
 
 ### 👩🏻‍💻 Developers   
+|이소민|정대철|신도재|
+|------|---|---|
+|image|image|image|
+|BE|BE|BE|
