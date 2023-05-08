@@ -30,15 +30,15 @@ public class ApplicationFromStudyResponseDto {
     private final String message;
     private final String approvalStatusEnum;
 
-    public ApplicationFromStudyResponseDto(User user, UserInfo userInfo , Application applicationString) {
-        this.id = user.getId();
+    public ApplicationFromStudyResponseDto(User user, UserInfo userInfo , Application application) {
+        this.id = application.getId();
         this.userName = user.getUserName();
         this.userPhone = userInfo.getUserPhone();
         this.userGender = user.getUserGender();
         this.dateOfBirth = user.getDateOfBirth();
-        this.createdAt = applicationString.getCreatedAt();
+        this.createdAt = application.getCreatedAt();
         this.userAddress = userInfo.getUserAddress();
-        this.message = applicationString.getMessage();
-        this.approvalStatusEnum = applicationString.getApprovalStatusEnum();
+        this.message = application.getMessage();
+        this.approvalStatusEnum = application.getApprovalStatusEnum();
     }
 }
