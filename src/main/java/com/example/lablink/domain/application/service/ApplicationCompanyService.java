@@ -48,9 +48,8 @@ public class ApplicationCompanyService {
     public void applicationStatus(CompanyDetailsImpl companyDetails, ApplicationStatusRequestDto statusRequestDto, Long studyId, Long applicationId) {
         if (companyDetails != null) {
             // 공고, 신청서 찾기
-            getStudyService.getStudy(studyId);
-            Application application = applicationRepository.findById(applicationId).orElseThrow(
-                    ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND));
+            Application application = applicationRepository.findByIdAndStudyId(applicationId,studyId).orElseThrow(
+                ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND));
 
             if(statusRequestDto.getApprovalStatus().equals("승인")) {
                 application.statusUpdate(ApprovalStatusEnum.APPROVED.toString());
