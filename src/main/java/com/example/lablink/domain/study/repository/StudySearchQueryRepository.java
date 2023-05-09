@@ -29,7 +29,7 @@ public class StudySearchQueryRepository {
                         searchCondition(keyword)
                 )
                 .orderBy(study.id.desc())
-                .offset((pageIndex -1) * pageCount)
+                .offset(pageIndex * pageCount)
                 .limit(pageCount)
                 .fetch();
     }
@@ -73,7 +73,7 @@ public class StudySearchQueryRepository {
         List<Study> studyList = queryFactory.selectFrom(study)
                 .where(categoryExpression, addressExpression, genderExpression, ageExpression)
                 .orderBy(study.createdAt.desc())
-                .offset((pageIndex - 1) * pageCount)
+                .offset(pageIndex * pageCount)
                 .limit(pageCount)
                 .fetch();
 
