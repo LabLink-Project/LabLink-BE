@@ -2,9 +2,11 @@ package com.example.lablink.domain.user.service;
 
 import com.example.lablink.domain.company.service.CompanyService;
 import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
+import com.example.lablink.domain.user.entity.RefreshToken;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
 import com.example.lablink.domain.user.exception.UserException;
+import com.example.lablink.domain.user.repository.RefreshTokenRepository;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
@@ -17,6 +19,7 @@ import com.example.lablink.domain.user.dto.response.MyLabResponseDto;
 import com.example.lablink.domain.user.entity.UserInfo;
 import com.example.lablink.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,11 +29,15 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Provider;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -40,6 +47,7 @@ public class UserService {
     private final UserInfoService userInfoService;
     private final EntityManager em;
     private final @Lazy @Qualifier("companyService") Provider<CompanyService> companyServiceProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     // 유저 회원가입
     @Transactional
@@ -87,8 +95,23 @@ public class UserService {
             throw new UserException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user));
+        // Access token 생성 및 헤더에 추가
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user.getEmail(), user.getNickName()));
+
+        // Refresh token 생성 및 저장
+        Long refreshTokenId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        RefreshToken refreshToken = new RefreshToken(refreshTokenId, jwtUtil.createUserRfToken(user.getEmail(), user.getNickName()));
+        refreshTokenRepository.save(refreshToken);
+
+        // Refresh token을 쿠키에 저장
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshTokenId.toString());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/"); // 쿠키의 유효 경로 설정
+        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 만료 시간 설정 (7일)
+        response.addCookie(refreshTokenCookie);
+
         return "로그인 완료.";
+
         // CSRF, JWT토큰 생성
 //        CsrfToken userCsrfToken = csrfTokenRepository.generateToken(request);
 //        String userToken = jwtUtil.createUserToken(user);
@@ -139,7 +162,7 @@ public class UserService {
     // 인증 유저 가져오기
     public User getUser(UserDetailsImpl userDetails){
         return  userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-                ()->new UserException(UserErrorCode.USER_NOT_FOUND));
+            ()->new UserException(UserErrorCode.USER_NOT_FOUND));
     }
 
     // 회원 탈퇴
@@ -190,9 +213,38 @@ public class UserService {
         return query.getResultList();
     }
 
-    // User 찾기
-    public User findUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+    // 리프레시토큰 발급 메서드
+    public String refreshAccessToken(UserDetailsImpl userDetails, HttpServletRequest request, HttpServletResponse response) {
+        log.info("========================= 리프레시토큰 발급 시작");
+        User user = getUser(userDetails);
+
+        // 클라이언트가 주는 모든 쿠키 가져오기
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN);
+        }
+
+        // 쿠키 중 RefreshToken 가져오기
+        Long refreshTokenIndex = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("RefreshToken")) {
+                refreshTokenIndex = Long.parseLong(cookie.getValue());
+                break;
+            }
+        }
+
+        if (refreshTokenIndex == null) {
+            throw new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN);
+        }
+
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenIndex(refreshTokenIndex).orElseThrow(
+            () -> new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN));
+
+        log.info("========================= 리프레시토큰 : {}", refreshToken.getToken());
+        String token = jwtUtil.createUserToken(user.getEmail(), user.getNickName());
+        log.info("========================= 새 액세스토큰 : {}", token);
+
+        return token;
     }
 
     public User getUserByNickname(String nickName) {
