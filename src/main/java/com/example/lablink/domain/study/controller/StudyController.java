@@ -58,7 +58,7 @@ public class StudyController {
     @GetMapping()
     public ResponseEntity getStudies(
             @ModelAttribute StudySearchOption searchOption,
-            @RequestParam(defaultValue = "1") int pageIndex,
+            @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "10") int pageCount,
             @RequestParam(required = false) String sortedType,
             @AuthenticationPrincipal UserDetailsImpl userDetails, @AuthenticationPrincipal CompanyDetailsImpl companyDetails) {

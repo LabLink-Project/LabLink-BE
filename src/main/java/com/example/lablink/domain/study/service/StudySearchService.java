@@ -16,6 +16,9 @@ import com.example.lablink.domain.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.domain.study.entity.Study;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -43,11 +46,13 @@ public class StudySearchService {
     public List<StudyResponseDto> getStudies(StudySearchOption searchOption, String keyword, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails) {
         User user = userDetails == null ? null : userDetails.getUser();
         Company company = companyDetails == null ? null : companyDetails.getCompany();
-        List<Study> studies = new ArrayList<>();
+        List<Study> studies = null;
         List<StudyResponseDto> studyResponseDtos = new ArrayList<>();
         // 정렬 조건이 들어온다면
         if(sortedType != null){
-            studies = getSortedStudies(sortedType);
+            Page<Study> pageStudies;
+            pageStudies = getSortedStudies(sortedType, pageIndex, pageCount);
+            studies = convertPageToList(pageStudies);
         }
 
         // 상세 검색
@@ -58,7 +63,7 @@ public class StudySearchService {
 
         if(keyword != null){
             studies = studySearchQueryRepository.searchStudiesByKeyword(keyword, pageIndex, pageCount);
-            if(searchOption.getKeyword() != null){
+            if(searchOption.getKeyword() != null && !keyword.trim().isEmpty()){
                 if(user != null){
                     // 최신검색어 구현
                     Double timestamp = (double) System.currentTimeMillis();
@@ -84,8 +89,11 @@ public class StudySearchService {
 
         // 일반 전체 조회
         if(sortedType == null && !searchOption.hasValue()){
+            Page<Study> pageStudies;
 //            studies = studyRepository.findAllByOrderByEndDateDesc();
-            studies = studyRepository.findAllByOrderByCreatedAtDesc();
+            Pageable pageable = PageRequest.of(pageIndex, pageCount);
+            pageStudies = studyRepository.findAllByOrderByCreatedAtDesc(pageable);
+            studies = convertPageToList(pageStudies);
         }
 
         for (Study study : studies){
@@ -164,21 +172,26 @@ public class StudySearchService {
 
     @Transactional
     // 공고 정렬 조회
-    public List<Study> getSortedStudies(String sortedType) {
-        List<Study> studies = new ArrayList<>();
+    public Page<Study> getSortedStudies(String sortedType, int pageIndex, int pageCount) {
+        Page<Study> studies = null;
+        Pageable pageable = PageRequest.of(pageIndex, pageCount);
         // 인기순 == 지원자 많은 순
         if (Objects.equals(sortedType, "popularity")){
             // 지원자 많은 순으로 정렬
-            studies = studyRepository.findAllByOrderByCurrentApplicantCountDesc();
+            studies = studyRepository.findAllByOrderByCurrentApplicantCountDesc(pageable);
         }
         // 최신순
         if (Objects.equals(sortedType, "latest")){
-            studies = studyRepository.findAllByOrderByCreatedAtDesc();
+            studies = studyRepository.findAllByOrderByCreatedAtDesc(pageable);
         }
         // 단가 높은 순
         if (Objects.equals(sortedType, "pay")){
-            studies = studyRepository.findAllByOrderByPayDesc();
+            studies = studyRepository.findAllByOrderByPayDesc(pageable);
         }
         return studies;
+    }
+
+    public List<Study> convertPageToList(Page<Study> page) {
+        return page.getContent();
     }
 }
