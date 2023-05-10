@@ -22,14 +22,14 @@ public class OauthController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/users/google/login")
-    public ResponseEntity googleLogin(@RequestParam String code, @RequestParam String scope, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseEntity<?> googleLogin(@RequestParam String code, @RequestParam String scope, HttpServletResponse response) throws JsonProcessingException {
         System.out.println("__________code" + code);
         System.out.println("__________scope" + scope);
 //        oauthService.googleLogin(code, scope, response);
 //        return ResponseMessage.SuccessResponse("로그인 성공", "");
 
         User googleUser = oauthService.googleLogin(code, scope, response);
-        String createToken =  jwtUtil.createUserToken(googleUser);
+        String createToken =  jwtUtil.createUserToken(googleUser.getEmail(), googleUser.getNickName());
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
