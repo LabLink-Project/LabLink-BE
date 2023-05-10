@@ -23,7 +23,7 @@ public class KaKaoUserController {
     public synchronized ResponseEntity<?> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
         User kakaoUser = kakaoService.kakaoLogin(code, response);
-        String createToken =  jwtUtil.createUserToken(kakaoUser.getEmail(), kakaoUser.getNickName());
+        String createToken =  jwtUtil.createUserToken(kakaoUser);
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 

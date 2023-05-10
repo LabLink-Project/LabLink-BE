@@ -2,6 +2,7 @@ package com.example.lablink.global.jwt;
 
 import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.security.CompanyDetailsServiceImpl;
+import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.exception.UserErrorCode;
 import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.security.UserDetailsServiceImpl;
@@ -78,14 +79,14 @@ public class JwtUtil {
     }
 
     // 유저 토큰 생성
-    public String createUserToken(String email, String nickName) {
+    public String createUserToken(User user) {
         Date date = new Date();
 
         return BEARER_PREFIX +
             Jwts.builder()
-                .setSubject(email)
+                .setSubject(user.getId().toString())
                 .claim(AUTHORIZATION_KEY, USER)
-                .claim("nickname", nickName)
+                .claim("nickname", user.getNickName())
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                 .setIssuedAt(date)
                 .signWith(key, signatureAlgorithm)

@@ -109,9 +109,7 @@ public class KakaoService {
         Long id = jsonNode.get("id").asLong();
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
-        String email = jsonNode.get("kakao_account")
-                .get("email").asText();
-
+        String email = jsonNode.has("kakao_account") ? jsonNode.get("kakao_account").get("email").asText() : null;
 
         log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
         return new KakaoUserInfoDto(id, nickname, email);
@@ -121,7 +119,7 @@ public class KakaoService {
     private void signupIfNeeded(KakaoUserInfoDto kakaoUserInfo/*, TermsRequestDto termsRequestDto*/) {
         Long kakaoId = kakaoUserInfo.getId();
         String nickname = kakaoUserInfo.getNickname();
-        String email = kakaoUserInfo.getEmail();
+        String email = kakaoUserInfo.getEmail() != null ? kakaoUserInfo.getEmail() : null;
 
         // 이미 회원가입한 사용자인지 확인
         if (userRepository.existsByKakaoId(kakaoId)) {
