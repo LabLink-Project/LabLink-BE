@@ -11,6 +11,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity(name = "users")
 @Table(name = "users", indexes = {
@@ -83,7 +84,7 @@ public class User extends Timestamped {
     public User(Long kakaoId, String nickname, String email, UserInfo userInfo, UserRoleEnum role){
         this.kakaoId = kakaoId;
         this.nickName = nickname;
-        this.email = email;
+        this.kakaoEmail = Objects.requireNonNullElse(email,null);
         this.userinfo = userInfo;
         this.role = role;
     }
