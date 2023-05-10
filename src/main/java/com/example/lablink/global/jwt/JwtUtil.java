@@ -173,12 +173,12 @@ public class JwtUtil {
     }
 
     // 인증 객체 생성
-    public Authentication createAuthentication(String email, String role) {
+    public Authentication createAuthentication(String id, String role) {
         UserDetails userDetails = null;
         if(Objects.equals(role, "USER")){
-            userDetails = userDetailsService.loadUserByUsername(email);
+            userDetails = userDetailsService.loadUserByUsername(id);
         } else if (Objects.equals(role, "BUSINESS")) {
-            userDetails = companyDetailsService.loadUserByUsername(email);
+            userDetails = companyDetailsService.loadUserByUsername(id);
         }
 
         assert userDetails != null : "UserDetails must not be null";
