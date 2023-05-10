@@ -23,7 +23,7 @@ public class MyLabResponseDto {
     private String companyName;
 
     public MyLabResponseDto(Study study, Long id, String viewStatus, String approvalStatus) {
-        this.id = id;
+        this.id = study.getId();
         this.companyName = study.getCompany().getCompanyName();
         this.title = study.getTitle();
         this.applicationDate = study.getCreatedAt();
