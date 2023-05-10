@@ -66,9 +66,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     /* 주어진 파라미터 값으로 SecurityContext에 인증 설정.
      * JWT 유틸리티를 사용하여 인증 객체를 생성하고, SecurityContext에 설정*/
-    public void setAuthentication(String email, String role) {
+    public void setAuthentication(String id, String role) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = jwtUtil.createAuthentication(email, role);
+        Authentication authentication = jwtUtil.createAuthentication(id, role);
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);

@@ -14,11 +14,11 @@ import java.util.Collection;
 public class CompanyDetailsImpl implements UserDetails {
 
     private final Company company;
-    private final String email;
+    private final String id;
 
-    public CompanyDetailsImpl(Company company, String email) {
+    public CompanyDetailsImpl(Company company, String id) {
         this.company = company;
-        this.email = email;
+        this.id = id;
     }
 
     public Company getCompany() {
@@ -46,7 +46,7 @@ public class CompanyDetailsImpl implements UserDetails {
     // 인증에 사용될 이름(이메일)
     @Override
     public String getUsername() {
-        return this.email;
+        return this.id;
     }
 
     @Override
