@@ -105,11 +105,10 @@ public class UserService {
         refreshTokenRepository.save(refreshToken);
 
         // Refresh token을 쿠키에 저장
-        Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshTokenId.toString());
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setPath("/"); // 쿠키의 유효 경로 설정
-        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 만료 시간 설정 (7일)
-        response.addCookie(refreshTokenCookie);
+        String refreshTokenCookieValue = String.format("RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; SameSite=Lax",
+            refreshTokenId, 7 * 24 * 60 * 60);
+
+        response.addHeader("Set-Cookie", refreshTokenCookieValue);
 
         return "로그인 완료.";
 
