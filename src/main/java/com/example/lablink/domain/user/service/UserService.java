@@ -40,6 +40,7 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
 
+//    private final Logger logger = LoggerFactory.getLogger(UserService.class); // 메서드 실행 시간 측정 ex) 회원탈퇴
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TermsService termsService;
@@ -168,18 +169,14 @@ public class UserService {
     // 회원 탈퇴
     @Transactional
     public String deleteUser(UserDetailsImpl userDetails, HttpServletResponse response) {
-////        북마크 제거
-//        bookmarkService.findAllByMyBookmark(userDetails.getUser()).forEach(bookmarkService::deleteAllBookmark);
-////        신청서 삭제
-//        applicationService.findAllByMyApplication(userDetails.getUser()).forEach(applicationService::deleteApplication);
-////        약관 삭제
-//        termsService.deleteTerms(userDetails.getUser());
-////        유저 삭제
-//        userRepository.delete(userDetails.getUser());
-//
+//        long start = System.currentTimeMillis();
+
+        // 삭제 & 로그아웃 (헤더 null값 만들기)
         userRepository.deleteUserAndData(userDetails.getUser().getId());
-//        로그아웃 (헤더 null값 만들기)
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
+
+//        long end = System.currentTimeMillis();
+//        logger.info("deleteUser took {} ms", end - start);
         return "탈퇴 완료.";
     }
 
