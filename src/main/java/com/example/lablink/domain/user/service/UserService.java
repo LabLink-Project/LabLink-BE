@@ -20,6 +20,8 @@ import com.example.lablink.domain.user.entity.UserInfo;
 import com.example.lablink.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +42,7 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
 
-//    private final Logger logger = LoggerFactory.getLogger(UserService.class); // 메서드 실행 시간 측정 ex) 회원탈퇴
+    private final Logger logger = LoggerFactory.getLogger(UserService.class); // 메서드 실행 시간 측정 ex) 회원탈퇴
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TermsService termsService;
@@ -169,43 +171,36 @@ public class UserService {
     // 회원 탈퇴
     @Transactional
     public String deleteUser(UserDetailsImpl userDetails, HttpServletResponse response) {
-//        long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
         // 삭제 & 로그아웃 (헤더 null값 만들기)
         userRepository.deleteUserAndData(userDetails.getUser().getId());
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, null);
 
-//        long end = System.currentTimeMillis();
-//        logger.info("deleteUser took {} ms", end - start);
+        long end = System.currentTimeMillis();
+        logger.info("deleteUser took {} ms", end - start);
         return "탈퇴 완료.";
     }
 
     // 내 실험 관리 - 신청한 목록
-    // TODO 쿼리 사용 & 쿼리 x 성능차이 확인
     // TODO User 권한 없으면 한번에 예외 발생 처리 - 현재 각 메서드별 처리
     @Transactional
     public List<MyLabResponseDto> getMyLabs(UserDetailsImpl userDetails) {
+        long start = System.currentTimeMillis();
+
         if(userDetails == null || userDetails.equals(" ")) {
             throw new UserException(UserErrorCode.INVALID_TOKEN);
         }
-        /*내가 작성한 신청서를 찾아 리스트에 넣는다*/
-//        List<Application> applcations = applicationService.findAllByMyApplication(userDetails.getUser());
-//        List<MyLabResponseDto> myLabs = new ArrayList<>();
-//        for (Application applcation : applcations) {
-//            Study study = getStudyService.getStudy(applcation.getStudyId());
-//            myLabs.add(new MyLabResponseDto(study, applcation.getApprovalStatusEnum(), applcation.getApplicationViewStatusEnum()));
-//        }
-//        return myLabs;
 
         // 내가 신청한 목록
-        // 1. application에서 user로 찾아온다
-        // 2. 스터디 정보와 어플리케이션 정보를 찾아서 responseDto에 넣어주려고 한듯 ?
-        // db를 두번 찌르지 않기 위해서 이 query를 썻나 ?
         TypedQuery<MyLabResponseDto> query = em.createQuery(
-            "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s, a.id, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
+            "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
                 "FROM Study s INNER JOIN Application a ON s.id = a.studyId " +
                 "WHERE a.user = :user", MyLabResponseDto.class);
         query.setParameter("user", userDetails.getUser());
+
+        long end = System.currentTimeMillis();
+        logger.info("getMyLabs took {} ms", end - start);
 
         return query.getResultList();
     }
