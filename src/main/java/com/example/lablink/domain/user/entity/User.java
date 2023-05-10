@@ -84,7 +84,7 @@ public class User extends Timestamped {
     public User(Long kakaoId, String nickname, String email, UserInfo userInfo, UserRoleEnum role){
         this.kakaoId = kakaoId;
         this.nickName = nickname;
-        this.kakaoEmail = Objects.requireNonNullElse(email,null);
+        if(email != null) this.kakaoEmail = email;
         this.userinfo = userInfo;
         this.role = role;
     }
