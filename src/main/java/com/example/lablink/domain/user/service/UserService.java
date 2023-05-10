@@ -99,7 +99,7 @@ public class UserService {
         }
 
         // Access token 생성 및 헤더에 추가
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user.getEmail(), user.getNickName()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user));
 
         // Refresh token 생성 및 저장
         Long refreshTokenId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
@@ -232,7 +232,7 @@ public class UserService {
             () -> new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN));
 
         log.info("========================= 리프레시토큰 : {}", refreshToken.getToken());
-        String token = jwtUtil.createUserToken(user.getEmail(), user.getNickName());
+        String token = jwtUtil.createUserToken(user);
         log.info("========================= 새 액세스토큰 : {}", token);
 
         return token;

@@ -29,7 +29,7 @@ public class OauthController {
 //        return ResponseMessage.SuccessResponse("로그인 성공", "");
 
         User googleUser = oauthService.googleLogin(code, scope, response);
-        String createToken =  jwtUtil.createUserToken(googleUser.getEmail(), googleUser.getNickName());
+        String createToken =  jwtUtil.createUserToken(googleUser);
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
