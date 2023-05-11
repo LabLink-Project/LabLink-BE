@@ -111,7 +111,7 @@ public class JwtUtil {
 
         return BEARER_PREFIX +
             Jwts.builder()
-                .setSubject(company.getEmail())
+                .setSubject(company.getId().toString())
                 .claim(AUTHORIZATION_KEY, company.getRole().toString())
                 .claim("companyName",company.getCompanyName())
                 .setExpiration(new Date(date.getTime() + TOKEN_TIME))
