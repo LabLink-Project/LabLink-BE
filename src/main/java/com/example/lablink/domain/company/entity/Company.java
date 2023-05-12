@@ -2,9 +2,13 @@ package com.example.lablink.domain.company.entity;
 
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
+import com.example.lablink.global.timestamp.entity.Timestamped;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -12,7 +16,9 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 //@AllArgsConstructor
-public class Company {
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE company SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
+public class Company extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
