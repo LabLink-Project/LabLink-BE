@@ -16,6 +16,7 @@ import com.example.lablink.domain.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.domain.study.entity.Study;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +42,18 @@ public class StudySearchService {
     private final BookmarkService bookmarkService;
     private final RedisTemplate<String, String> redisTemplate;
 
+
+    // 캐시 키 생성
+    public String generateCacheKey(int pageIndex, int pageCount, String sortedType, UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails) {
+        String userId = userDetails != null ? String.valueOf(userDetails.getUser().getId()) : "null";
+        String companyId = companyDetails != null ? String.valueOf(companyDetails.getCompany().getId()) : "null";
+
+        return "CustomKey [" + pageIndex + "," + pageCount + "," + sortedType + "," + userId + "," + companyId + "]";
+    }
+
     // 게시글 조회 (전체 조회 및 검색 조회 등)
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "StudyResponseDtos", unless = "#searchOption.hasValue()", key = "#root.target.generateCacheKey(#pageIndex, #pageCount, #sortedType, #userDetails, #companyDetails)")
     public List<StudyResponseDto> getStudies(StudySearchOption searchOption, String keyword, Integer pageIndex, Integer pageCount, String sortedType, UserDetailsImpl userDetails, CompanyDetailsImpl companyDetails) {
         User user = userDetails == null ? null : userDetails.getUser();
         Company company = companyDetails == null ? null : companyDetails.getCompany();
@@ -110,7 +121,6 @@ public class StudySearchService {
             }
             studyResponseDtos.add(new StudyResponseDto(study, isBookmarked/*, isApplied*/));
         }
-
         return studyResponseDtos;
     }
 
