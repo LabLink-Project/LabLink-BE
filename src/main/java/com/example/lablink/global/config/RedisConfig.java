@@ -1,5 +1,7 @@
 package com.example.lablink.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +19,11 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableRedisRepositories
 public class RedisConfig extends CachingConfigurerSupport {
+    private final ObjectMapper objectMapper;
+
     @Value("${spring.redis.port}")
     private int port;
 
@@ -84,19 +89,24 @@ public class RedisConfig extends CachingConfigurerSupport {
 //        return container;
 //    }
 
-    //레디스 캐시
+    // 레디스 캐시
     @Bean
-    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext
-                        .SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext
-                        .SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+    public RedisCacheManager redisCacheManager() {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
+                .defaultCacheConfig()
+                .disableCachingNullValues()
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair
+                                .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
+                );
 
+//        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
+//        redisCacheConfigurationMap
+//                .put(CacheNames.STUDY, redisCacheConfiguration.entryTtl(Duration.ofMinutes(5)));
 
-        return RedisCacheManager
-                .RedisCacheManagerBuilder
-                .fromConnectionFactory(redisConnectionFactory)
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnectionFactory())
+//                .withInitialCacheConfigurations(redisCacheConfigurationMap)
                 .cacheDefaults(redisCacheConfiguration)
                 .build();
     }
