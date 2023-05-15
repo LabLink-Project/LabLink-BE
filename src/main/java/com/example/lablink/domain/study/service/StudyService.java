@@ -20,6 +20,7 @@ import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,7 @@ public class StudyService {
 
     // 게시글 작성
     @Transactional
+    @CacheEvict(cacheNames = "StudyResponseDtos", allEntries = true)
     public void createStudy(StudyRequestDto requestDto, CompanyDetailsImpl companyDetails, S3ResponseDto thumbnailS3ResponseDto, S3ResponseDto detailS3ResponseDto) {
         // todo : isCompanyLogin 통일
         Company company = isCompanyLogin(companyDetails);
@@ -73,6 +75,7 @@ public class StudyService {
     // 이미지 수정 refactoring
     // 수정 requestDto가 따로 있어야 하나 ? or 수정하기 눌렀을 때 내용 보여주기 -> patch
     @Transactional
+    @CacheEvict(cacheNames = "StudyResponseDtos", allEntries = true)
     public void updateStudy(Long studyId, StudyRequestDto requestDto, CompanyDetailsImpl companyDetails) {
         Company company = isCompanyLogin(companyDetails);
         Study study = getStudyService.getStudy(studyId);
@@ -164,6 +167,7 @@ public class StudyService {
     // 게시글 삭제
     // 이미지 삭제 refactoring
     @Transactional
+    @CacheEvict(cacheNames = "StudyResponseDtos", allEntries = true)
     public void deleteStudy(Long studyId, CompanyDetailsImpl companyDetails) {
         // companyDetails == null 아면 로그인이 필요한 서비스입니다. 날려주기
         Company company = isCompanyLogin(companyDetails);
