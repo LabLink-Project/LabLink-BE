@@ -2,13 +2,13 @@ package com.example.lablink.domain.user.kakao.service;
 
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.kakao.dto.KakaoUserInfoDto;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.service.TermsService;
 import com.example.lablink.domain.user.entity.UserInfo;
-import com.example.lablink.domain.user.exception.UserErrorCode;
 import com.example.lablink.domain.user.service.UserInfoService;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +53,7 @@ public class KakaoService {
 //        result.put("nickname", kakaoUserInfo.getNickname());
 
         // todo: 그냥 kakaoUserInfo.getId(), kakaoUserInfo.getNickname() 넘겨서 토큰 만드는 걸로 고치자 나중에
-        return userRepository.findByKakaoId(kakaoUserInfo.getId()).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+        return userRepository.findByKakaoId(kakaoUserInfo.getId()).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_NOT_FOUND));
     }
     private String getToken(String code) throws JsonProcessingException {
         // HTTP Header 생성

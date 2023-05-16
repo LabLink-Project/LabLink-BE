@@ -1,5 +1,4 @@
-package com.example.lablink.domain.user.exception;
-
+package com.example.lablink.global.exception;
 
 import com.example.lablink.global.message.ResponseMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +8,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class UserExceptionHandler {
-    @ExceptionHandler(value = { UserException.class })
-    protected ResponseEntity<ResponseMessage> handleCustomException(UserException e) {
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = { GlobalException.class })
+    protected ResponseEntity<ResponseMessage> handleCustomException(GlobalException e) {
         log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
         return ResponseMessage.ErrorResponse(e.getErrorCode());
     }
+
 }
+

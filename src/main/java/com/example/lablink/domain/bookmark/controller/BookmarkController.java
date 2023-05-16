@@ -4,9 +4,9 @@ import com.example.lablink.domain.bookmark.dto.BookmarkResponseDto;
 import com.example.lablink.domain.bookmark.service.BookmarkService;
 import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import com.example.lablink.global.message.ResponseMessage;
-import com.example.lablink.domain.study.exception.StudyErrorCode;
-import com.example.lablink.domain.study.exception.StudyException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class BookmarkController {
             bookmarkResponseDtos = bookmarkService.getCompanyBookmark(companyDetails);
         }
         if (userDetails == null && companyDetails == null){
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+            throw new GlobalException(GlobalErrorCode.LOGIN_REQUIRED);
         }
         return ResponseMessage.SuccessResponse("북마크 조회 성공", bookmarkResponseDtos);
     }
@@ -52,7 +52,7 @@ public class BookmarkController {
             message = bookmarkService.bookmark(studyId, companyDetails);
         }
         if (userDetails == null && companyDetails == null){
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+            throw new GlobalException(GlobalErrorCode.LOGIN_REQUIRED);
         }
         return ResponseMessage.SuccessResponse(message, "");
     }

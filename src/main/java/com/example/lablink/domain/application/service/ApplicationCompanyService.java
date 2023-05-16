@@ -5,13 +5,13 @@ import com.example.lablink.domain.application.dto.Response.ApplicationFromStudyR
 import com.example.lablink.domain.application.entity.Application;
 import com.example.lablink.domain.application.entity.ApplicationViewStatusEnum;
 import com.example.lablink.domain.application.entity.ApprovalStatusEnum;
-import com.example.lablink.domain.application.exception.ApplicationErrorCode;
-import com.example.lablink.domain.application.exception.ApplicationException;
 import com.example.lablink.domain.application.repository.ApplicationRepository;
 import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.service.GetStudyService;
 import com.example.lablink.domain.study.service.StudyService;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ public class ApplicationCompanyService {
         studyService.findStudyFromCompany(studyId, companyDetails.getCompany());
         // 해당 공고의 신청서 찾기
         Application application  = applicationRepository.findById(applicationId).orElseThrow(
-                ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
+                ()->new GlobalException(GlobalErrorCode.APPLICATION_NOT_FOUND)
         );
 
         String applicationViewStatusEnum = ApplicationViewStatusEnum.VIEWED.toString();
@@ -49,7 +49,7 @@ public class ApplicationCompanyService {
         if (companyDetails != null) {
             // 공고, 신청서 찾기
             Application application = applicationRepository.findByIdAndStudyId(applicationId,studyId).orElseThrow(
-                ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND));
+                ()->new GlobalException(GlobalErrorCode.APPLICATION_NOT_FOUND));
 
             if(statusRequestDto.getApprovalStatus().equals("승인")) {
                 application.statusUpdate(ApprovalStatusEnum.APPROVED.toString());
@@ -58,7 +58,7 @@ public class ApplicationCompanyService {
             }
         } else {
             // 인증된 회사 정보가 없는 경우, 예외 처리
-            throw new ApplicationException(ApplicationErrorCode.NOT_HAVE_PERMISSION);
+            throw new GlobalException(GlobalErrorCode.NOT_HAVE_PERMISSION);
         }
     }
 

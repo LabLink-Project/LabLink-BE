@@ -4,8 +4,6 @@ import com.example.lablink.domain.bookmark.service.BookmarkService;
 import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.study.dto.StudySearchOption;
-import com.example.lablink.domain.study.exception.StudyErrorCode;
-import com.example.lablink.domain.study.exception.StudyException;
 import com.example.lablink.domain.study.repository.StudyRepository;
 import com.example.lablink.domain.study.repository.StudySearchQueryRepository;
 import com.example.lablink.domain.user.entity.User;
@@ -14,6 +12,8 @@ import com.example.lablink.domain.study.dto.responseDto.LatestSearchKeyword;
 import com.example.lablink.domain.study.dto.responseDto.SearchRankResponseDto;
 import com.example.lablink.domain.study.dto.responseDto.StudyResponseDto;
 import com.example.lablink.domain.study.entity.Study;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -156,7 +156,7 @@ public class StudySearchService {
             String key = user.getId().toString();
             redisTemplate.opsForZSet().remove(key, deleteWord);
         } else {
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+            throw new GlobalException(GlobalErrorCode.LOGIN_REQUIRED);
         }
     }
 
@@ -166,7 +166,7 @@ public class StudySearchService {
             String key = company.getCompanyName();
             redisTemplate.opsForZSet().remove(key, deleteWord);
         } else {
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+            throw new GlobalException(GlobalErrorCode.LOGIN_REQUIRED);
         }
     }
 

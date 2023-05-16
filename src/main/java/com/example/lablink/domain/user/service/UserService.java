@@ -5,11 +5,12 @@ import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.domain.user.entity.RefreshToken;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.repository.RefreshTokenRepository;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import com.example.lablink.global.jwt.JwtUtil;
 
 import com.example.lablink.domain.user.dto.request.LoginRequestDto;
@@ -17,7 +18,6 @@ import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.dto.response.MyLabResponseDto;
 
 import com.example.lablink.domain.user.entity.UserInfo;
-import com.example.lablink.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -36,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -64,17 +66,33 @@ public class UserService {
         // 기업과 유저의 이메일 중복 확인
         CompanyService companyService = companyServiceProvider.get();
         if(companyService.existEmail(email)) {
-            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
-
         // 가입 닉네임 중복 확인
         if (userRepository.existsByNickName(signupRequestDto.getNickName())) {
-            throw new UserException(UserErrorCode.DUPLICATE_NICK_NAME);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_NICK_NAME);
+        }
+
+        // 닉네임 유효성 검사
+        if (!signupRequestDto.getNickName().matches("^[a-zA-Z0-9가-힣]{2,16}$")) {
+            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
+        }
+        // 이메일 유효성 검사
+        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}$")) {
+            throw new GlobalException(GlobalErrorCode.NOT_VALID_EMAIL);
+        }
+        // 비밀번호 유효성 검사
+        if (!signupRequestDto.getNickName().matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+|<>?{}\\[\\]\\\\-])(?=\\S+$).{8,20}$")) {
+            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
+        }
+        // 핸드폰 유효성 검사
+        if (!signupRequestDto.getUserPhone().matches("^\\d{1,11}$")) {
+            throw new GlobalException(GlobalErrorCode.NOT_VALID_PHONENUMBER);
         }
 
         // 필수 약관 동의
         if(!signupRequestDto.isAgeCheck() || !signupRequestDto.isTermsOfServiceAgreement() || !signupRequestDto.isPrivacyPolicyConsent() || !signupRequestDto.isSensitiveInfoConsent()) {
-            throw new UserException(UserErrorCode.NEED_AGREE_REQUIRE_TERMS);
+            throw new GlobalException(GlobalErrorCode.NEED_AGREE_REQUIRE_TERMS);
         }
         // 유저 저장 및 유저를 약관에 저장시킴 -> 약관을 유저에 저장시키면 유저를 불러올때마다 약관이 불려와 무거움
         // userinfo는 회원가입할 때 받지 않음.
@@ -91,11 +109,11 @@ public class UserService {
         String password = loginRequestDto.getPassword();
 
         // 이메일 존재, 일치 여부
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException(UserErrorCode.EMAIL_NOT_FOUND));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND));
 
         // 비밀번호 일치 여부
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UserException(UserErrorCode.PASSWORD_MISMATCH);
+            throw new GlobalException(GlobalErrorCode.PASSWORD_MISMATCH);
         }
 
         // Access token 생성 및 헤더에 추가
@@ -143,12 +161,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public String emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
         if(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
-            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
 
         CompanyService companyService = companyServiceProvider.get();
         if(companyService.existEmail(signupEmailCheckRequestDto.getEmail())) {
-            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
         return "사용 가능합니다.";
     }
@@ -156,7 +174,7 @@ public class UserService {
     // 유저 닉네임 중복 확인
     public String nickNameCheck(UserNickNameRequestDto userNickNameRequestDto) {
         if(userRepository.existsByNickName(userNickNameRequestDto.getNickName())) {
-            throw new UserException(UserErrorCode.DUPLICATE_NICK_NAME);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_NICK_NAME);
         }
         return "사용 가능합니다.";
     }
@@ -164,7 +182,7 @@ public class UserService {
     // 인증 유저 가져오기
     public User getUser(UserDetailsImpl userDetails){
         return  userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-            ()->new UserException(UserErrorCode.USER_NOT_FOUND));
+            ()->new GlobalException(GlobalErrorCode.USER_NOT_FOUND));
     }
 
     // 회원 탈퇴
@@ -188,7 +206,7 @@ public class UserService {
         long start = System.currentTimeMillis();
 
         if(userDetails == null || userDetails.equals(" ")) {
-            throw new UserException(UserErrorCode.INVALID_TOKEN);
+            throw new GlobalException(GlobalErrorCode.INVALID_TOKEN);
         }
 
         // 내가 신청한 목록
@@ -217,7 +235,7 @@ public class UserService {
         // 클라이언트가 주는 모든 쿠키 가져오기
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            throw new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN);
+            throw new GlobalException(GlobalErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         // 쿠키 중 RefreshToken 가져오기
@@ -230,11 +248,11 @@ public class UserService {
         }
 
         if (refreshTokenIndex == null) {
-            throw new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN);
+            throw new GlobalException(GlobalErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         RefreshToken refreshToken = refreshTokenRepository.findByTokenIndex(refreshTokenIndex).orElseThrow(
-            () -> new UserException(UserErrorCode.EXPIRED_REFRESH_TOKEN));
+            () -> new GlobalException(GlobalErrorCode.EXPIRED_REFRESH_TOKEN));
 
         log.info("========================= 리프레시토큰 : {}", refreshToken.getToken());
         String token = jwtUtil.createUserToken(user);
@@ -244,13 +262,13 @@ public class UserService {
     }
 
     public User getUserByNickname(String nickName) {
-        return userRepository.findByNickName(nickName).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+        return userRepository.findByNickName(nickName).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_NOT_FOUND));
     }
 
     // 가입 이메일 중복 확인
     public void checkEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
     }
     public boolean existEmail(String email) {

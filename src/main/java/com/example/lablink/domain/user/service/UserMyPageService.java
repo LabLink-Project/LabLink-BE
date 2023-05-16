@@ -3,10 +3,10 @@ package com.example.lablink.domain.user.service;
 import com.example.lablink.domain.user.dto.request.MyPageCheckRequestDto;
 import com.example.lablink.domain.user.dto.response.UserModifyResponseDto;
 import com.example.lablink.domain.user.entity.User;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
-import com.example.lablink.domain.user.exception.UserErrorCode;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class UserMyPageService {
         String inputPassword = checkRequestDto.getPassword();
 
         if(!passwordEncoder.matches(inputPassword, myPassword)) {
-            throw new UserException(UserErrorCode.PASSWORD_MISMATCH);
+            throw new GlobalException(GlobalErrorCode.PASSWORD_MISMATCH);
         }
         return new UserModifyResponseDto(user.getUserName(), user.getDateOfBirth());
     }
@@ -39,29 +39,9 @@ public class UserMyPageService {
     @Transactional
     public void modifyProfile(UserDetailsImpl userDetails, MyPageCheckRequestDto.UserModifyRequestDto checkRequestDto) {
         User user = userDetails.getUser();
-        if(user == null) { throw new UserException(UserErrorCode.INVALID_TOKEN); }
+        if(user == null) { throw new GlobalException(GlobalErrorCode.INVALID_TOKEN); }
 
         userMapper.updateUserModifyDto(checkRequestDto, user);
-
-//        if (checkRequestDto.getUserName() != null && !checkRequestDto.getUserName().isBlank()) {
-//            user.setUserName(checkRequestDto.getUserName());
-//        }
-//
-//        if (checkRequestDto.getDateOfBirth() != null) {
-//            user.setDateOfBirth(checkRequestDto.getDateOfBirth());
-//        }
-//
-//        if (checkRequestDto.getUserGender() != null && !checkRequestDto.getUserGender().isBlank()) {
-//            user.setUserGender(checkRequestDto.getUserGender());
-//        }
-//
-//        if (checkRequestDto.getUserPhone() != null && !checkRequestDto.getUserPhone().isBlank()) {
-//            user.getUserinfo().setUserPhone(checkRequestDto.getUserPhone());
-//        }
-//
-//        if (checkRequestDto.getUserAddress() != null && !checkRequestDto.getUserAddress().isBlank()) {
-//            user.getUserinfo().setUserAddress(checkRequestDto.getUserAddress());
-//        }
         userRepository.save(user);
     }
 
@@ -74,7 +54,7 @@ public class UserMyPageService {
         String myPassword = userService.getUser(userDetails).getPassword();
 
         if(passwordEncoder.matches(inputPassword, myPassword)) {
-            throw new UserException(UserErrorCode.DUPLICATE_PASSWORD);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_PASSWORD);
         }
 
         user.setPassword(passwordEncoder.encode(inputPassword));

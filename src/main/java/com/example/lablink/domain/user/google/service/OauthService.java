@@ -2,10 +2,10 @@ package com.example.lablink.domain.user.google.service;
 
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.repository.UserRepository;
-import com.example.lablink.domain.user.exception.UserErrorCode;
 import com.example.lablink.domain.user.google.dto.GoogleUserInfoDto;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +62,7 @@ public class OauthService {
 //        String createToken =  jwtUtil.createUserToken(googleUser);
 //        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 //        return createToken;
-        return userRepository.findByGoogleEmail(googleUserInfo.getEmail()).orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+        return userRepository.findByGoogleEmail(googleUserInfo.getEmail()).orElseThrow(() -> new GlobalException(GlobalErrorCode.USER_NOT_FOUND));
     }
 
 
