@@ -1,9 +1,9 @@
 package com.example.lablink.domain.study.service;
 
-import com.example.lablink.domain.study.exception.StudyErrorCode;
-import com.example.lablink.domain.study.exception.StudyException;
 import com.example.lablink.domain.study.repository.StudyRepository;
 import com.example.lablink.domain.study.entity.Study;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ public class GetStudyService {
     @Transactional(readOnly = true)
     public Study getStudy(Long studyId){
         return studyRepository.findById(studyId).orElseThrow(
-                ()-> new StudyException(StudyErrorCode.STUDY_NOT_FOUND)
+                ()-> new GlobalException(GlobalErrorCode.STUDY_NOT_FOUND)
         );
     }
 

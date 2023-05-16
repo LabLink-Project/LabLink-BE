@@ -3,8 +3,6 @@ package com.example.lablink.domain.chat.service;
 import com.example.lablink.domain.chat.dto.*;
 import com.example.lablink.domain.chat.entity.ChatMessage;
 import com.example.lablink.domain.chat.entity.ChatRoom;
-import com.example.lablink.domain.chat.exception.ChatErrorCode;
-import com.example.lablink.domain.chat.exception.ChatException;
 import com.example.lablink.domain.chat.repository.ChatMessageRepository;
 import com.example.lablink.domain.chat.repository.ChatRoomRepository;
 import com.example.lablink.domain.company.entity.Company;
@@ -12,6 +10,8 @@ import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.service.GetStudyService;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.service.UserService;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -74,7 +74,7 @@ public class ChatService {
     @Transactional
     public void saveMessage(ChatMessageDto message) {
         User user = userService.getUserByNickname(message.getSender());
-        ChatRoom room = chatRoomRepository.findByRoomId(message.getRoomId()).orElseThrow(() -> new ChatException(ChatErrorCode.CHATROOM_NOT_FOUND));
+        ChatRoom room = chatRoomRepository.findByRoomId(message.getRoomId()).orElseThrow(() -> new GlobalException(GlobalErrorCode.CHATROOM_NOT_FOUND));
         ChatMessage chatMessage = new ChatMessage(user, message.getContent(), room);
         chatMessageRepository.saveAndFlush(chatMessage);
         ChatMessageResponseDto responseDto = new ChatMessageResponseDto(chatMessage.getRoom().getRoomId(), chatMessage.getSender().getNickName(), chatMessage.getContent(), changeDateFormat(chatMessage.getCreatedAt()));
@@ -83,7 +83,7 @@ public class ChatService {
 
     // Company
     private MyChatRoomResponseDto findCompanyMessageHistoryByRoomId(String roomId, Company company) {
-        ChatRoom room = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new ChatException(ChatErrorCode.CHATROOM_NOT_FOUND));
+        ChatRoom room = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new GlobalException(GlobalErrorCode.CHATROOM_NOT_FOUND));
         List<MessageListDto> messages = chatMessageRepository.findAllByRoom(room).stream()
                 .map(m -> new MessageListDto(m.getSender().getNickName(), m.getContent(), m.getRoom().getRoomId(), changeDateFormat(m.getCreatedAt()))).toList();
         List<ChatRoom> chatRooms = chatRoomRepository.findAllChatRoomByCompany(company);
@@ -100,7 +100,7 @@ public class ChatService {
 
     // User
     private MyChatRoomResponseDto findUserMessageHistoryByRoomId(String roomId, User user) {
-        ChatRoom room = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new ChatException(ChatErrorCode.CHATROOM_NOT_FOUND));
+        ChatRoom room = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new GlobalException(GlobalErrorCode.CHATROOM_NOT_FOUND));
         List<MessageListDto> messages = chatMessageRepository.findAllByRoom(room).stream()
                 .map(m -> new MessageListDto(m.getSender().getNickName(), m.getContent(), m.getRoom().getRoomId(), changeDateFormat(m.getCreatedAt()))).toList();
         List<ChatRoom> chatRooms = chatRoomRepository.findAllChatRoomByUser(user);
@@ -132,7 +132,7 @@ public class ChatService {
 
     @Transactional
     public void deleteRoom(String roomId) {
-        ChatRoom room = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new ChatException(ChatErrorCode.CHATROOM_NOT_FOUND));
+        ChatRoom room = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new GlobalException(GlobalErrorCode.CHATROOM_NOT_FOUND));
         if (chatMessageRepository.existsByRoom(room)) {
             chatMessageRepository.deleteByRoom(room);
         }

@@ -1,9 +1,6 @@
 package com.example.lablink.global.message;
-import com.example.lablink.domain.application.exception.ApplicationErrorCode;
-import com.example.lablink.domain.company.exception.CompanyErrorCode;
-import com.example.lablink.domain.feedback.exception.FeedBackErrorCode;
-import com.example.lablink.domain.study.exception.StudyErrorCode;
-import com.example.lablink.domain.user.exception.UserErrorCode;
+
+import com.example.lablink.global.exception.GlobalErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +23,7 @@ public class ResponseMessage<T> {
                         .build();
     }
 
-    public static ResponseEntity ErrorResponse(UserErrorCode errorCode) {
+    public static ResponseEntity ErrorResponse(GlobalErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(ResponseMessage.builder()
@@ -35,53 +32,6 @@ public class ResponseMessage<T> {
                         .data("")
                         .build()
                 );
-    }
-
-    public static ResponseEntity ErrorResponse(CompanyErrorCode errorCode) {
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(ResponseMessage.builder()
-                        .statusCode(errorCode.getHttpStatus().value())
-                        .message(errorCode.getMessage())
-                        .data("")
-                        .build()
-                );
-    }
-
-    // StudyErrorCode
-    public static ResponseEntity ErrorResponse(StudyErrorCode errorCode) {
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(ResponseMessage.builder()
-                        .statusCode(errorCode.getHttpStatus().value())
-                        .message(errorCode.getMessage())
-                        .data("")
-                        .build()
-                );
-    }
-
-    public static ResponseEntity ErrorResponse(ApplicationErrorCode errorCode) {
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(ResponseMessage.builder()
-                        .statusCode(errorCode.getHttpStatus().value())
-                        .message(errorCode.getMessage())
-                        .data("")
-                        .build()
-                );
-
-    }
-
-    public static ResponseEntity ErrorResponse(FeedBackErrorCode errorCode) {
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(ResponseMessage.builder()
-                        .statusCode(errorCode.getHttpStatus().value())
-                        .message(errorCode.getMessage())
-                        .data("")
-                        .build()
-                );
-
     }
 
     public static <T> ResponseEntity SuccessResponse(String message, T data){
@@ -94,4 +44,5 @@ public class ResponseMessage<T> {
                         .build()
                 );
     }
+
 }

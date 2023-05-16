@@ -3,10 +3,10 @@ package com.example.lablink.global.jwt;
 import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.security.CompanyDetailsServiceImpl;
 import com.example.lablink.domain.user.entity.User;
-import com.example.lablink.domain.user.exception.UserErrorCode;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.security.UserDetailsServiceImpl;
 
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -158,11 +158,12 @@ public class JwtUtil {
         Claims claims;
 
         if (token != null) {
+            Object GlobalrrorCode;
             if (validateToken(token)) {
                 claims = getUserInfoFromToken(token);
                 return claims;
             } else
-                throw new UserException(UserErrorCode.INVALID_TOKEN);
+                throw new GlobalException(GlobalErrorCode.INVALID_TOKEN);
         }
         return null;
     }

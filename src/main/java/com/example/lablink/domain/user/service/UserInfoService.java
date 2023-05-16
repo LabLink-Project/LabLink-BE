@@ -1,11 +1,11 @@
 package com.example.lablink.domain.user.service;
 
 import com.example.lablink.domain.user.entity.UserInfo;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.kakao.dto.KakaoUserInfoDto;
 import com.example.lablink.domain.user.repository.UserInfoRepository;
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
-import com.example.lablink.domain.user.exception.UserErrorCode;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +26,6 @@ public class UserInfoService {
 
     // UserInfo 찾기
     public UserInfo findUserInfo(Long userInfoId) {
-        return userInfoRepository.findById(userInfoId).orElseThrow(() -> new UserException(UserErrorCode.USERINFO_NOT_FOUND));
+        return userInfoRepository.findById(userInfoId).orElseThrow(() -> new GlobalException(GlobalErrorCode.USERINFO_NOT_FOUND));
     }
 }
