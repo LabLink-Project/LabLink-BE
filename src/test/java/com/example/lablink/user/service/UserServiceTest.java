@@ -6,13 +6,13 @@
 //import com.example.lablink.domain.user.service.UserInfoService;
 //import com.example.lablink.domain.user.service.UserService;
 //import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
+//import com.example.lablink.global.exception.GlobalErrorCode;
+//import com.example.lablink.global.exception.GlobalException;
 //import com.example.lablink.global.jwt.JwtUtil;
 //import com.example.lablink.domain.user.dto.request.LoginRequestDto;
 //import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 //import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
 //import com.example.lablink.domain.user.entity.User;
-//import com.example.lablink.domain.user.exception.UserErrorCode;
-//import com.example.lablink.domain.user.exception.UserException;
 //import com.example.lablink.domain.user.repository.UserRepository;
 //import com.example.lablink.domain.user.security.UserDetailsImpl;
 //import org.junit.jupiter.api.DisplayName;
@@ -98,8 +98,8 @@
 //        given(userRepository.existsByEmail(signupRequestDto.getEmail())).willReturn(true);
 //
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.signup(signupRequestDto), UserErrorCode.DUPLICATE_EMAIL.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.signup(signupRequestDto), GlobalErrorCode.DUPLICATE_EMAIL.getMessage());
 //    }
 //
 //    @Test
@@ -109,8 +109,8 @@
 //        given(userRepository.existsByNickName(signupRequestDto.getNickName())).willReturn(true);
 //
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.signup(signupRequestDto), UserErrorCode.DUPLICATE_NICK_NAME.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.signup(signupRequestDto), GlobalErrorCode.DUPLICATE_NICK_NAME.getMessage());
 //    }
 //
 //    @Test
@@ -130,8 +130,8 @@
 //        );
 //
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.signup(signupRequestDto), UserErrorCode.NEED_AGREE_REQUIRE_TERMS.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.signup(signupRequestDto), GlobalErrorCode.NEED_AGREE_REQUIRE_TERMS.getMessage());
 //    }
 //
 //    @Test
@@ -164,8 +164,8 @@
 //        given(passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())).willReturn(false);
 //
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.login(loginRequestDto, response), UserErrorCode.PASSWORD_MISMATCH.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.login(loginRequestDto, response), GlobalErrorCode.PASSWORD_MISMATCH.getMessage());
 //    }
 //
 //    @Test
@@ -188,8 +188,8 @@
 //        given(userRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())).willReturn(true);
 //
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.emailCheck(signupEmailCheckRequestDto), UserErrorCode.DUPLICATE_EMAIL.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.emailCheck(signupEmailCheckRequestDto), GlobalErrorCode.DUPLICATE_EMAIL.getMessage());
 //    }
 //
 //    @Test
@@ -213,8 +213,8 @@
 //        given(userRepository.existsByNickName(userNickNameRequestDto.getNickName())).willReturn(true);
 //
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.nickNameCheck(userNickNameRequestDto), UserErrorCode.DUPLICATE_NICK_NAME.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.nickNameCheck(userNickNameRequestDto), GlobalErrorCode.DUPLICATE_NICK_NAME.getMessage());
 //    }
 //
 //    @Test
@@ -238,8 +238,8 @@
 //        UserDetailsImpl userDetails = new UserDetailsImpl(user, user.getEmail());
 //        given(userRepository.findById(any())).willReturn(Optional.empty());
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.getUser(userDetails), UserErrorCode.USER_NOT_FOUND.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.getUser(userDetails), GlobalErrorCode.USER_NOT_FOUND.getMessage());
 //    }
 //
 //    @Test
@@ -292,21 +292,21 @@
 //        // given
 //        UserDetailsImpl userDetails = null;
 //        // when & then
-//        assertThrows(UserException.class,
-//            () -> userService.getMyLabs(userDetails), UserErrorCode.INVALID_TOKEN.getMessage());
+//        assertThrows(GlobalException.class,
+//            () -> userService.getMyLabs(userDetails), GlobalErrorCode.INVALID_TOKEN.getMessage());
 //
 //    }
 //
-//    @Test
-//    @DisplayName("유저 찾기 메서드")
-//    void test() {
-//        // given
-//        User user = new User();
-//        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-//        // when
-//        User result = userService.findUser(user.getId());
-//        //then
-//        assertEquals(user, result);
-//    }
+////    @Test
+////    @DisplayName("유저 찾기 메서드")
+////    void test() {
+////        // given
+////        User user = new User();
+////        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+////        // when
+////        User result = userService.findUser(user.getId());
+////        //then
+////        assertEquals(user, result);
+////    }
 //
 //}
