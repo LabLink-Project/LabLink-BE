@@ -73,22 +73,22 @@ public class UserService {
             throw new GlobalException(GlobalErrorCode.DUPLICATE_NICK_NAME);
         }
 
-        // 닉네임 유효성 검사
-        if (!signupRequestDto.getNickName().matches("^[a-zA-Z0-9가-힣]{2,16}$")) {
-            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
-        }
-        // 이메일 유효성 검사
-        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}$")) {
-            throw new GlobalException(GlobalErrorCode.NOT_VALID_EMAIL);
-        }
-        // 비밀번호 유효성 검사
-        if (!signupRequestDto.getNickName().matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+|<>?{}\\[\\]\\\\-])(?=\\S+$).{8,20}$")) {
-            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
-        }
-        // 핸드폰 유효성 검사
-        if (!signupRequestDto.getUserPhone().matches("^\\d{1,11}$")) {
-            throw new GlobalException(GlobalErrorCode.NOT_VALID_PHONENUMBER);
-        }
+//        // 닉네임 유효성 검사
+//        if (!signupRequestDto.getNickName().matches("^[a-zA-Z0-9가-힣]{2,16}$")) {
+//            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
+//        }
+//        // 이메일 유효성 검사
+//        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}$")) {
+//            throw new GlobalException(GlobalErrorCode.NOT_VALID_EMAIL);
+//        }
+//        // 비밀번호 유효성 검사
+//        if (!signupRequestDto.getNickName().matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+|<>?{}\\[\\]\\\\-])(?=\\S+$).{8,20}$")) {
+//            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
+//        }
+//        // 핸드폰 유효성 검사
+//        if (!signupRequestDto.getUserPhone().matches("^\\d{1,11}$")) {
+//            throw new GlobalException(GlobalErrorCode.NOT_VALID_PHONENUMBER);
+//        }
 
         // 필수 약관 동의
         if(!signupRequestDto.isAgeCheck() || !signupRequestDto.isTermsOfServiceAgreement() || !signupRequestDto.isPrivacyPolicyConsent() || !signupRequestDto.isSensitiveInfoConsent()) {
@@ -120,15 +120,15 @@ public class UserService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createUserToken(user));
 
         // Refresh token 생성 및 저장
-        Long refreshTokenId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-        RefreshToken refreshToken = new RefreshToken(refreshTokenId, jwtUtil.createUserRfToken(user.getEmail(), user.getNickName()));
-        refreshTokenRepository.save(refreshToken);
+//        Long refreshTokenId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+//        RefreshToken refreshToken = new RefreshToken(refreshTokenId, jwtUtil.createUserRfToken(user.getEmail(), user.getNickName()));
+//        refreshTokenRepository.save(refreshToken);
+//
+//        // Refresh token을 쿠키에 저장
+//        String refreshTokenCookieValue = String.format("RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; SameSite=Lax",
+//            refreshTokenId, 7 * 24 * 60 * 60);
 
-        // Refresh token을 쿠키에 저장
-        String refreshTokenCookieValue = String.format("RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; SameSite=Lax",
-            refreshTokenId, 7 * 24 * 60 * 60);
-
-        response.addHeader("Set-Cookie", refreshTokenCookieValue);
+//        response.addHeader("Set-Cookie", refreshTokenCookieValue);
 
         return "로그인 완료.";
 
