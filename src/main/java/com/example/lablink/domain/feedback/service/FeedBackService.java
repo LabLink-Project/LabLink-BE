@@ -4,14 +4,14 @@ import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.feedback.dto.Request.FeedBackRequestDto;
 import com.example.lablink.domain.feedback.dto.Response.DetailFeedBackResponseDto;
 import com.example.lablink.domain.feedback.dto.Response.FeedBackResponseDto;
-import com.example.lablink.domain.feedback.exception.FeedBackErrorCode;
-import com.example.lablink.domain.feedback.exception.FeedBackException;
 import com.example.lablink.domain.feedback.repository.FeedBackRepository;
 import com.example.lablink.domain.study.service.StudyService;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.domain.feedback.entity.Feedback;
 import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.service.GetStudyService;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -57,7 +57,7 @@ public class FeedBackService {
     public DetailFeedBackResponseDto getDetailFeedBack(CompanyDetailsImpl companyDetails, Long studyId, Long feedbackId) {
         studyService.checkRole(studyId,companyDetails.getCompany());
         Feedback feedback = feedBackRepository.findById(feedbackId).orElseThrow(
-                () -> new FeedBackException(FeedBackErrorCode.FeedBack_NOT_FOUND)
+                () -> new GlobalException(GlobalErrorCode.FeedBack_NOT_FOUND)
         );
         feedback.updateViewStatus();
         return new DetailFeedBackResponseDto(feedback);

@@ -5,14 +5,14 @@ import com.example.lablink.domain.application.dto.Response.ApplicationResponseDt
 import com.example.lablink.domain.application.entity.Application;
 import com.example.lablink.domain.application.entity.ApplicationViewStatusEnum;
 import com.example.lablink.domain.application.entity.ApprovalStatusEnum;
-import com.example.lablink.domain.application.exception.ApplicationErrorCode;
-import com.example.lablink.domain.application.exception.ApplicationException;
 import com.example.lablink.domain.application.repository.ApplicationRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.service.GetStudyService;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.service.UserService;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,11 +53,11 @@ public class ApplicationService {
     @Transactional
     public void modifyApplication(UserDetailsImpl userDetails, Long studyId,ApplicationRequestDto applicationRequestDto,Long applicationId) {
         Application application = applicationRepository.findById(applicationId).orElseThrow(
-                ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
+                ()->new GlobalException(GlobalErrorCode.APPLICATION_NOT_FOUND)
         );
 
         if(!application.getStudyId().equals(studyId) || !application.getUser().getId().equals(userDetails.getUser().getId())){
-            throw new ApplicationException(ApplicationErrorCode.NOT_AUTHOR);
+            throw new GlobalException(GlobalErrorCode.NOT_AUTHOR);
         }
 
         application.update(applicationRequestDto.getMessage());
@@ -66,11 +66,11 @@ public class ApplicationService {
     @Transactional
     public void deleteApplication(UserDetailsImpl userDetails, Long studyId,Long applicationId) {
         Application application =applicationRepository.findById(applicationId).orElseThrow(
-                ()->new ApplicationException(ApplicationErrorCode.APPLICATION_NOT_FOUND)
+                ()->new GlobalException(GlobalErrorCode.APPLICATION_NOT_FOUND)
         );
 
         if(!application.getStudyId().equals(studyId) || !application.getUser().getId().equals(userDetails.getUser().getId())){
-          throw new ApplicationException(ApplicationErrorCode.NOT_AUTHOR);
+          throw new GlobalException(GlobalErrorCode.NOT_AUTHOR);
         }
         applicationRepository.delete(application);
     }

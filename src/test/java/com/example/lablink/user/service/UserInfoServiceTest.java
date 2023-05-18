@@ -2,10 +2,10 @@ package com.example.lablink.user.service;
 
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.entity.UserInfo;
-import com.example.lablink.domain.user.exception.UserErrorCode;
-import com.example.lablink.domain.user.exception.UserException;
 import com.example.lablink.domain.user.repository.UserInfoRepository;
 import com.example.lablink.domain.user.service.UserInfoService;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,11 +59,11 @@ class UserInfoServiceTest {
     void findUserInfo() {
         // given
         UserInfo userInfo = new UserInfo();
-        given(userInfoRepository.findById(userInfo.getId())).willThrow(UserException.class);
+        given(userInfoRepository.findById(userInfo.getId())).willThrow(GlobalException.class);
 
         // when & then
-        assertThrows(UserException.class,
-        () -> userInfoService.findUserInfo(userInfo.getId()), UserErrorCode.USER_NOT_FOUND.getMessage());
+        assertThrows(GlobalException.class,
+        () -> userInfoService.findUserInfo(userInfo.getId()), GlobalErrorCode.USER_NOT_FOUND.getMessage());
     }
 
 }

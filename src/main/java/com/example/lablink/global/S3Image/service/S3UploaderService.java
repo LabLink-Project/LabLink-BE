@@ -7,8 +7,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.global.S3Image.entity.S3Image;
 import com.example.lablink.global.S3Image.repository.S3ImageRepository;
-import com.example.lablink.domain.study.exception.StudyErrorCode;
-import com.example.lablink.domain.study.exception.StudyException;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +72,7 @@ public class S3UploaderService {
      */
     public void deleteFile(Long id) {
         S3Image s3Image = s3ImageRepository.findById(id).orElseThrow(
-                () -> new StudyException(StudyErrorCode.NOT_FOUND_IMAGE));
+                () -> new GlobalException(GlobalErrorCode.NOT_FOUND_IMAGE));
 
         try {
             String keyName = s3Image.getUploadFilePath() + s3Image.getUploadFileName(); // ex) 구분/년/월/일/파일.확장자
@@ -80,7 +80,7 @@ public class S3UploaderService {
             if (isObjectExist) {
                 amazonS3Client.deleteObject(bucketName, keyName);
             } else {
-                throw new StudyException(StudyErrorCode.NOT_FOUND_IMAGE);
+                throw new GlobalException(GlobalErrorCode.NOT_FOUND_IMAGE);
             }
         } catch (Exception e) {
             log.debug("Delete File failed", e);

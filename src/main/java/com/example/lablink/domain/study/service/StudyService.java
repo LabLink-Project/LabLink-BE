@@ -13,11 +13,11 @@ import com.example.lablink.domain.study.dto.requestDto.StudyRequestDto;
 import com.example.lablink.domain.study.dto.responseDto.StudyDetailResponseDto;
 import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.entity.StudyStatusEnum;
-import com.example.lablink.domain.study.exception.StudyErrorCode;
-import com.example.lablink.domain.study.exception.StudyException;
 import com.example.lablink.domain.study.repository.StudyRepository;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -205,7 +205,7 @@ public class StudyService {
         if (companyDetails != null){
             return companyDetails.getCompany();
         } else{
-            throw new StudyException(StudyErrorCode.LOGIN_REQUIRED);
+            throw new GlobalException(GlobalErrorCode.LOGIN_REQUIRED);
         }
     }
 
@@ -213,7 +213,7 @@ public class StudyService {
     // checkRole 게시글 권한 확인 (해당 게시글을 작성자와 똑같은지 확인)
     public void checkRole(Long studyId, Company company){
         studyRepository.findByIdAndCompany(studyId, company).orElseThrow(
-                () -> new StudyException(StudyErrorCode.NOT_AUTHOR)
+                () -> new GlobalException(GlobalErrorCode.NOT_AUTHOR)
         );
     }
 
@@ -221,7 +221,7 @@ public class StudyService {
     // 기업별 공고 찾기
     public List<Study> findAllCompanyStudy(Company company) {
         if (company == null) {
-            throw new StudyException(StudyErrorCode.STUDY_NOT_FOUND);
+            throw new GlobalException(GlobalErrorCode.STUDY_NOT_FOUND);
         }
         return studyRepository.findAllByCompany(company);
     }
@@ -232,6 +232,6 @@ public class StudyService {
     // 기업이 작성한 공고 찾기
     public Study findStudyFromCompany(Long studyId, Company company) {
         return studyRepository.findByIdAndCompany(studyId, company)
-            .orElseThrow(() -> new StudyException(StudyErrorCode.STUDY_NOT_FOUND));
+            .orElseThrow(() -> new GlobalException(GlobalErrorCode.STUDY_NOT_FOUND));
     }
 }

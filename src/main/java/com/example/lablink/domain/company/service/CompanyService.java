@@ -8,13 +8,13 @@ import com.example.lablink.domain.company.dto.request.CompanyNameCheckRequestDto
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.domain.company.dto.response.ViewMyStudyResponseDto;
 import com.example.lablink.domain.company.entity.Company;
-import com.example.lablink.domain.company.exception.CompanyErrorCode;
-import com.example.lablink.domain.company.exception.CompanyException;
 import com.example.lablink.domain.company.repository.CompanyRepository;
 import com.example.lablink.domain.company.security.CompanyDetailsImpl;
 import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
 import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
 import com.example.lablink.global.jwt.JwtUtil;
 import com.example.lablink.domain.study.service.StudyService;
 import lombok.RequiredArgsConstructor;
@@ -54,12 +54,12 @@ public class CompanyService {
         // 유저와 기업의 이메일 중복 검사
         UserService userService = userServiceProvider.get();
         if(userService.existEmail(email)) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
 
         // 로그인시 작성 회사명 db의 회사명의 일치, 존재 확인
         if (companyRepository.existsByCompanyName(companySignupRequestDto.getCompanyName())) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_COMPANY_NAME);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_COMPANY_NAME);
         }
 
         Company company;
@@ -80,11 +80,11 @@ public class CompanyService {
         String password = companyLoginRequestDto.getPassword();
 
         // 로그인시 작성 email과 db의 email의 일치, 존재 확인
-        Company company = companyRepository.findByEmail(email).orElseThrow(() -> new CompanyException(CompanyErrorCode.EMAIL_NOT_FOUND));
+        Company company = companyRepository.findByEmail(email).orElseThrow(() -> new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND));
 
         // 비밀번호 일치 여부
         if (!passwordEncoder.matches(password, company.getPassword())) {
-            throw new CompanyException(CompanyErrorCode.PASSWORD_MISMATCH);
+            throw new GlobalException(GlobalErrorCode.PASSWORD_MISMATCH);
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createCompanyToken(company));
@@ -118,12 +118,12 @@ public class CompanyService {
     @Transactional(readOnly = true)
     public void emailCheck(SignupEmailCheckRequestDto signupEmailCheckRequestDto) {
         if(companyRepository.existsByEmail(signupEmailCheckRequestDto.getEmail())) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
 
         UserService userService = userServiceProvider.get();
         if(userService.existEmail(signupEmailCheckRequestDto.getEmail())) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
     }
 
@@ -131,7 +131,7 @@ public class CompanyService {
     @Transactional
     public void companyNameCheck(CompanyNameCheckRequestDto companyNameCheckRequestDto) {
         if(companyRepository.existsByCompanyName(companyNameCheckRequestDto.getCompanyName())) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_COMPANY_NAME);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_COMPANY_NAME);
         }
     }
 
@@ -165,7 +165,7 @@ public class CompanyService {
 
     public void checkEmail(String email) {
         if (companyRepository.existsByEmail(email)) {
-            throw new CompanyException(CompanyErrorCode.DUPLICATE_EMAIL);
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
     }
 
