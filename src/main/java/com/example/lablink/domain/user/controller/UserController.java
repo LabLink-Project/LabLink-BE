@@ -31,7 +31,7 @@ public class UserController {
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(/*@Valid*/ @RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         return ResponseMessage.SuccessResponse(userService.signup(signupRequestDto), "");
     }
 
