@@ -35,9 +35,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -72,23 +69,6 @@ public class UserService {
         if (userRepository.existsByNickName(signupRequestDto.getNickName())) {
             throw new GlobalException(GlobalErrorCode.DUPLICATE_NICK_NAME);
         }
-
-//        // 닉네임 유효성 검사
-//        if (!signupRequestDto.getNickName().matches("^[a-zA-Z0-9가-힣]{2,16}$")) {
-//            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
-//        }
-//        // 이메일 유효성 검사
-//        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}$")) {
-//            throw new GlobalException(GlobalErrorCode.NOT_VALID_EMAIL);
-//        }
-//        // 비밀번호 유효성 검사
-//        if (!signupRequestDto.getNickName().matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+|<>?{}\\[\\]\\\\-])(?=\\S+$).{8,20}$")) {
-//            throw new GlobalException(GlobalErrorCode.NOT_VALID_NICKNAME);
-//        }
-//        // 핸드폰 유효성 검사
-//        if (!signupRequestDto.getUserPhone().matches("^\\d{1,11}$")) {
-//            throw new GlobalException(GlobalErrorCode.NOT_VALID_PHONENUMBER);
-//        }
 
         // 필수 약관 동의
         if(!signupRequestDto.isAgeCheck() || !signupRequestDto.isTermsOfServiceAgreement() || !signupRequestDto.isPrivacyPolicyConsent() || !signupRequestDto.isSensitiveInfoConsent()) {
@@ -126,8 +106,8 @@ public class UserService {
 //
 //        // Refresh token을 쿠키에 저장
 //        String refreshTokenCookieValue = String.format("RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; SameSite=Lax",
-//            refreshTokenId, 7 * 24 * 60 * 60);
-
+//                refreshTokenId, 7 * 24 * 60 * 60);
+//
 //        response.addHeader("Set-Cookie", refreshTokenCookieValue);
 
         return "로그인 완료.";
@@ -210,12 +190,6 @@ public class UserService {
         }
 
         // 내가 신청한 목록
-//        TypedQuery<MyLabResponseDto> query = em.createQuery(
-//            "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
-//                "FROM Study s INNER JOIN Application a ON s.id = a.studyId " +
-//                "WHERE a.user = :user", MyLabResponseDto.class);
-//        query.setParameter("user", userDetails.getUser());
-
         TypedQuery<MyLabResponseDto> query = em.createQuery(
                 "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
                         "FROM Study s LEFT JOIN Application a ON s.id = a.studyId WHERE a.user = :user", MyLabResponseDto.class);
@@ -252,7 +226,7 @@ public class UserService {
         }
 
         RefreshToken refreshToken = refreshTokenRepository.findByTokenIndex(refreshTokenIndex).orElseThrow(
-            () -> new GlobalException(GlobalErrorCode.EXPIRED_REFRESH_TOKEN));
+                () -> new GlobalException(GlobalErrorCode.EXPIRED_REFRESH_TOKEN));
 
         log.info("========================= 리프레시토큰 : {}", refreshToken.getToken());
         String token = jwtUtil.createUserToken(user);

@@ -2,6 +2,7 @@ package com.example.lablink.domain.user.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class) // db에 createdAt 생성해주기
 @Getter
+@Setter
 @NoArgsConstructor
 public class RefreshToken {
     @Id
