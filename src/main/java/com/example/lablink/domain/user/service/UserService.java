@@ -6,6 +6,7 @@ import com.example.lablink.domain.user.entity.RefreshToken;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.entity.UserRoleEnum;
 import com.example.lablink.domain.user.repository.RefreshTokenRepository;
+import com.example.lablink.domain.user.repository.UserQueryRepository;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,7 @@ public class UserService {
     private final EntityManager em;
     private final @Lazy @Qualifier("companyService") Provider<CompanyService> companyServiceProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserQueryRepository userQueryRepository;
 
     // 유저 회원가입
     @Transactional
@@ -180,8 +183,8 @@ public class UserService {
     }
 
     // 내 실험 관리 - 신청한 목록
-    // TODO User 권한 없으면 한번에 예외 발생 처리 - 현재 각 메서드별 처리
     @Transactional
+    @Cacheable(value = "myLab", key = "#userDetails.getUser().getId()")
     public List<MyLabResponseDto> getMyLabs(UserDetailsImpl userDetails) {
         long start = System.currentTimeMillis();
 
@@ -191,13 +194,16 @@ public class UserService {
 
         // 내가 신청한 목록
         TypedQuery<MyLabResponseDto> query = em.createQuery(
-                "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
-                        "FROM Study s LEFT JOIN Application a ON s.id = a.studyId WHERE a.user = :user", MyLabResponseDto.class);
-        query.setParameter("user", userDetails.getUser());
+                "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s.id, s.title, s.createdAt, s.pay, s.address, a.applicationViewStatusEnum, a.approvalStatusEnum, s.date, s.company.companyName) " +
+                        "FROM Study s LEFT JOIN Application a ON s.id = a.studyId WHERE a.user.id = :userId", MyLabResponseDto.class);
+        query.setParameter("userId", userDetails.getUser().getId());
+
 
         long end = System.currentTimeMillis();
         logger.info("getMyLabs took {} ms", end - start);
 
+        //QueryDSL
+//        return userQueryRepository.getMyLabResponseDto(userDetails.getUser());
         return query.getResultList();
     }
 

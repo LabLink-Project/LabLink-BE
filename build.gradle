@@ -80,14 +80,7 @@ dependencies {
     }
 //    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.4.1'
 
-    // Mail
-    implementation "org.springframework.boot:spring-boot-starter-mail"
-
     // 소셜로그인
-    implementation 'com.google.api-client:google-api-client:1.32.1'
-    implementation 'com.google.oauth-client:google-oauth-client:1.32.1'
-    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.32.1'
-    implementation 'com.google.http-client:google-http-client-jackson2:1.40.1'
     compileOnly('org.springframework.boot:spring-boot-starter-oauth2-client')
     implementation 'org.springframework.boot:spring-boot-starter'
 
