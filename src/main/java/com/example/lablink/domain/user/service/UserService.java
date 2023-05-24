@@ -195,13 +195,15 @@ public class UserService {
 
         // 내가 신청한 목록
         TypedQuery<MyLabResponseDto> query = em.createQuery(
-                "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s, a.applicationViewStatusEnum, a.approvalStatusEnum) " +
-                        "FROM Study s LEFT JOIN Application a ON s.id = a.studyId WHERE a.user = :user", MyLabResponseDto.class);
-        query.setParameter("user", userDetails.getUser());
+                "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s.id, s.title, s.createdAt, s.pay, s.address, a.applicationViewStatusEnum, a.approvalStatusEnum, s.date, s.company.companyName) " +
+                        "FROM Study s LEFT JOIN Application a ON s.id = a.studyId WHERE a.user.id = :userId", MyLabResponseDto.class);
+        query.setParameter("userId", userDetails.getUser().getId());
+
 
         long end = System.currentTimeMillis();
         logger.info("getMyLabs took {} ms", end - start);
 
+        //QueryDSL
 //        return userQueryRepository.getMyLabResponseDto(userDetails.getUser());
         return query.getResultList();
     }
