@@ -35,7 +35,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -183,14 +185,14 @@ class UserServiceTest {
             String approvalStatus = "";
             String viewStatus = "";
             Long id = 1L;
-
-            MyLabResponseDto myLab1 = new MyLabResponseDto(study1, viewStatus, approvalStatus);
+            LocalDateTime now = null;
+            MyLabResponseDto myLab1 = new MyLabResponseDto(id, "Example Title", now, 5000, "Example Address", viewStatus, approvalStatus, now, "Example Company");
             List<MyLabResponseDto> myLabs = new ArrayList<>();
             myLabs.add(myLab1);
 
             TypedQuery<MyLabResponseDto> query = mock(TypedQuery.class);
             given(em.createQuery(any(String.class), eq(MyLabResponseDto.class))).willReturn(query);
-            given(query.setParameter("user", userDetails.getUser())).willReturn(query);
+            given(query.setParameter("userId", userDetails.getUser().getId())).willReturn(query);
             given(query.getResultList()).willReturn(myLabs);
 
             // When
@@ -199,6 +201,7 @@ class UserServiceTest {
             // Then
             assertEquals(myLabs, myLabs1);
         }
+
         @Test
         @DisplayName("유저 닉네임 찾기 메서드")
         void test() {
