@@ -183,7 +183,6 @@ public class UserService {
     }
 
     // 내 실험 관리 - 신청한 목록
-    // TODO User 권한 없으면 한번에 예외 발생 처리 - 현재 각 메서드별 처리
     @Transactional
     @Cacheable(value = "myLab", key = "#userDetails.getUser().getId()")
     public List<MyLabResponseDto> getMyLabs(UserDetailsImpl userDetails) {
