@@ -20,6 +20,7 @@ import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
+import org.joda.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -178,13 +180,17 @@ class UserServiceTest {
             Company company = new Company();
             company.setCompanyName("Example Company");
             study1.setCompany(company);
-
             UserDetailsImpl userDetails = new UserDetailsImpl(user, user.getEmail());
-            String approvalStatus = "";
-            String viewStatus = "";
             Long id = 1L;
+            String title = "Sample Title";
+            int pay = 1000;
+            String address = "Mock Address";
+            String viewStatus = "Mock View Status";
+            String approvalStatus = "Mock Approval Status";
+            String companyName = "Mock Company Name";
 
-            MyLabResponseDto myLab1 = new MyLabResponseDto(study1, viewStatus, approvalStatus);
+            MyLabResponseDto myLab1 = new MyLabResponseDto(id, title, now(), pay, address, viewStatus, approvalStatus, now(), companyName);
+
             List<MyLabResponseDto> myLabs = new ArrayList<>();
             myLabs.add(myLab1);
 

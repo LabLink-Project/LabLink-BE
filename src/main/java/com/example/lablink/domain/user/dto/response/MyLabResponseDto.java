@@ -1,14 +1,14 @@
 package com.example.lablink.domain.user.dto.response;
 
-import com.example.lablink.domain.study.entity.Study;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class MyLabResponseDto {
     private Long id;
     private String title;
