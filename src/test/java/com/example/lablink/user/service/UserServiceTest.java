@@ -36,7 +36,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -182,21 +184,15 @@ class UserServiceTest {
             study1.setCompany(company);
             UserDetailsImpl userDetails = new UserDetailsImpl(user, user.getEmail());
             Long id = 1L;
-            String title = "Sample Title";
-            int pay = 1000;
-            String address = "Mock Address";
-            String viewStatus = "Mock View Status";
-            String approvalStatus = "Mock Approval Status";
-            String companyName = "Mock Company Name";
-
-            MyLabResponseDto myLab1 = new MyLabResponseDto(id, title, now(), pay, address, viewStatus, approvalStatus, now(), companyName);
+            LocalDateTime now = null;
+            MyLabResponseDto myLab1 = new MyLabResponseDto(id, "Example Title", now, 5000, "Example Address", viewStatus, approvalStatus, now, "Example Company");
 
             List<MyLabResponseDto> myLabs = new ArrayList<>();
             myLabs.add(myLab1);
 
             TypedQuery<MyLabResponseDto> query = mock(TypedQuery.class);
             given(em.createQuery(any(String.class), eq(MyLabResponseDto.class))).willReturn(query);
-            given(query.setParameter("user", userDetails.getUser())).willReturn(query);
+            given(query.setParameter("userId", userDetails.getUser().getId())).willReturn(query);
             given(query.getResultList()).willReturn(myLabs);
 
             // When
@@ -205,6 +201,7 @@ class UserServiceTest {
             // Then
             assertEquals(myLabs, myLabs1);
         }
+
         @Test
         @DisplayName("유저 닉네임 찾기 메서드")
         void test() {

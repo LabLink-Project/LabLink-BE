@@ -29,11 +29,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
         "a.deleted_at = now() " +
         "where u.id = :userId", nativeQuery = true)
     void deleteUserAndData(@Param("userId") Long userId);
-
-    // native쿼리 사용 방식 -> from에 테이블 입력
-    // 그냥 쿼리문은 from에 객체(Entity) 입력
-//    @Query(value = "select * from users where email = :email" , nativeQuery = true )
-//    Optional<User> findByUserEmail(@Param("email") String email);
-
-
 }

@@ -1,7 +1,6 @@
 package com.example.lablink.domain.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +32,16 @@ public class MyLabResponseDto {
         this.date = date;
         this.companyName = companyName;
     }
+
+//    public MyLabResponseDto(Study study, String viewStatus, String approvalStatus) {
+//        this.id = study.getId();
+//        this.companyName = study.getCompany().getCompanyName();
+//        this.title = study.getTitle();
+//        this.applicationDate = study.getCreatedAt();
+//        this.pay = study.getPay();
+//        this.address = study.getAddress();
+//        this.viewStatus = viewStatus;
+//        this.approvalStatus = approvalStatus;
+//        this.date = study.getDate();
+//    }
 }
