@@ -2,10 +2,7 @@ package com.example.lablink.user.service;
 
 import com.example.lablink.domain.application.service.ApplicationService;
 import com.example.lablink.domain.bookmark.service.BookmarkService;
-import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.service.CompanyService;
-import com.example.lablink.domain.study.entity.Study;
-import com.example.lablink.domain.user.dto.response.MyLabResponseDto;
 import com.example.lablink.domain.user.entity.*;
 import com.example.lablink.domain.user.repository.RefreshTokenRepository;
 import com.example.lablink.domain.user.service.TermsService;
@@ -20,7 +17,6 @@ import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.dto.request.UserNickNameRequestDto;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
-import org.joda.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,14 +29,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.inject.Provider;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
