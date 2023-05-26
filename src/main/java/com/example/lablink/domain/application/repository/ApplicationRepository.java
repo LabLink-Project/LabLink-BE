@@ -14,5 +14,5 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
     boolean existsByStudyIdAndUser(Long studyId, User user);
 
     Optional<Application> findByIdAndStudyId(Long ApplicationId,Long StudyId);
-
+//    List<Application> findByUser(User user); // 신청서 조회 JPA
 }

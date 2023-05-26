@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ApplicationService {
@@ -99,4 +101,8 @@ public class ApplicationService {
     public boolean checkApplication(Long studyId, User user) {
         return applicationRepository.existsByStudyIdAndUser(studyId, user);
     }
+    // 신청서 조회 JPA
+//    public List<Application> findAllByMyApplication (User user) {
+//        return applicationRepository.findByUser(user);
+//    }
 }

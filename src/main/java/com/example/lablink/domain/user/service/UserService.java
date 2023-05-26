@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
@@ -68,6 +69,7 @@ public class UserService {
         if(companyService.existEmail(email)) {
             throw new GlobalException(GlobalErrorCode.DUPLICATE_EMAIL);
         }
+
         // 가입 닉네임 중복 확인
         if (userRepository.existsByNickName(signupRequestDto.getNickName())) {
             throw new GlobalException(GlobalErrorCode.DUPLICATE_NICK_NAME);
@@ -191,13 +193,31 @@ public class UserService {
         if(userDetails == null || userDetails.equals(" ")) {
             throw new GlobalException(GlobalErrorCode.INVALID_TOKEN);
         }
+            // JPA
+//        List<Application> applications = applicationService.findAllByMyApplication(userDetails.getUser());
+//        List<MyLabResponseDto> myLabs = new ArrayList<>();
+//
+//        for (Application application : applications) {
+//            Study study = getStudyService.getStudy(application.getStudyId());
+//            myLabs.add(new MyLabResponseDto(study.getId(),
+//                                            study.getTitle(),
+//                                            study.getCreatedAt(),
+//                                            study.getPay(),
+//                                            study.getAddress(),
+//                                            application.getApplicationViewStatusEnum(),
+//                                            application.getApprovalStatusEnum(),
+//                                            study.getDate(),
+//                                            study.getCompany().getCompanyName()));
+//        }
+//        long end = System.currentTimeMillis();
+//        logger.info("getMyLabs took {} ms", end - start);
+//        return myLabs;
 
         // 내가 신청한 목록
         TypedQuery<MyLabResponseDto> query = em.createQuery(
                 "SELECT new com.example.lablink.domain.user.dto.response.MyLabResponseDto(s.id, s.title, s.createdAt, s.pay, s.address, a.applicationViewStatusEnum, a.approvalStatusEnum, s.date, s.company.companyName) " +
                         "FROM Study s LEFT JOIN Application a ON s.id = a.studyId WHERE a.user.id = :userId", MyLabResponseDto.class);
         query.setParameter("userId", userDetails.getUser().getId());
-
 
         long end = System.currentTimeMillis();
         logger.info("getMyLabs took {} ms", end - start);
