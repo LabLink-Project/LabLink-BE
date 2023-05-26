@@ -1,12 +1,19 @@
 package com.example.lablink.domain.company.service;
 
+import com.example.lablink.domain.company.dto.request.CompanyLoginRequestDto;
+import com.example.lablink.domain.company.dto.request.CompanyNameCheckRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.repository.CompanyRepository;
+import com.example.lablink.domain.user.dto.request.SignupRequestDto;
+import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.service.UserService;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.global.S3Image.entity.S3Image;
+import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
+import com.example.lablink.global.exception.GlobalException;
 import com.example.lablink.global.jwt.JwtUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,6 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -78,51 +88,54 @@ class CompanyServiceTest {
             // then
             verify(companyRepository).save(any(Company.class));
         }
-//        @Test
-//        @DisplayName("Success - Corporate Login")
-//        void companyLogin() {
-//            // Given
-//            CompanyLoginRequestDto companyLoginRequestDto = new CompanyLoginRequestDto();
-//            String email = companyLoginRequestDto.getEmail();
-//            String password = companyLoginRequestDto.getPassword();
-//            String auth = JwtUtil.AUTHORIZATION_HEADER;
-//
-//            Company company = new Company();
-//            company.setPassword(passwordEncoder.encode(password));
-//
-//            given(companyRepository.findByEmail(email)).willReturn(Optional.of(company));
-//            given(passwordEncoder.matches(password, company.getPassword())).willReturn(true);
-//
-//            // When
-//            assertDoesNotThrow(() -> companyService.companyLogin(companyLoginRequestDto, response));
-//
-//            // Then
-//            verify(response).addHeader(eq(auth), anyString());
-//            // Add more assertions or verifications based on your requirements
-//        }
+        @Test
+        @DisplayName("성공 - 기업 로그인")
+        void companyLogin() {
+            // Given
+            CompanyLoginRequestDto companyLoginRequestDto = new CompanyLoginRequestDto();
+            String email = companyLoginRequestDto.getEmail();
+            String password = companyLoginRequestDto.getPassword();
+            String auth = JwtUtil.AUTHORIZATION_HEADER;
+            Company company = new Company();
+            company.setPassword(passwordEncoder.encode(password));
 
+            given(companyRepository.findByEmail(email)).willReturn(Optional.of(company));
+            given(passwordEncoder.matches(password, company.getPassword())).willReturn(true);
 
+            // When
+            companyService.companyLogin(companyLoginRequestDto, response);
+            // Then
+            verify(response).addHeader(auth, jwtUtil.createCompanyToken(company));
+        }
+        @Test
+        @DisplayName("성공 - 이메일 중복 검사")
+        void emailCheck() {
+            // Given
+            SignupEmailCheckRequestDto signupEmailCheckRequestDto = new SignupEmailCheckRequestDto("email@asdf123");
+            String companyEmail = signupEmailCheckRequestDto.getEmail();
+            String userEmail = "email@asdf123";
+            given(userServiceProvider.get()).willReturn(userService);
 
-
+            // When
+            companyService.emailCheck(signupEmailCheckRequestDto);
+            // Then
+            assertEquals(companyEmail, userEmail);
+        }
+        @Test
+        @DisplayName("성공 - 기업명 중복 x")
+        void companyNameCheck() {
+            // given
+            CompanyNameCheckRequestDto companyNameCheckRequestDto = new CompanyNameCheckRequestDto();
+            String companyName = companyNameCheckRequestDto.getCompanyName();
+            given(companyRepository.existsByCompanyName(companyName)).willReturn(true);
+            //when
+            Assertions.assertThrows(GlobalException.class, () -> companyService.companyNameCheck(companyNameCheckRequestDto));
+        }
 
 
     }
 
 
-    @Test
-    @DisplayName("")
-    void companyLogin() {
-    }
-
-    @Test
-    @DisplayName("")
-    void emailCheck() {
-    }
-
-    @Test
-    @DisplayName("")
-    void companyNameCheck() {
-    }
 
     @Test
     @DisplayName("")
