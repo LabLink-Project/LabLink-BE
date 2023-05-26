@@ -5,8 +5,6 @@ import com.example.lablink.domain.company.dto.request.CompanyNameCheckRequestDto
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
 import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.repository.CompanyRepository;
-import com.example.lablink.domain.user.dto.request.SignupRequestDto;
-import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.service.UserService;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.global.S3Image.entity.S3Image;
