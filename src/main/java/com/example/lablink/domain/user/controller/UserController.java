@@ -87,9 +87,4 @@ public class UserController {
             .body(successResponse.getBody());
     }
 
-    //test
-    @GetMapping("/test")
-    public ResponseEntity<?> getUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseMessage.SuccessResponse("조회 성공", userService.getUser(userDetails));
-    }
 }
