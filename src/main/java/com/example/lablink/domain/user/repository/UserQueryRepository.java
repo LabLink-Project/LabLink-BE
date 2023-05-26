@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-// 내 신청서 목록 조회 querydsl을 위한 클래스 ( 비교 결과 jpql과 큰 차이는 없다 )
 @Repository
 public class UserQueryRepository {
     private final JPAQueryFactory queryFactory;
@@ -24,7 +23,8 @@ public class UserQueryRepository {
 
     public List<MyLabResponseDto> getMyLabResponseDto(User userDetails) {
         return queryFactory
-                .select(Projections.constructor(MyLabResponseDto.class,
+                .select(Projections.constructor(
+                        MyLabResponseDto.class,
                         qStudy.id,
                         qStudy.title,
                         qStudy.createdAt,
