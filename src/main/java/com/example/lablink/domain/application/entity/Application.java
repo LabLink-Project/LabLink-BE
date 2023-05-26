@@ -16,10 +16,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE application SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
-@Table(indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id"),
-        @Index(name = "idx_study_id", columnList = "studyId")
-})
+@Table(name = "application",
+        indexes = {@Index(name = "index_user_id",  columnList="user_id", unique = false),
+                @Index(name = "index_study_id", columnList="studyId", unique = false)})
 public class Application extends Timestamped {
 
     @Id
