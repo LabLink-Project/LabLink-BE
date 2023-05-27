@@ -3,12 +3,17 @@ package com.example.lablink.domain.company.service;
 import com.example.lablink.domain.company.dto.request.CompanyLoginRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanyNameCheckRequestDto;
 import com.example.lablink.domain.company.dto.request.CompanySignupRequestDto;
+import com.example.lablink.domain.company.dto.response.ViewMyStudyResponseDto;
 import com.example.lablink.domain.company.entity.Company;
 import com.example.lablink.domain.company.repository.CompanyRepository;
+import com.example.lablink.domain.company.security.CompanyDetailsImpl;
+import com.example.lablink.domain.study.entity.Study;
+import com.example.lablink.domain.study.service.StudyService;
 import com.example.lablink.domain.user.service.UserService;
 import com.example.lablink.global.S3Image.dto.S3ResponseDto;
 import com.example.lablink.global.S3Image.entity.S3Image;
 import com.example.lablink.global.common.dto.request.SignupEmailCheckRequestDto;
+import com.example.lablink.global.exception.GlobalErrorCode;
 import com.example.lablink.global.exception.GlobalException;
 import com.example.lablink.global.jwt.JwtUtil;
 import org.junit.jupiter.api.Assertions;
@@ -25,9 +30,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -45,6 +53,8 @@ class CompanyServiceTest {
     private Provider<UserService> userServiceProvider;
     @Mock
     private UserService userService;
+    @Mock
+    private StudyService studyService;
     @Mock
     private JwtUtil jwtUtil;
     @Mock
@@ -86,6 +96,7 @@ class CompanyServiceTest {
             // then
             verify(companyRepository).save(any(Company.class));
         }
+
         @Test
         @DisplayName("성공 - 기업 로그인")
         void companyLogin() {
@@ -105,6 +116,7 @@ class CompanyServiceTest {
             // Then
             verify(response).addHeader(auth, jwtUtil.createCompanyToken(company));
         }
+
         @Test
         @DisplayName("성공 - 이메일 중복 검사")
         void emailCheck() {
@@ -119,6 +131,7 @@ class CompanyServiceTest {
             // Then
             assertEquals(companyEmail, userEmail);
         }
+
         @Test
         @DisplayName("성공 - 기업명 중복 x")
         void companyNameCheck() {
@@ -130,28 +143,110 @@ class CompanyServiceTest {
             Assertions.assertThrows(GlobalException.class, () -> companyService.companyNameCheck(companyNameCheckRequestDto));
         }
 
+        @Test
+        @DisplayName("성공 - 기업 회원 탈퇴")
+        void deleteCompany() {
+            Company company = new Company();
+            String id = "1";
+            Study study = new Study();
+            CompanyDetailsImpl companyDetails = new CompanyDetailsImpl(company, id);
+            List<Study> studies = Collections.singletonList(study);
+//            List<Study> studies = new ArrayList<>();
+            given(studyService.findAllCompanyStudy(company)).willReturn(studies);
 
-    }
+            // when
+            companyService.deleteCompany(companyDetails, response);
+            // given
+            verify(studyService).deleteStudy(study.getId(), companyDetails);
+            verify(companyRepository).delete(company);
+            verify(response).setHeader(eq(JwtUtil.AUTHORIZATION_HEADER), isNull());
+        }
+
+        @Test
+        @DisplayName("성공 - 내 공고 확인")
+        void viewMyStudies() {
+            // given
+            Company company = new Company();
+            String id = "1";
+            CompanyDetailsImpl companyDetails = new CompanyDetailsImpl(company, id);
+            List<Study> studies = new ArrayList<>();
+            List<ViewMyStudyResponseDto> views = new ArrayList<>();
+//            for (Study study : studies) {
+//                views.add(new ViewMyStudyResponseDto(study));
+//            }
+            given(studyService.findAllCompanyStudy(company)).willReturn(studies);
+
+            // when
+            List<ViewMyStudyResponseDto> viewMyStudies = companyService.viewMyStudies(companyDetails);
+            // then
+            assertEquals(viewMyStudies, views);
+        }
+
+        @Test
+        @DisplayName("성공 - 이메일 중복x 사용 가능")
+        void checkEmail() {
+            String email = companySignupRequestDto.getEmail();
+            given(companyRepository.existsByEmail(email)).willReturn(false);
+            // when & then
+            companyService.checkEmail(email);
+        }
+
+        @Test
+        @DisplayName("성공 - 이메일 존재 확인")
+        void existEmail() {
+            String email = companySignupRequestDto.getEmail();
+            given(companyRepository.existsByEmail(email)).willReturn(false);
+            // when
+            boolean result = companyService.existEmail(email);
+            // then
+            assertFalse(result);
+        }
+    } // 성공 케이스
+
+    @Nested
+    @DisplayName("실패 케이스")
+    class FailCase {
+        @Test
+        @DisplayName("실패 - 유저와 이메일 중복")
+        void companySignupDuplicateEmail() {
+            // given
+            String email = companySignupRequestDto.getEmail();
+            given(userServiceProvider.get()).willReturn(userService);
+            given(userService.existEmail(email)).willReturn(true);
+
+            // when & then
+            assertThrows(GlobalException.class, () -> {
+                companyService.companySignup(companySignupRequestDto, s3ResponseDto);
+            }, "중복된 이메일이 존재합니다.");
+        }
+        @Test
+        @DisplayName("실패 - 중복된 회사 이름")
+        void duplicateCompanyName() {
+            // given
+            String companyName = companySignupRequestDto.getCompanyName();
+            given(userServiceProvider.get()).willReturn(userService);
+            given(companyRepository.existsByCompanyName(companyName)).willReturn(true);
+
+            // when & then
+            GlobalException exception = assertThrows(GlobalException.class, () -> {
+                companyService.companySignup(companySignupRequestDto, s3ResponseDto);
+            });
+            assertEquals(GlobalErrorCode.DUPLICATE_COMPANY_NAME, exception.getErrorCode());
+        }
 
 
 
-    @Test
-    @DisplayName("")
-    void deleteCompany() {
-    }
 
-    @Test
-    @DisplayName("")
-    void viewMyStudies() {
-    }
 
-    @Test
-    @DisplayName("")
-    void checkEmail() {
-    }
+    } // 실패 케이스
 
-    @Test
-    @DisplayName("")
-    void existEmail() {
-    }
+
+
+
+
+
+
+
+
+
 }
