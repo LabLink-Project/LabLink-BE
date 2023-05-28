@@ -1,4 +1,4 @@
-package com.example.lablink.user.service;
+package com.example.lablink.domain.user.service;
 
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.entity.UserInfo;
