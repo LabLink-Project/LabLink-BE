@@ -174,7 +174,7 @@ class UserServiceTest {
 //            String approvalStatus = "";
 //            String viewStatus = "";
 //            Long id = 1L;
-//
+
 //            MyLabResponseDto myLab1 = new MyLabResponseDto(1L, "title", now(), 5000, "address",  viewStatus, approvalStatus, now(), "companyName");
 //            List<MyLabResponseDto> myLabs = new ArrayList<>();
 //            myLabs.add(myLab1);
