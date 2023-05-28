@@ -3,7 +3,6 @@ package com.example.lablink.domain.user.service;
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
 import com.example.lablink.domain.user.entity.UserInfo;
 import com.example.lablink.domain.user.repository.UserInfoRepository;
-import com.example.lablink.domain.user.service.UserInfoService;
 import com.example.lablink.global.exception.GlobalErrorCode;
 import com.example.lablink.global.exception.GlobalException;
 import org.junit.jupiter.api.DisplayName;
