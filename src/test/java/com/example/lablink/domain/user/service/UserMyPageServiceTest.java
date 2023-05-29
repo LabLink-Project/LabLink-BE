@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserMyPageServiceTest {
@@ -59,7 +60,19 @@ class UserMyPageServiceTest {
             assertEquals(expectedResponseDto.getUserName(), actualResponseDto.getUserName());
             assertEquals(expectedResponseDto.getDateOfBirth(), actualResponseDto.getDateOfBirth());
         }
+        @Test
+        @DisplayName("성공 - 유저 정보 수정")
+        void modifyProfile() {
+            User user = new User();
+            MyPageCheckRequestDto.UserModifyRequestDto checkRequestDto = new MyPageCheckRequestDto.UserModifyRequestDto();
+            given(userDetails.getUser()).willReturn(user);
 
+            // when
+            userMyPageService.modifyProfile(userDetails, checkRequestDto);
+            // then
+            verify(userMapper).updateUserModifyDto(checkRequestDto, user);
+            verify(userRepository).save(user);
+        }
 
 
 
@@ -68,9 +81,7 @@ class UserMyPageServiceTest {
 
 
 
-    @Test
-    void modifyProfile() {
-    }
+
 
     @Test
     void changePassword() {
