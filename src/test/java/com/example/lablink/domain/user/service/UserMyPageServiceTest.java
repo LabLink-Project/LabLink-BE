@@ -26,8 +26,6 @@ class UserMyPageServiceTest {
     @Mock
     private UserService userService;
     @Mock
-    private UserDetailsImpl userDetails;
-    @Mock
     private MyPageCheckRequestDto myPageCheckRequestDto;
     @Mock
     private UserModifyResponseDto userModifyResponseDto;
@@ -37,6 +35,8 @@ class UserMyPageServiceTest {
     private UserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    UserDetailsImpl userDetails;
 
     @Nested
     @DisplayName("성공 케이스")
@@ -47,6 +47,8 @@ class UserMyPageServiceTest {
         void checkUser() {
             // given
             User user = new User();
+            String id = "1";
+            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
             String myPassword = userDetails.getPassword();
             String inputPassword = "inputPassword";
 
@@ -64,6 +66,8 @@ class UserMyPageServiceTest {
         @DisplayName("성공 - 유저 정보 수정")
         void modifyProfile() {
             User user = new User();
+//            String id = "1";
+//            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
             MyPageCheckRequestDto.UserModifyRequestDto checkRequestDto = new MyPageCheckRequestDto.UserModifyRequestDto();
             given(userDetails.getUser()).willReturn(user);
 
@@ -73,17 +77,27 @@ class UserMyPageServiceTest {
             verify(userMapper).updateUserModifyDto(checkRequestDto, user);
             verify(userRepository).save(user);
         }
+        @Test
+        @DisplayName("성공 - 유저 비밀번호 변경")
+        void changePassword() {
+            // given
+            User user = new User();
+            String id = "1";
+            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
 
+            given(userService.getUser(userDetails)).willReturn(user);
+            given(passwordEncoder.matches(myPageCheckRequestDto.getPassword(), user.getPassword())).willReturn(false);
 
-
-
+            // when
+            userMyPageService.changePassword(userDetails, myPageCheckRequestDto);
+            // then
+            verify(userRepository).save(user);
+        }
     } // 성공 케이스
 
 
 
 
 
-    @Test
-    void changePassword() {
-    }
+
 }

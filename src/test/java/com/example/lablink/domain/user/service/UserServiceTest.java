@@ -1,4 +1,4 @@
-package com.example.lablink.user.service;
+package com.example.lablink.domain.user.service;
 
 import com.example.lablink.domain.application.service.ApplicationService;
 import com.example.lablink.domain.bookmark.service.BookmarkService;
