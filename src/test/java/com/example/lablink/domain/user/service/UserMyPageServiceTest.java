@@ -5,6 +5,9 @@ import com.example.lablink.domain.user.dto.response.UserModifyResponseDto;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
+import com.example.lablink.global.exception.GlobalErrorCode;
+import com.example.lablink.global.exception.GlobalException;
+import jdk.jshell.spi.ExecutionControl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -26,8 +30,6 @@ class UserMyPageServiceTest {
     @Mock
     private UserService userService;
     @Mock
-    private MyPageCheckRequestDto myPageCheckRequestDto;
-    @Mock
     private UserModifyResponseDto userModifyResponseDto;
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -37,6 +39,8 @@ class UserMyPageServiceTest {
     private UserMapper userMapper;
     @Mock
     UserDetailsImpl userDetails;
+
+    MyPageCheckRequestDto myPageCheckRequestDto = new MyPageCheckRequestDto("inputPassword");
 
     @Nested
     @DisplayName("성공 케이스")
@@ -53,7 +57,7 @@ class UserMyPageServiceTest {
             String inputPassword = "inputPassword";
 
             given(userService.getUser(userDetails)).willReturn(user);
-            given(myPageCheckRequestDto.getPassword()).willReturn(inputPassword);
+//            given(myPageCheckRequestDto.getPassword()).willReturn(inputPassword);
             given(passwordEncoder.matches(inputPassword, myPassword)).willReturn(true);
 
             // when & then
@@ -94,6 +98,45 @@ class UserMyPageServiceTest {
             verify(userRepository).save(user);
         }
     } // 성공 케이스
+
+
+    @Nested
+    @DisplayName("실패 케이스")
+    class FailCase {
+        @Test
+        @DisplayName("실패 - 비밀번호 확인")
+        void checkUserFail() {
+            User user = new User();
+            String myPassword = userDetails.getPassword();
+            String inputPassword = "inputPassword";
+
+            given(userService.getUser(userDetails)).willReturn(user);
+            given(passwordEncoder.matches(inputPassword, myPassword)).willReturn(false);
+            // when & then
+            GlobalException exception = assertThrows(GlobalException.class, () -> userMyPageService.checkUser(userDetails, myPageCheckRequestDto),
+                    GlobalErrorCode.PASSWORD_MISMATCH.getMessage());
+            assertEquals(exception.getErrorCode(), GlobalErrorCode.PASSWORD_MISMATCH);
+        }
+//        @Test
+//            @DisplayName("실패 - 유저 비밀번호 변경")
+//            void changePasswordFail() {
+//                // given
+//                User user = new User();
+//                String myPassword = userDetails.getPassword();
+//                String inputPassword = "inputPassword";
+//
+//                given(userService.getUser(userDetails)).willReturn(user);
+//                given(passwordEncoder.matches(inputPassword, myPassword)).willReturn(false);
+//                // when
+//                GlobalException exception = assertThrows(GlobalException.class, () -> userMyPageService.changePassword(userDetails, myPageCheckRequestDto), GlobalErrorCode.DUPLICATE_PASSWORD.getMessage());
+//                // then
+//                assertThrows(GlobalException.class, () -> userMyPageService.changePassword(userDetails, myPageCheckRequestDto), GlobalErrorCode.PASSWORD_MISMATCH.getMessage());
+////                assertEquals(exception.getErrorCode(), GlobalErrorCode.DUPLICATE_PASSWORD);
+//
+//            }
+
+
+    }
 
 
 
