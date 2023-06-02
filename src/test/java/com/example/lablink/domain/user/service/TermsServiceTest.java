@@ -1,10 +1,12 @@
 package com.example.lablink.domain.user.service;
 
 import com.example.lablink.domain.user.dto.request.SignupRequestDto;
+import com.example.lablink.domain.user.dto.request.TermsRequestDto;
 import com.example.lablink.domain.user.entity.Terms;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.repository.TermsRepository;
 import com.example.lablink.domain.user.service.TermsService;
+import org.apache.poi.ss.formula.functions.T;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,8 @@ class TermsServiceTest {
 
     @Mock
     private TermsRepository termsRepository;
+    @Mock
+    private TermsRequestDto termsRequestDto;
 
     private SignupRequestDto signupRequestDto = new SignupRequestDto(
         "test01@naver.com",
@@ -44,23 +48,29 @@ class TermsServiceTest {
         // given
         User user = new User();
         given(termsRepository.save(any(Terms.class))).willReturn(new Terms(signupRequestDto, user));
-
         // when
         Terms terms = termsService.saveTerms(signupRequestDto, user);
-
         //then
         assertNotNull(terms);
     }
-
+    @Test
+    @DisplayName("소셜 약관 저장")
+    void saveSocialTerms() {
+        // given
+        User user = new User();
+        given(termsRepository.save(any(Terms.class))).willReturn(new Terms(signupRequestDto, user));
+        // when
+        Terms terms = termsService.saveSocialTerms(termsRequestDto, user);
+        //then
+        assertNotNull(terms);
+    }
     @Test
     @DisplayName("약관 삭제")
     void deleteTerms() {
         // given
         User user = new User();
-
         // when
         termsService.deleteTerms(user);
-
         //then
         verify(termsRepository).deleteByUser(user);
     }

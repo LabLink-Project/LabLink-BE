@@ -7,7 +7,6 @@ import com.example.lablink.domain.user.repository.UserRepository;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.global.exception.GlobalErrorCode;
 import com.example.lablink.global.exception.GlobalException;
-import jdk.jshell.spi.ExecutionControl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
