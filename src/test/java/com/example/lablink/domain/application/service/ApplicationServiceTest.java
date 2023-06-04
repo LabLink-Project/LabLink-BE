@@ -2,13 +2,9 @@ package com.example.lablink.domain.application.service;
 
 import com.example.lablink.domain.application.dto.Request.ApplicationRequestDto;
 import com.example.lablink.domain.application.entity.Application;
-import com.example.lablink.domain.application.entity.ApplicationViewStatusEnum;
-import com.example.lablink.domain.application.entity.ApprovalStatusEnum;
 import com.example.lablink.domain.application.repository.ApplicationRepository;
-import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.service.GetStudyService;
 import com.example.lablink.domain.user.entity.User;
-import com.example.lablink.domain.user.entity.UserInfo;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.domain.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -19,14 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.Optional;
-
-import static org.joda.time.LocalDate.now;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationServiceTest {
@@ -34,23 +25,13 @@ class ApplicationServiceTest {
     @InjectMocks
     private ApplicationService applicationService;
     @Mock
-    private UserDetailsImpl userDetails;
-    @Mock
     private ApplicationRepository applicationRepository;
     @Mock
     private GetStudyService getStudyService;
     @Mock
     private UserService userService;
-
-//    ApplicationRequestDto applicationRequestDto = new ApplicationRequestDto(
-//            "message",
-//            "name",
-//            "phone",
-//            "address",
-//            "detail",
-//            "gender",
-//            now()
-//    );
+    @Mock
+    private ApplicationRequestDto applicationRequestDto;
 
     @Nested
     @DisplayName("성공 케이스")
@@ -58,58 +39,51 @@ class ApplicationServiceTest {
 //        @Test
 //        @DisplayName("성공 - 신청서 작성")
 //        void addApplication() {
-//            // Given
-//            Study study = new Study();
-//            Long studyId = 1L;
+//            // 테스트에 필요한 객체들을 생성하고 초기화합니다.
+//            Long studyId = 1L;  // 스터디 ID
 //            String id = "1";
 //            User user = new User();
 //            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
-//
+//            Study study = new Study();
 //            UserInfo userInfo = new UserInfo();
-//
 //            Application application = new Application(user, studyId, "message", "enum1", "enum2");
-//
 //            given(userService.getUser(userDetails)).willReturn(user);
-//            given(getStudyService.getStudy(studyId)).willReturn(study);
-//            doNothing().when(user.getUserinfo()).updateUserInfo(applicationRequestDto);
 //
-//            // When
+//            // user.setUserinfo()를 호출하여 UserInfo 객체를 생성하고 연결해줍니다.
+//            user.setUserinfo(userInfo);
+//
+//            // 테스트할 메서드를 호출합니다.
 //            applicationService.addApplication(userDetails, studyId, applicationRequestDto);
 //
-//            // Then
 //            verify(study).updateCurrentApplicantCount();
 //            verify(user).updateUser(applicationRequestDto);
 //            verify(user.getUserinfo()).updateUserInfo(applicationRequestDto);
 //            verify(applicationRepository).save(application);
 //        }
-//@Test
-//@DisplayName("성공 - 신청서 삭제")
-//void deleteApplication() {
-//    // Given
-//    Long studyId = 1L;
-//    Long applicationId = 1L;
-//    String userId = "1";
-//    User user = new User();
-//    UserDetailsImpl userDetails = new UserDetailsImpl(user, userId);
-//    Study study = new Study();
-//    Application application = new Application(user, studyId, "message", "enum1", "enum2");
-//
-//    given(applicationRepository.findById(applicationId)).willReturn(Optional.of(application));
-//
-//    // When
-//    applicationService.deleteApplication(userDetails, studyId, applicationId);
-//
-//    // Then
-//    verify(applicationRepository).findById(applicationId);
-//    verify(applicationRepository).delete(application);
-//}
+        @Test
+        @DisplayName("성공 - 신청서 삭제")
+        void deleteApplication() {
+            // Given
+            String id = "1";
+            Long studyId = 1L;
+            Long applicationId = 1L;
+            Long userId = 1L;
+            User user = new User();
+            user.setId(userId); // Set the user ID
+            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
+            Application application = new Application(user, studyId, "message", "enum1", "enum2");
 
+            given(applicationRepository.findById(applicationId)).willReturn(Optional.of(application));
+
+            // When
+            applicationService.deleteApplication(userDetails, studyId, applicationId);
+            // Then
+            verify(applicationRepository).delete(application);
+        }
 
 
 
     }
-
-
     @Test
     void modifyApplication() {
     }
