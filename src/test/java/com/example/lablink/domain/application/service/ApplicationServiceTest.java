@@ -7,6 +7,7 @@ import com.example.lablink.domain.study.service.GetStudyService;
 import com.example.lablink.domain.user.entity.User;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.domain.user.service.UserService;
+import com.example.lablink.global.exception.GlobalException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -84,6 +87,52 @@ class ApplicationServiceTest {
 
 
     }
+
+    @Nested
+    @DisplayName("실패 케이스")
+    class FailCase {
+        @Test
+        @DisplayName("실패 - 신청서 삭제 - 신청서 존재x")
+        void deleteApplication_ApplicationNotFound() {
+            // Given
+            String id = "1";
+            Long studyId = 1L;
+            Long applicationId = 1L;
+            Long userId = 1L;
+            User user = new User();
+            user.setId(userId); // Set the user ID
+            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
+
+            given(applicationRepository.findById(applicationId)).willReturn(Optional.empty());
+
+            // When/Then
+            assertThrows(GlobalException.class, () -> applicationService.deleteApplication(userDetails, studyId, applicationId));
+            verify(applicationRepository, never()).delete(any(Application.class));
+        }
+        @Test
+        @DisplayName("실패 - 신청서 삭제 - 권한 없음")
+        void deleteApplication_NotAuthorized() {
+            // Given
+            String id = "1";
+            Long studyId = 1L;
+            Long applicationId = 1L;
+            Long userId = 1L;
+            User user = new User();
+            user.setId(userId); // Set the user ID
+            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
+            Application application = new Application(user, studyId, "message", "enum1", "enum2");
+
+            given(applicationRepository.findById(applicationId)).willReturn(Optional.of(application));
+
+            // When/Then
+            assertThrows(GlobalException.class, () -> applicationService.deleteApplication(userDetails, studyId + 1, applicationId));
+            assertThrows(GlobalException.class, () -> applicationService.deleteApplication(userDetails, studyId, applicationId + 1));
+            verify(applicationRepository, never()).delete(any(Application.class));
+        }
+    } // Failclass
+
+
+
     @Test
     void modifyApplication() {
     }
