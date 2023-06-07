@@ -83,7 +83,16 @@ class ApplicationServiceTest {
             // Then
             verify(applicationRepository).delete(application);
         }
-
+        @Test
+        @DisplayName("성공 - 신청서 확인")
+        void checkApplication() {
+            Long studyId = 1L;
+            User user = new User();
+            // when
+            applicationService.checkApplication(studyId, user);
+            // then
+            verify(applicationRepository).existsByStudyIdAndUser(studyId, user);
+        }
 
 
     }
@@ -145,7 +154,5 @@ class ApplicationServiceTest {
     void afterApplication() {
     }
 
-    @Test
-    void checkApplication() {
-    }
+
 }
