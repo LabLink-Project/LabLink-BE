@@ -1,10 +1,14 @@
 package com.example.lablink.domain.application.service;
 
 import com.example.lablink.domain.application.dto.Request.ApplicationRequestDto;
+import com.example.lablink.domain.application.dto.Response.ApplicationResponseDto;
 import com.example.lablink.domain.application.entity.Application;
 import com.example.lablink.domain.application.repository.ApplicationRepository;
+import com.example.lablink.domain.company.entity.Company;
+import com.example.lablink.domain.study.entity.Study;
 import com.example.lablink.domain.study.service.GetStudyService;
 import com.example.lablink.domain.user.entity.User;
+import com.example.lablink.domain.user.entity.UserInfo;
 import com.example.lablink.domain.user.security.UserDetailsImpl;
 import com.example.lablink.domain.user.service.UserService;
 import com.example.lablink.global.exception.GlobalException;
@@ -18,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -93,7 +99,25 @@ class ApplicationServiceTest {
             // then
             verify(applicationRepository).existsByStudyIdAndUser(studyId, user);
         }
+        @Test
+        @DisplayName("성공 - 신청서 접수 ")
+        void afterApplication() {
+            User user = new User();
+            Study study = new Study();
+            Company company = new Company();
+            UserInfo userInfo = new UserInfo();
+            ApplicationResponseDto applicationResponseDto = new ApplicationResponseDto(company, study, user, userInfo);
+            String id = "1";
+            Long studyId = 1L;
+            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
+            given(userService.getUser(userDetails)).willReturn(user);
+            given(getStudyService.getStudy(studyId)).willReturn(study);
 
+            // when
+            ApplicationResponseDto response = applicationService.afterApplication(userDetails, studyId);
+            // then
+            assertEquals(applicationResponseDto, response);
+        }
 
     }
 
@@ -150,9 +174,7 @@ class ApplicationServiceTest {
     void deleteApplication() {
     }
 
-    @Test
-    void afterApplication() {
-    }
+
 
 
 }
