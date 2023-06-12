@@ -83,6 +83,42 @@ class ApplicationServiceTest {
             // Then
             verify(applicationRepository).delete(application);
         }
+        @Test
+        @DisplayName("성공 - 신청서 확인")
+        void checkApplication() {
+            Long studyId = 1L;
+            User user = new User();
+            // when
+            applicationService.checkApplication(studyId, user);
+            // then
+            verify(applicationRepository).existsByStudyIdAndUser(studyId, user);
+        }
+//        @Test
+//        @DisplayName("성공 - 신청서 접수")
+//        void afterApplication() {
+//            Study study = new Study();
+//            Company company = new Company();
+//            study.setCompany(company);
+//            User user = new User();
+//            UserInfo userInfo = new UserInfo();
+//            user.setUserinfo(userInfo);
+//            ApplicationResponseDto applicationResponseDto = new ApplicationResponseDto(company, study, user, userInfo);
+//            String id = "1";
+//            Long studyId = 1L;
+//            UserDetailsImpl userDetails = new UserDetailsImpl(user, id);
+//            given(userService.getUser(userDetails)).willReturn(user);
+//            given(getStudyService.getStudy(studyId)).willReturn(study);
+//
+//            // when
+//            ApplicationResponseDto response = applicationService.afterApplication(userDetails, studyId);
+//
+//            // then
+//            assertEquals(applicationResponseDto.toString(), response.toString());
+//        }
+
+
+
+
 
 
 
@@ -141,11 +177,7 @@ class ApplicationServiceTest {
     void deleteApplication() {
     }
 
-    @Test
-    void afterApplication() {
-    }
 
-    @Test
-    void checkApplication() {
-    }
+
+
 }
